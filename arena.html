@@ -3,209 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desembainhar Espada - ER</title>
+    <title>Arena - Desembainhar Espada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-    body {
-        background: url('imagens/arena.png') no-repeat center center fixed;
-        background-size: cover;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        padding: 10px;
-    }
-
-    /* Container do jogo que se adapta à largura da tela */
-    #game-container {
-        width: 100%;
-        max-width: 500px; /* Limite para não ficar largo demais em PCs */
-        background: rgba(0, 31, 63, 0.8); /* Fundo escuro semi-transparente para leitura */
-        backdrop-filter: blur(8px);
-        border: 2px solid #FFD700;
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    /* Ajuste de fontes para telas menores */
-    @media (max-width: 480px) {
-        #game-container { padding: 1.5rem; }
-        #endereco { font-size: 2.5rem; } /* Diminui o texto bíblico para não quebrar linha */
-        #timer { font-size: 4rem; }
-    }
-</style>
+        body {
+            background: url('imagens/fundo_jogo.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            color: white;
+        }
+        .glass-panel {
+            background: rgba(0, 31, 63, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid #FFD700;
+        }
+    </style>
 </head>
-<body class="bg-er text-white min-h-screen flex flex-col items-center p-4">
+<body class="flex flex-col items-center justify-center p-4">
 
-    <!-- Cabeçalho -->
-    <header class="text-center my-6">
-        <h1 class="text-3xl font-bold text-gold uppercase tracking-widest">Desembainhar Espada</h1>
-        <p class="text-sm italic">Organização Embaixadores do Rei</p>
-    </header>
+    <!-- Header com Identificação -->
+    <div class="absolute top-4 w-full px-6 flex justify-between items-center text-xs uppercase tracking-widest">
+        <div id="user-info" class="text-yellow-400 font-bold">Carregando...</div>
+        <button onclick="logout()" class="bg-red-600 px-3 py-1 rounded font-bold">Sair</button>
+    </div>
 
-    <!-- Arena do Jogo -->
-    <main id="game-container" class="w-full max-w-md bg-white/10 p-8 rounded-xl shadow-2xl border border-white/20 text-center">
-        <div id="status-game" class="mb-4 text-lg font-semibold">Rodada 1 / 10</div>
+    <main id="game-container" class="glass-panel w-full max-w-lg p-8 rounded-3xl shadow-2xl text-center">
+        <div id="status-game" class="mb-4 text-sm font-bold text-blue-200">RODADA 1 / 10</div>
         
-        <div id="instrucao" class="text-2xl mb-6 h-20 flex items-center justify-center font-bold">
-            Pressione Iniciar para começar
+        <div id="instrucao" class="text-2xl mb-6 h-24 flex items-center justify-center font-black uppercase text-white">
+            Aguardando Início...
         </div>
 
-        <div id="endereco" class="text-4xl font-bold text-gold mb-6 hidden">
-            <!-- Endereço aparece aqui -->
-        </div>
+        <div id="endereco" class="text-4xl font-black text-yellow-400 mb-6 hidden"></div>
+        <div id="timer" class="text-6xl font-black mb-8 text-white hidden">60</div>
+        <div id="transcricao" class="text-xs text-gray-400 italic min-h-[40px] mb-4"></div>
 
-        <div id="timer" class="text-6xl font-black mb-8 hidden">60</div>
-
-        <div id="transcricao" class="text-sm text-gray-300 italic min-h-[40px] mb-4"></div>
-
-        <button id="btn-acao" onclick="iniciarRodada()" class="btn-er px-10 py-4 rounded-full text-xl hover:scale-105 transition-transform">
-            INICIAR JOGO
+        <button id="btn-acao" onclick="iniciarRodada()" class="w-full bg-yellow-500 text-blue-900 font-black py-4 rounded-xl text-xl hover:scale-105 transition-all shadow-lg">
+            DESEMBAINHAR ESPADA!
         </button>
     </main>
 
     <script>
-        // Configurações Iniciais
         const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
         const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-        const BIBLIA_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHIiOiJTdW4gTWF5IDEwIDIwMjYgMTQ6MjM6MzggR01UKzAwMDAudGh1cnVnb0BnbWFpbC5jb20iLCJpYXQiOjE3Nzg0MjMwMTh9.3_Bya9bi4SKO9oEfFQVNck7ZeINtKiQjmgxJS9CTrTE"; // COLOQUE SEU TOKEN AQUI
-        
-        const supabase = supabase.createClient(SB_URL, SB_KEY);
-        
+        const BIBLIA_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHIiOiJTdW4gTWF5IDEwIDIwMjYgMTQ6MjM6MzggR01UKzAwMDAudGh1cnVnb0BnbWFpbC5jb20iLCJpYXQiOjE3Nzg0MjMwMTh9.3_Bya9bi4SKO9oEfFQVNck7ZeINtKiQjmgxJS9CTrTEI"; // Use o token gerado anteriormente
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        let userSession = null;
         let rodadaAtual = 1;
         let pontuacaoTotal = 0;
         let versiculoCerto = "";
-        let cronometro;
         let tempoRestante = 60;
+        let cronometro;
 
-        const instrucaoEl = document.getElementById('instrucao');
-        const enderecoEl = document.getElementById('endereco');
-        const timerEl = document.getElementById('timer');
-        const btnAcao = document.getElementById('btn-acao');
-        const transcricaoEl = document.getElementById('transcricao');
+        // 1. Verificar Sessão ao Carregar
+        window.onload = async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                userSession = session.user;
+                // Buscar nome do perfil
+                const { data } = await supabaseClient.from('perfis').select('nome').eq('id', userSession.id).single();
+                document.getElementById('user-info').innerText = data ? `Jogador: ${data.nome}` : `Jogador: ${userSession.email}`;
+            }
+        };
 
-        // Reconhecimento de Voz
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const rec = Recognition ? new Recognition() : null;
-        if(rec) {
-            rec.lang = 'pt-BR';
-            rec.continuous = true;
-            rec.interimResults = true;
-        }
-
+        // 2. Lógica do Jogo
         async function iniciarRodada() {
-            btnAcao.classList.add('hidden');
-            instrucaoEl.innerText = "Desembainhar Espada!";
+            document.getElementById('btn-acao').classList.add('hidden');
+            const instrucao = document.getElementById('instrucao');
             
-            // 1. Contagem 1, 2, 3
+            // Contagem Regressiva 1, 2, 3
             for(let i=1; i<=3; i++) {
+                instrucao.innerText = i;
                 await new Promise(r => setTimeout(r, 1000));
-                instrucaoEl.innerText = i;
             }
 
-            // 2. Busca Versículo Aleatório na API
-            instrucaoEl.innerText = "Sorteando...";
-            const res = await fetch('https://www.abibliadigital.com.br/api/verses/nvi/random', {
-                headers: { 'Authorization': `Bearer ${BIBLIA_TOKEN}` }
-            });
-            const data = await res.json();
+            instrucao.innerText = "Buscando Versículo...";
             
-            versiculoCerto = data.text;
-            const enderecoString = `${data.book.name} ${data.chapter}:${data.number}`;
+            try {
+                const res = await fetch('https://www.abibliadigital.com.br/api/verses/nvi/random', {
+                    headers: { 'Authorization': `Bearer ${BIBLIA_TOKEN}` }
+                });
+                const data = await res.json();
+                versiculoCerto = data.text;
+                
+                const enderecoEl = document.getElementById('endereco');
+                enderecoEl.innerText = `${data.book.name} ${data.chapter}:${data.number}`;
+                enderecoEl.classList.remove('hidden');
+                instrucao.innerText = "O endereço é:";
 
-            // 3. Mostra Endereço por 5 segundos
-            instrucaoEl.innerText = "O endereço é:";
-            enderecoEl.innerText = enderecoString;
-            enderecoEl.classList.remove('hidden');
-            
-            await new Promise(r => setTimeout(r, 5000));
-            
-            // 4. Inicia busca (60 seg)
-            instrucaoEl.innerText = "CARREGAR!";
-            enderecoEl.classList.add('hidden');
-            timerEl.classList.remove('hidden');
-            iniciarCronometro();
-            ativarEscuta("encontrei");
+                await new Promise(r => setTimeout(r, 5000));
+                
+                instrucao.innerText = "CARREGAR!";
+                enderecoEl.classList.add('hidden');
+                document.getElementById('timer').classList.remove('hidden');
+                começarCronometro();
+            } catch (e) {
+                alert("Erro ao conectar com a Bíblia Digital.");
+                resetBotao();
+            }
         }
 
-        function iniciarCronometro() {
+        function começarCronometro() {
             tempoRestante = 60;
-            timerEl.innerText = tempoRestante;
+            const timerEl = document.getElementById('timer');
             cronometro = setInterval(() => {
                 tempoRestante--;
                 timerEl.innerText = tempoRestante;
-                if(tempoRestante <= 0) encerrarRodada(0);
+                if(tempoRestante <= 0) finalizarRodada(0);
             }, 1000);
+            // Aqui você deve ativar a Web Speech API para ouvir "Encontrei"
         }
 
-        function ativarEscuta(modo) {
-            if(!rec) return;
-            rec.start();
-            rec.onresult = (event) => {
-                const fala = event.results[event.results.length - 1][0].transcript.toLowerCase();
-                transcricaoEl.innerText = "Ouvi: " + fala;
-
-                if(modo === "encontrei" && fala.includes("encontrei")) {
-                    clearInterval(cronometro);
-                    rec.stop();
-                    validarLeitura();
-                }
-            };
-        }
-
-        async function validarLeitura() {
-            instrucaoEl.innerText = "Leia o versículo...";
-            // Pequena pausa para o menino começar a ler
-            await new Promise(r => setTimeout(r, 1000));
-            
-            rec.start();
-            // Lógica de 5 segundos para começar a ler
-            let timeoutLeitura = setTimeout(() => {
-                encerrarRodada(0, "Demorou para ler!");
-            }, 6000);
-
-            rec.onresult = (event) => {
-                clearTimeout(timeoutLeitura);
-                const textoLido = event.results[event.results.length - 1][0].transcript;
-                
-                // Comparação Simples (Pode ser melhorada com Levenshtein depois)
-                if(compararTextos(textoLido, versiculoCerto)) {
-                    encerrarRodada(tempoRestante, "Correto!");
-                }
-            };
-        }
-
-        function compararTextos(t1, t2) {
-            // Limpa pontuação e converte para minusculo para facilitar
-            const limpar = (t) => t.toLowerCase().replace(/[^\w\s]/gi, '');
-            return limpar(t1).includes(limpar(t2).substring(0, 10)); // Validação simplificada
-        }
-
-        function encerrarRodada(pontos, msg) {
+        async function finalizarRodada(pontos) {
             clearInterval(cronometro);
-            rec.stop();
             pontuacaoTotal += pontos;
-            alert(msg + " Pontos nesta rodada: " + pontos);
             
             if(rodadaAtual < 10) {
                 rodadaAtual++;
-                document.getElementById('status-game').innerText = `Rodada ${rodadaAtual} / 10`;
-                btnAcao.classList.remove('hidden');
-                btnAcao.innerText = "PRÓXIMA RODADA";
+                document.getElementById('status-game').innerText = `RODADA ${rodadaAtual} / 10`;
+                resetBotao("PRÓXIMA RODADA");
             } else {
-                finalizarJogo();
+                await salvarPontuacao();
             }
         }
 
-        async function finalizarJogo() {
-            instrucaoEl.innerText = "Fim de Jogo!";
-            timerEl.innerText = pontuacaoTotal;
-            // Aqui enviamos para o Supabase (Necessário login do usuário)
-            console.log("Pontuação Final para o Supabase:", pontuacaoTotal);
+        async function salvarPontuacao() {
+            document.getElementById('instrucao').innerText = "Salvando Resultado...";
+            const { error } = await supabaseClient
+                .from('ranking')
+                .insert([{ jogador_id: userSession.id, pontos: pontuacaoTotal }]);
+
+            if (error) {
+                alert("Erro ao salvar pontos: " + error.message);
+            } else {
+                alert(`Fim de jogo! Pontuação total: ${pontuacaoTotal}`);
+                window.location.href = 'ranking.html';
+            }
+        }
+
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            window.location.href = 'index.html';
+        }
+
+        function resetBotao(texto = "DESEMBAINHAR ESPADA!") {
+            const btn = document.getElementById('btn-acao');
+            btn.innerText = texto;
+            btn.classList.remove('hidden');
+            document.getElementById('timer').classList.add('hidden');
         }
     </script>
 </body>
