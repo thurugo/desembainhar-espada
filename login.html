@@ -1,31 +1,98 @@
-<div class="glass-panel p-8 rounded-2xl shadow-xl text-white w-full max-w-md">
-    <h2 class="text-2xl font-bold mb-6 text-center text-yellow-400">Entrar na Arena</h2>
-    <form id="login-form" class="space-y-4">
-        <input type="email" id="log-email" placeholder="E-mail" class="w-full p-3 rounded-lg bg-white/20 border border-white/30 outline-none focus:border-yellow-400" required>
-        <input type="password" id="log-senha" placeholder="Senha" class="w-full p-3 rounded-lg bg-white/20 border border-white/30 outline-none focus:border-yellow-400" required>
-        <button type="submit" class="w-full bg-yellow-500 text-blue-900 font-bold py-3 rounded-lg hover:bg-yellow-400 transition-all">
-            ENTRAR AGORA
-        </button>
-    </form>
-    <p class="mt-4 text-sm text-center">Não tem conta? <a href="cadastro.html" class="text-yellow-400 underline">Cadastre-se</a></p>
-</div>
-
-<script>
-    const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-    const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('log-email').value;
-        const password = document.getElementById('log-senha').value;
-
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-        if (error) {
-            alert("Erro ao entrar: " + error.message + " (Verifique se confirmou o e-mail)");
-        } else {
-            window.location.href = 'arena.html';
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Desembainhar Espada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            /* Utiliza o recorte da parte esquerda da imagem unificada */
+            background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1rem;
         }
-    });
-</script>
+        .glass-panel {
+            background: rgba(0, 31, 63, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel w-full max-w-md p-8 rounded-3xl shadow-2xl text-white">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-black text-yellow-400 uppercase tracking-tight">Entrar na Arena</h2>
+            <p class="text-blue-200 text-sm italic mt-2">"Lâmpada para os meus pés é a tua palavra"</p>
+        </div>
+
+        <form id="login-form" class="space-y-5">
+            <div class="flex flex-col">
+                <label for="log-email" class="text-xs font-bold uppercase mb-1 ml-1 text-blue-200">E-mail</label>
+                <input type="email" id="log-email" placeholder="seu@email.com" 
+                    class="p-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:border-yellow-400 transition-all text-white placeholder-white/40" required>
+            </div>
+
+            <div class="flex flex-col">
+                <label for="log-senha" class="text-xs font-bold uppercase mb-1 ml-1 text-blue-200">Senha</label>
+                <input type="password" id="log-senha" placeholder="••••••••" 
+                    class="p-3 rounded-xl bg-white/10 border border-white/20 outline-none focus:border-yellow-400 transition-all text-white placeholder-white/40" required>
+            </div>
+
+            <button type="submit" id="btn-login" 
+                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl transition-all transform hover:scale-[1.02] shadow-lg uppercase">
+                Acessar Jogo
+            </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-white/10 text-center">
+            <p class="text-sm text-blue-100">
+                Ainda não tem conta? 
+                <a href="cadastro.html" class="text-yellow-400 font-bold hover:underline">Cadastre-se aqui</a>
+            </p>
+            <p class="mt-4 text-[10px] text-gray-400 uppercase tracking-widest">Eis-me Aqui</p>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            btn.innerText = "VERIFICANDO...";
+            btn.disabled = true;
+
+            const email = document.getElementById('log-email').value;
+            const password = document.getElementById('log-senha').value;
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                if (data.user) {
+                    // Login bem sucedido, redireciona para a arena
+                    window.location.href = 'arena.html';
+                }
+            } catch (err) {
+                alert("Erro ao entrar: " + err.message + "\n\nCertifique-se de que confirmou seu e-mail no link enviado.");
+                btn.innerText = "ACESSAR JOGO";
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
