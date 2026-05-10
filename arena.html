@@ -7,10 +7,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .bg-er { background-color: #003366; } /* Azul ER */
-        .text-gold { color: #FFD700; } /* Dourado */
-        .btn-er { background-color: #FFD700; color: #003366; font-weight: bold; }
-    </style>
+    body {
+        background: url('imagens/arena.png') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 10px;
+    }
+
+    /* Container do jogo que se adapta à largura da tela */
+    #game-container {
+        width: 100%;
+        max-width: 500px; /* Limite para não ficar largo demais em PCs */
+        background: rgba(0, 31, 63, 0.8); /* Fundo escuro semi-transparente para leitura */
+        backdrop-filter: blur(8px);
+        border: 2px solid #FFD700;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    /* Ajuste de fontes para telas menores */
+    @media (max-width: 480px) {
+        #game-container { padding: 1.5rem; }
+        #endereco { font-size: 2.5rem; } /* Diminui o texto bíblico para não quebrar linha */
+        #timer { font-size: 4rem; }
+    }
+</style>
 </head>
 <body class="bg-er text-white min-h-screen flex flex-col items-center p-4">
 
