@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desembainhar Espada - Início</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            /* Use o recorte da parte esquerda da imagem watermarked_img_9125867646210610038.png */
+            background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .glass-panel {
+            background: rgba(0, 31, 63, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="glass-panel max-w-lg w-full p-8 rounded-3xl shadow-2xl text-center text-white">
+        <!-- Título e Boas-vindas -->
+        <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter mb-2">Desembainhar Espada</h1>
+        <p class="text-blue-200 mb-8 italic">"Lâmpada para os meus pés é tua palavra e luz, para o meu caminho."</p>
+
+        <div class="space-y-4">
+            <!-- Botão Iniciar (Leva para Login/Arena) -->
+            <a href="arena.html" class="block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-extrabold py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg">
+                JOGAR AGORA
+            </a>
+
+            <!-- Botão Cadastro -->
+            <a href="cadastro.html" class="block w-full border-2 border-white/50 hover:border-yellow-400 hover:text-yellow-400 text-white font-bold py-4 rounded-xl transition-all">
+                CRIAR MINHA CONTA
+            </a>
+        </div>
+
+        <div class="mt-12 flex justify-center gap-8 opacity-80">
+            <div class="text-xs">
+                <img src="imagens/logo_er.png" class="h-10 mx-auto mb-1" alt="Embaixadores">
+                ER
+            </div>
+            <div class="text-xs">
+                <img src="imagens/logo_mr.png" class="h-10 mx-auto mb-1" alt="Mensageiras">
+                MR
+            </div>
+        </div>
+        
+        <p class="mt-6 text-[10px] text-gray-400 uppercase tracking-widest">Eis-me Aqui</p>
+    </div>
+
+</body>
+</html>

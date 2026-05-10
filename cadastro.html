@@ -1,0 +1,87 @@
+<!-- Tela de Cadastro Unificada -->
+<div id="auth-container" class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl text-gray-800">
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-blue-900">Cadastre-se para Jogar</h2>
+        <p class="text-gray-500">Escolha sua organização e comece a gincana!</p>
+    </div>
+
+    <form id="registro-form" class="space-y-4">
+        <!-- Seletor de Organização -->
+        <div class="flex gap-4 mb-6">
+            <label class="flex-1 cursor-pointer">
+                <input type="radio" name="organizacao" value="ER" class="peer hidden" checked>
+                <div class="peer-checked:bg-blue-900 peer-checked:text-white border-2 border-blue-900 p-2 text-center rounded-lg text-sm font-bold transition-all">
+                    Embaixadores
+                </div>
+            </label>
+            <label class="flex-1 cursor-pointer">
+                <input type="radio" name="organizacao" value="MR" class="peer hidden">
+                <div class="peer-checked:bg-pink-600 peer-checked:text-white border-2 border-pink-600 p-2 text-center rounded-lg text-sm font-bold transition-all text-pink-600">
+                    Mensageiras
+                </div>
+            </label>
+        </div>
+
+        <input type="text" id="reg-nome" placeholder="Nome Completo" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <input type="date" id="reg-nascimento" class="p-3 border rounded-lg text-sm" title="Data de Nascimento" required>
+            <input type="text" id="reg-igreja" placeholder="Nome da Igreja" class="p-3 border rounded-lg text-sm" required>
+        </div>
+
+        <input type="email" id="reg-email" placeholder="E-mail" class="w-full p-3 border rounded-lg outline-none" required>
+        <input type="password" id="reg-senha" placeholder="Crie uma Senha" class="w-full p-3 border rounded-lg outline-none" required>
+
+        <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition-colors">
+            CRIAR CONTA E JOGAR
+        </button>
+    </form>
+    
+    <p class="text-center mt-4 text-sm text-gray-600">
+        Já tem conta? <a href="#" onclick="mostrarLogin()" class="text-blue-700 font-bold">Entrar</a>
+    </p>
+</div>
+
+<script>
+    // Lógica de Registro no Supabase
+    document.getElementById('registro-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-senha').value;
+        const nome = document.getElementById('reg-nome').value;
+        const nascimento = document.getElementById('reg-nascimento').value;
+        const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
+        const igreja = document.getElementById('reg-igreja').value;
+
+        // 1. Criar usuário na Auth do Supabase
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+
+        if (error) {
+            alert("Erro no cadastro: " + error.message);
+        } else {
+            // 2. Salvar dados extras na nossa tabela 'perfis'
+            const { error: profileError } = await supabase
+                .from('perfis')
+                .insert([
+                    { 
+                        id: data.user.id, 
+                        nome, 
+                        data_nascimento: nascimento, 
+                        organizacao, 
+                        email 
+                    }
+                ]);
+
+            if (profileError) {
+                alert("Erro ao salvar perfil: " + profileError.message);
+            } else {
+                alert("Cadastro realizado com sucesso! Bem-vindo(a)!");
+                iniciarAmbienteJogo(data.user); // Função que leva para a Arena
+            }
+        }
+    });
+</script>

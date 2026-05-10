@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desembainhar Espada - ER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .bg-er { background-color: #003366; } /* Azul ER */
+        .text-gold { color: #FFD700; } /* Dourado */
+        .btn-er { background-color: #FFD700; color: #003366; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-er text-white min-h-screen flex flex-col items-center p-4">
+
+    <!-- Cabeçalho -->
+    <header class="text-center my-6">
+        <h1 class="text-3xl font-bold text-gold uppercase tracking-widest">Desembainhar Espada</h1>
+        <p class="text-sm italic">Organização Embaixadores do Rei</p>
+    </header>
+
+    <!-- Arena do Jogo -->
+    <main id="game-container" class="w-full max-w-md bg-white/10 p-8 rounded-xl shadow-2xl border border-white/20 text-center">
+        <div id="status-game" class="mb-4 text-lg font-semibold">Rodada 1 / 10</div>
+        
+        <div id="instrucao" class="text-2xl mb-6 h-20 flex items-center justify-center font-bold">
+            Pressione Iniciar para começar
+        </div>
+
+        <div id="endereco" class="text-4xl font-bold text-gold mb-6 hidden">
+            <!-- Endereço aparece aqui -->
+        </div>
+
+        <div id="timer" class="text-6xl font-black mb-8 hidden">60</div>
+
+        <div id="transcricao" class="text-sm text-gray-300 italic min-h-[40px] mb-4"></div>
+
+        <button id="btn-acao" onclick="iniciarRodada()" class="btn-er px-10 py-4 rounded-full text-xl hover:scale-105 transition-transform">
+            INICIAR JOGO
+        </button>
+    </main>
+
+    <script>
+        // Configurações Iniciais
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const BIBLIA_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHIiOiJTdW4gTWF5IDEwIDIwMjYgMTQ6MjM6MzggR01UKzAwMDAudGh1cnVnb0BnbWFpbC5jb20iLCJpYXQiOjE3Nzg0MjMwMTh9.3_Bya9bi4SKO9oEfFQVNck7ZeINtKiQjmgxJS9CTrTE"; // COLOQUE SEU TOKEN AQUI
+        
+        const supabase = supabase.createClient(SB_URL, SB_KEY);
+        
+        let rodadaAtual = 1;
+        let pontuacaoTotal = 0;
+        let versiculoCerto = "";
+        let cronometro;
+        let tempoRestante = 60;
+
+        const instrucaoEl = document.getElementById('instrucao');
+        const enderecoEl = document.getElementById('endereco');
+        const timerEl = document.getElementById('timer');
+        const btnAcao = document.getElementById('btn-acao');
+        const transcricaoEl = document.getElementById('transcricao');
+
+        // Reconhecimento de Voz
+        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const rec = Recognition ? new Recognition() : null;
+        if(rec) {
+            rec.lang = 'pt-BR';
+            rec.continuous = true;
+            rec.interimResults = true;
+        }
+
+        async function iniciarRodada() {
+            btnAcao.classList.add('hidden');
+            instrucaoEl.innerText = "Desembainhar Espada!";
+            
+            // 1. Contagem 1, 2, 3
+            for(let i=1; i<=3; i++) {
+                await new Promise(r => setTimeout(r, 1000));
+                instrucaoEl.innerText = i;
+            }
+
+            // 2. Busca Versículo Aleatório na API
+            instrucaoEl.innerText = "Sorteando...";
+            const res = await fetch('https://www.abibliadigital.com.br/api/verses/nvi/random', {
+                headers: { 'Authorization': `Bearer ${BIBLIA_TOKEN}` }
+            });
+            const data = await res.json();
+            
+            versiculoCerto = data.text;
+            const enderecoString = `${data.book.name} ${data.chapter}:${data.number}`;
+
+            // 3. Mostra Endereço por 5 segundos
+            instrucaoEl.innerText = "O endereço é:";
+            enderecoEl.innerText = enderecoString;
+            enderecoEl.classList.remove('hidden');
+            
+            await new Promise(r => setTimeout(r, 5000));
+            
+            // 4. Inicia busca (60 seg)
+            instrucaoEl.innerText = "CARREGAR!";
+            enderecoEl.classList.add('hidden');
+            timerEl.classList.remove('hidden');
+            iniciarCronometro();
+            ativarEscuta("encontrei");
+        }
+
+        function iniciarCronometro() {
+            tempoRestante = 60;
+            timerEl.innerText = tempoRestante;
+            cronometro = setInterval(() => {
+                tempoRestante--;
+                timerEl.innerText = tempoRestante;
+                if(tempoRestante <= 0) encerrarRodada(0);
+            }, 1000);
+        }
+
+        function ativarEscuta(modo) {
+            if(!rec) return;
+            rec.start();
+            rec.onresult = (event) => {
+                const fala = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                transcricaoEl.innerText = "Ouvi: " + fala;
+
+                if(modo === "encontrei" && fala.includes("encontrei")) {
+                    clearInterval(cronometro);
+                    rec.stop();
+                    validarLeitura();
+                }
+            };
+        }
+
+        async function validarLeitura() {
+            instrucaoEl.innerText = "Leia o versículo...";
+            // Pequena pausa para o menino começar a ler
+            await new Promise(r => setTimeout(r, 1000));
+            
+            rec.start();
+            // Lógica de 5 segundos para começar a ler
+            let timeoutLeitura = setTimeout(() => {
+                encerrarRodada(0, "Demorou para ler!");
+            }, 6000);
+
+            rec.onresult = (event) => {
+                clearTimeout(timeoutLeitura);
+                const textoLido = event.results[event.results.length - 1][0].transcript;
+                
+                // Comparação Simples (Pode ser melhorada com Levenshtein depois)
+                if(compararTextos(textoLido, versiculoCerto)) {
+                    encerrarRodada(tempoRestante, "Correto!");
+                }
+            };
+        }
+
+        function compararTextos(t1, t2) {
+            // Limpa pontuação e converte para minusculo para facilitar
+            const limpar = (t) => t.toLowerCase().replace(/[^\w\s]/gi, '');
+            return limpar(t1).includes(limpar(t2).substring(0, 10)); // Validação simplificada
+        }
+
+        function encerrarRodada(pontos, msg) {
+            clearInterval(cronometro);
+            rec.stop();
+            pontuacaoTotal += pontos;
+            alert(msg + " Pontos nesta rodada: " + pontos);
+            
+            if(rodadaAtual < 10) {
+                rodadaAtual++;
+                document.getElementById('status-game').innerText = `Rodada ${rodadaAtual} / 10`;
+                btnAcao.classList.remove('hidden');
+                btnAcao.innerText = "PRÓXIMA RODADA";
+            } else {
+                finalizarJogo();
+            }
+        }
+
+        async function finalizarJogo() {
+            instrucaoEl.innerText = "Fim de Jogo!";
+            timerEl.innerText = pontuacaoTotal;
+            // Aqui enviamos para o Supabase (Necessário login do usuário)
+            console.log("Pontuação Final para o Supabase:", pontuacaoTotal);
+        }
+    </script>
+</body>
+</html>
