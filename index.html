@@ -6,17 +6,40 @@
     <title>Desembainhar Espada - Início</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+    body {
+        /* Define a imagem de fundo */
+        background-image: url('imagens/fundo_entrada.png');
+        
+        /* Impede que a imagem se repita caso a tela seja maior que a imagem */
+        background-repeat: no-repeat;
+        
+        /* Centraliza a imagem tanto na horizontal quanto na vertical */
+        background-position: center center;
+        
+        /* O segredo: 'cover' faz a imagem cobrir toda a área disponível, 
+           redimensionando-a sem perder a proporção */
+        background-size: cover;
+        
+        /* Fixa o fundo para que ele não role junto com o conteúdo */
+        background-attachment: fixed;
+        
+        /* Garante que o corpo ocupe toda a altura da tela */
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Ajuste para telas muito pequenas (Celulares) */
+    @media (max-width: 640px) {
         body {
-            /* Use o recorte da parte esquerda da imagem watermarked_img_9125867646210610038.png */
-            background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
-            background-size: cover;
+            /* Em telas de celular, centralizamos no topo para garantir 
+               que os logos e o título fiquem visíveis */
+            background-position: top center;
         }
-        .glass-panel {
-            background: rgba(0, 31, 63, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-        }
-    </style>
+    }
+</style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
