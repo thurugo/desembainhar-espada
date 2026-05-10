@@ -59,9 +59,12 @@ const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
 const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
 document.getElementById('registro-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
+    // CRÍTICO: Impede o recarregamento automático da página
+    e.preventDefault(); 
+    
     const btn = e.target.querySelector('button');
-    btn.innerText = "Processando...";
+    const originalBtnText = btn.innerText;
+    btn.innerText = "PROCESSANDO...";
     btn.disabled = true;
 
     const email = document.getElementById('reg-email').value;
@@ -71,13 +74,22 @@ document.getElementById('registro-form').addEventListener('submit', async (e) =>
     const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
 
     try {
-        // 1. Criar usuário na autenticação
-        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+        // 1. Criar usuário no Supabase Auth
+        const { data, error } = await supabaseClient.auth.signUp({ 
+            email, 
+            password,
+            options: {
+                data: { // Salva metadados básicos no auth
+                    full_name: nome,
+                    org: organizacao
+                }
+            }
+        });
 
         if (error) throw error;
 
         if (data.user) {
-            // 2. Salvar no perfil (Tabela 'perfis')
+            // 2. Salvar dados na tabela 'perfis'
             const { error: profileError } = await supabaseClient
                 .from('perfis')
                 .insert([{ 
@@ -90,13 +102,19 @@ document.getElementById('registro-form').addEventListener('submit', async (e) =>
 
             if (profileError) throw profileError;
 
-            alert("Cadastro realizado com sucesso!");
-            // Redireciona para a arena após o cadastro
-            window.location.href = 'arena.html';
+            // 3. Feedback de Sucesso (Não limpa apenas os campos, avisa o usuário)
+            document.getElementById('registro-form').innerHTML = `
+                <div class="text-center p-6 bg-green-100 rounded-xl border border-green-200">
+                    <h3 class="text-green-800 font-bold text-xl mb-2">CADASTRO REALIZADO!</h3>
+                    <p class="text-green-700 mb-4">Enviamos um e-mail de confirmação para <strong>${email}</strong>.</p>
+                    <p class="text-sm text-green-600 mb-6">Por favor, clique no link enviado para ativar sua conta antes de fazer login.</p>
+                    <a href="login.html" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg font-bold">IR PARA LOGIN</a>
+                </div>
+            `;
         }
     } catch (err) {
-        alert("Erro: " + err.message);
-        btn.innerText = "CRIAR CONTA E JOGAR";
+        alert("Erro no cadastro: " + err.message);
+        btn.innerText = originalBtnText;
         btn.disabled = false;
     }
 });
