@@ -7,20 +7,41 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body {
-            background: url('imagens/fundo_ranking.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #001f3f;
-        }
-        .ranking-table {
-            background: rgba(255, 255, 255, 0.9);
-            border-collapse: separate;
-            border-spacing: 0 8px;
-        }
-        .pos-1 { background: #FFD700; font-weight: bold; } /* Ouro */
-        .pos-2 { background: #C0C0C0; } /* Prata */
-        .pos-3 { background: #CD7F32; } /* Bronze */
-    </style>
+    body {
+        background: url('imagens/fundo_ranking.png') no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        margin: 0;
+        padding: 1rem;
+    }
+
+    /* Ajuste dos Filtros para ficarem em coluna no celular */
+    .filter-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Torna a tabela rolável lateralmente em telas pequenas */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+    }
+
+    table {
+        min-width: 400px; /* Garante que os dados não fiquem esmagados */
+    }
+
+    /* Melhoria no toque para botões e seletores */
+    select, button {
+        height: 48px; /* Altura ideal para toque com o dedo */
+        font-size: 16px;
+    }
+</style>
 </head>
 <body class="min-h-screen p-4 md:p-8">
 
