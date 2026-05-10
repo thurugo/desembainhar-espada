@@ -24,10 +24,19 @@
 
         <input type="text" id="reg-nome" placeholder="Nome Completo" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
         
-        <div class="grid grid-cols-2 gap-4">
-            <input type="date" id="reg-nascimento" class="p-3 border rounded-lg text-sm" title="Data de Nascimento" required>
-            <input type="text" id="reg-igreja" placeholder="Nome da Igreja" class="p-3 border rounded-lg text-sm" required>
-        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Campo Nome da Igreja -->
+    <div class="flex flex-col">
+        <label for="reg-igreja" class="text-xs font-bold text-blue-900 mb-1 ml-1 uppercase">Igreja / Grupo</label>
+        <input type="text" id="reg-igreja" placeholder="Nome da Igreja" class="p-3 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+
+    <!-- Campo Data de Nascimento com Título Visível -->
+    <div class="flex flex-col">
+        <label for="reg-nascimento" class="text-xs font-bold text-blue-900 mb-1 ml-1 uppercase">Data de Nascimento</label>
+        <input type="date" id="reg-nascimento" class="p-3 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+</div>
 
         <input type="email" id="reg-email" placeholder="E-mail" class="w-full p-3 border rounded-lg outline-none" required>
         <input type="password" id="reg-senha" placeholder="Crie uma Senha" class="w-full p-3 border rounded-lg outline-none" required>
@@ -44,44 +53,51 @@
 
 <script>
     // Lógica de Registro no Supabase
-    document.getElementById('registro-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const email = document.getElementById('reg-email').value;
-        const password = document.getElementById('reg-senha').value;
-        const nome = document.getElementById('reg-nome').value;
-        const nascimento = document.getElementById('reg-nascimento').value;
-        const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
-        const igreja = document.getElementById('reg-igreja').value;
+    // Certifique-se de que o Supabase está inicializado com suas chaves
+const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        // 1. Criar usuário na Auth do Supabase
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-        });
+document.getElementById('registro-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.innerText = "Processando...";
+    btn.disabled = true;
 
-        if (error) {
-            alert("Erro no cadastro: " + error.message);
-        } else {
-            // 2. Salvar dados extras na nossa tabela 'perfis'
-            const { error: profileError } = await supabase
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-senha').value;
+    const nome = document.getElementById('reg-nome').value;
+    const nascimento = document.getElementById('reg-nascimento').value;
+    const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
+
+    try {
+        // 1. Criar usuário na autenticação
+        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+
+        if (error) throw error;
+
+        if (data.user) {
+            // 2. Salvar no perfil (Tabela 'perfis')
+            const { error: profileError } = await supabaseClient
                 .from('perfis')
-                .insert([
-                    { 
-                        id: data.user.id, 
-                        nome, 
-                        data_nascimento: nascimento, 
-                        organizacao, 
-                        email 
-                    }
-                ]);
+                .insert([{ 
+                    id: data.user.id, 
+                    nome: nome, 
+                    data_nascimento: nascimento, 
+                    organizacao: organizacao, 
+                    email: email 
+                }]);
 
-            if (profileError) {
-                alert("Erro ao salvar perfil: " + profileError.message);
-            } else {
-                alert("Cadastro realizado com sucesso! Bem-vindo(a)!");
-                iniciarAmbienteJogo(data.user); // Função que leva para a Arena
-            }
+            if (profileError) throw profileError;
+
+            alert("Cadastro realizado com sucesso!");
+            // Redireciona para a arena após o cadastro
+            window.location.href = 'arena.html';
         }
-    });
+    } catch (err) {
+        alert("Erro: " + err.message);
+        btn.innerText = "CRIAR CONTA E JOGAR";
+        btn.disabled = false;
+    }
+});
 </script>
