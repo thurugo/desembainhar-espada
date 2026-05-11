@@ -2,14 +2,12 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <!-- Meta tag vital para que o celular não diminua o layout -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cadastro - Desembainhar Espada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            /* Fundo unificado ER e MR */
             background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
@@ -18,77 +16,75 @@
             align-items: center;
             justify-content: center;
         }
+        /* Ajuste de opacidade para contraste máximo com textos amarelos */
         .glass-panel {
-            background: rgba(0, 31, 63, 0.85);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 215, 0, 0.4);
+            background: rgba(0, 20, 40, 0.96); /* Azul profundo quase sólido */
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
         }
-        /* Impede zoom automático em campos de input no iPhone */
         input { font-size: 16px !important; }
     </style>
 </head>
 <body class="p-2 md:p-6">
 
-    <div id="cadastro-container" class="glass-panel w-full max-w-xl p-5 md:p-8 rounded-3xl shadow-2xl text-white">
+    <div id="cadastro-container" class="glass-panel w-full max-w-xl p-6 md:p-10 rounded-3xl shadow-2xl text-white my-4">
         
-        <div class="text-center mb-6">
-            <h2 class="text-2xl md:text-3xl font-black text-yellow-400 uppercase tracking-tight">Criar Conta</h2>
+        <div class="text-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-black text-yellow-400 uppercase tracking-tight shadow-sm">Criar Conta</h2>
             <p class="text-blue-200 text-xs mt-1 italic">"Eis-me Aqui"</p>
         </div>
 
-        <form id="registro-form" class="space-y-4">
-            <!-- Nome Completo -->
+        <form id="registro-form" class="space-y-5">
+            <!-- Os campos permanecem os mesmos, mas agora sob um fundo muito mais legível -->
             <div class="flex flex-col">
-                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Nome Completo</label>
+                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Nome Completo</label>
                 <input type="text" id="reg-nome" placeholder="Seu nome completo" 
-                    class="w-full p-4 rounded-xl bg-white text-blue-900 font-medium outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    class="w-full p-4 rounded-xl bg-white/10 border border-white/20 text-white font-medium outline-none focus:border-yellow-400 transition-all" required>
             </div>
 
-            <!-- E-mail e Senha -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex flex-col">
-                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">E-mail</label>
+                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">E-mail</label>
                     <input type="email" id="reg-email" placeholder="seu@email.com" 
-                        class="p-4 rounded-xl bg-white text-blue-900 outline-none" required>
+                        class="p-4 rounded-xl bg-white/10 border border-white/20 text-white outline-none focus:border-yellow-400" required>
                 </div>
                 <div class="flex flex-col">
-                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Senha</label>
+                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Senha</label>
                     <input type="password" id="reg-senha" placeholder="Mínimo 6 dígitos" 
-                        class="p-4 rounded-xl bg-white text-blue-900 outline-none" required>
+                        class="p-4 rounded-xl bg-white/10 border border-white/20 text-white outline-none focus:border-yellow-400" required>
                 </div>
             </div>
 
-            <!-- Data de Nascimento (com título visível para celular) e Organização -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex flex-col">
-                    <label for="reg-nascimento" class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Data de Nascimento</label>
+                    <label for="reg-nascimento" class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Data de Nascimento</label>
                     <input type="date" id="reg-nascimento" 
-                        class="p-4 rounded-xl bg-white text-blue-900 outline-none" required>
+                        class="p-4 rounded-xl bg-white/10 border border-white/20 text-white outline-none focus:border-yellow-400" required>
                 </div>
                 <div class="flex flex-col">
-                    <label class="text-[10px] font-bold uppercase mb-2 ml-1 text-blue-200 text-center">Organização</label>
-                    <div class="flex justify-around bg-blue-900/50 p-3 rounded-xl border border-white/20">
+                    <label class="text-[10px] font-bold uppercase mb-2 ml-1 text-blue-200 text-center tracking-widest">Organização</label>
+                    <div class="flex justify-around bg-blue-900/40 p-3 rounded-xl border border-white/10">
                         <label class="flex items-center space-x-2 cursor-pointer">
                             <input type="radio" name="organizacao" value="ER" class="accent-yellow-400" checked>
-                            <span class="text-sm font-bold">ER</span>
+                            <span class="text-sm font-bold text-white">ER</span>
                         </label>
                         <label class="flex items-center space-x-2 cursor-pointer">
                             <input type="radio" name="organizacao" value="MR" class="accent-yellow-400">
-                            <span class="text-sm font-bold">MR</span>
+                            <span class="text-sm font-bold text-white">MR</span>
                         </label>
                     </div>
                 </div>
             </div>
 
-            <!-- Botão de Ação -->
             <button type="submit" id="btn-registrar" 
-                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl transition-all active:scale-95 shadow-lg uppercase mt-4">
+                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-xl transition-all active:scale-95 shadow-lg uppercase mt-4 text-lg">
                 Finalizar Cadastro
             </button>
         </form>
 
-        <div class="mt-6 text-center">
-            <a href="login.html" class="text-xs text-blue-200 hover:text-yellow-400 underline">Já tenho conta? Entrar agora</a>
+        <div class="mt-8 pt-6 border-t border-white/10 text-center">
+            <a href="login.html" class="text-xs text-blue-200 hover:text-yellow-400 underline">Já tem conta? Entrar agora</a>
         </div>
     </div>
 
