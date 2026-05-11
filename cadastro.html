@@ -114,47 +114,53 @@
             btn.innerText = "PROCESSANDO...";
 
             try {
-                // 1. Criar Usuário
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { full_name: nome, org: organizacao } }
-                });
+    // 1. Criar Usuário no Auth
+    const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: nome, org: organizacao } }
+    });
 
-                if (error) throw error;
+    if (error) throw error;
 
-                if (data.user) {
-                    // 2. Aguardar sincronização do banco
-                    await new Promise(resolve => setTimeout(resolve, 1500));
+    // 2. Verificação de segurança: Só prossegue se o data.user realmente existir
+    if (data?.user?.id) {
+        // Aguardamos 2 segundos para o Supabase sincronizar globalmente
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
-                    // 3. Salvar Perfil
-                    const { error: pError } = await supabaseClient
-                        .from('perfis')
-                        .insert([{ 
-                            id: data.user.id, 
-                            nome, 
-                            data_nascimento: nascimento, 
-                            organizacao, 
-                            email 
-                        }]);
+        const { error: pError } = await supabaseClient
+            .from('perfis')
+            .upsert({ // 'upsert' é mais seguro que 'insert' para evitar duplicatas
+                id: data.user.id, 
+                nome, 
+                data_nascimento: nascimento, 
+                organizacao, 
+                email 
+            }, { onConflict: 'id' });
 
-                    if (pError) throw pError;
+        if (pError) throw pError;
 
-                    // Sucesso Final
-                    document.getElementById('cadastro-container').innerHTML = `
-                        <div class="text-center p-6 border border-yellow-400 rounded-2xl">
-                            <h3 class="text-yellow-400 font-black text-2xl mb-4">CONTA CRIADA!</h3>
-                            <p class="mb-6">Verifique seu e-mail para ativar o acesso à Arena.</p>
-                            <a href="login.html" class="bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Ir para Login</a>
-                        </div>
-                    `;
-                }
-            } catch (err) {
-                alert("Erro: " + err.message);
-                btn.disabled = false;
-                btn.innerText = "FINALIZAR CADASTRO";
-            }
-        }
+        // Sucesso
+        document.getElementById('cadastro-container').innerHTML = `
+            <div class="text-center p-6 border border-yellow-400 rounded-2xl">
+                <h3 class="text-yellow-400 font-black text-2xl mb-4">CONTA CRIADA!</h3>
+                <p class="mb-6">Verifique seu e-mail para ativar o acesso à Arena.</p>
+                <a href="login.html" class="bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Ir para Login</a>
+            </div>
+        `;
+    }
+} catch (err) {
+    // Se o erro de FK persistir, o usuário já foi criado no Auth, 
+    // então orientamos a tentar o login ou aguardar.
+    if (err.message.includes("foreign key")) {
+        alert("Sua conta foi criada! Aguarde 30 segundos e tente fazer o login diretamente.");
+        window.location.href = 'login.html';
+    } else {
+        alert("Erro: " + err.message);
+    }
+    btn.disabled = false;
+    btn.innerText = "FINALIZAR CADASTRO";
+}
     </script>
 </body>
 </html>
