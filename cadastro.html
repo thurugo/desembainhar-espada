@@ -89,63 +89,69 @@
     </div>
 
     <script>
-       form.addEventListener('submit', async (e) => {
-            e.preventDefault(); 
-            
-            const btn = document.getElementById('btn-registrar');
-            btn.disabled = true;
-            btn.innerText = "PROCESSANDO...";
+      async function executarCadastro() {
+    const btn = document.getElementById('btn-registrar');
+    
+    // Coleta dos dados manualmente para evitar erros de formulário
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-senha').value;
+    const nome = document.getElementById('reg-nome').value;
+    const nascimento = document.getElementById('reg-nascimento').value;
+    const elementoOrg = document.querySelector('input[name="organizacao"]:checked');
+    const organizacao = elementoOrg ? elementoOrg.value : 'ER';
 
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-senha').value;
-            const nome = document.getElementById('reg-nome').value;
-            const nascimento = document.getElementById('reg-nascimento').value;
-            const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
+    // Validação básica antes de tentar o Supabase
+    if (!email || !password || !nome || !nascimento) {
+        alert("Por favor, preencha todos os campos.");
+        return;
+    }
 
-            try {
-                // 1. Registro no Supabase Auth
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { full_name: nome, org: organizacao } }
-                });
+    btn.disabled = true;
+    btn.innerText = "PROCESSANDO...";
 
-                if (error) throw error;
-
-                // Se o usuário foi criado, esperamos 1 segundo para o DB processar a FK
-                if (data.user) {
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-
-                    // 2. Salvar na tabela de perfis
-                    const { error: pError } = await supabaseClient
-                        .from('perfis')
-                        .insert([{ 
-                            id: data.user.id, // O ID que veio do Auth
-                            nome, 
-                            data_nascimento: nascimento, 
-                            organizacao, 
-                            email 
-                        }]);
-
-                    if (pError) throw pError;
-
-                    // 3. Sucesso: Mensagem clara
-                    document.getElementById('cadastro-container').innerHTML = `
-                        <div class="text-center p-6 bg-white/10 rounded-2xl border border-yellow-400/50">
-                            <h3 class="text-yellow-400 font-black text-2xl mb-4">CADASTRO OK!</h3>
-                            <p class="text-white mb-6">Enviamos um e-mail para <strong>${email}</strong>. Confirme-o antes de entrar.</p>
-                            <a href="login.html" class="inline-block bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Ir para Login</a>
-                        </div>
-                    `;
-                }
-            } catch (err) {
-                // Se der erro de FK, avisamos de forma amigável
-                console.error(err);
-                alert("Erro ao sincronizar perfil. Tente clicar novamente em instantes ou verifique se o e-mail já existe.");
-                btn.disabled = false;
-                btn.innerText = "TENTAR NOVAMENTE";
-            }
+    try {
+        // 1. Registro no Supabase Auth
+        const { data, error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: { data: { full_name: nome, org: organizacao } }
         });
+
+        if (error) throw error;
+
+        if (data.user) {
+            // Delay de 1.5 segundos para garantir que o Auth criou o ID antes do Perfil (evita erro de FK)
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // 2. Salvar na tabela de perfis
+            const { error: pError } = await supabaseClient
+                .from('perfis')
+                .insert([{ 
+                    id: data.user.id, 
+                    nome, 
+                    data_nascimento: nascimento, 
+                    organizacao, 
+                    email 
+                }]);
+
+            if (pError) throw pError;
+
+            // 3. Sucesso: Feedback visual no painel escuro que criamos
+            document.getElementById('cadastro-container').innerHTML = `
+                <div class="text-center p-6 bg-white/5 rounded-2xl border border-yellow-400">
+                    <h3 class="text-yellow-400 font-black text-2xl mb-4">SUCESSO!</h3>
+                    <p class="text-white mb-6">Enviamos um link para <strong>${email}</strong>. <br>Confirme-o para ativar sua conta.</p>
+                    <a href="login.html" class="inline-block bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Fazer Login</a>
+                </div>
+            `;
+        }
+    } catch (err) {
+        console.error("Erro detalhado:", err);
+        alert("Erro no cadastro: " + err.message);
+        btn.disabled = false;
+        btn.innerText = "FINALIZAR CADASTRO";
+    }
+}
     </script>
 </body>
 </html>
