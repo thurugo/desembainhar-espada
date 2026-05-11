@@ -7,23 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
     body {
-        /* Define a imagem de fundo */
-        background-image: url('imagens/fundo_entrada.png');
-        
-        /* Impede que a imagem se repita caso a tela seja maior que a imagem */
-        background-repeat: no-repeat;
-        
-        /* Centraliza a imagem tanto na horizontal quanto na vertical */
-        background-position: center center;
-        
-        /* O segredo: 'cover' faz a imagem cobrir toda a área disponível, 
-           redimensionando-a sem perder a proporção */
+        background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
         background-size: cover;
-        
-        /* Fixa o fundo para que ele não role junto com o conteúdo */
-        background-attachment: fixed;
-        
-        /* Garante que o corpo ocupe toda a altura da tela */
         min-height: 100vh;
         margin: 0;
         display: flex;
@@ -31,48 +16,39 @@
         justify-content: center;
     }
 
-    /* Ajuste para telas muito pequenas (Celulares) */
-    @media (max-width: 640px) {
-        body {
-            /* Em telas de celular, centralizamos no topo para garantir 
-               que os logos e o título fiquem visíveis */
-            background-position: top center;
-        }
+    /* Painel com menos transparência para destacar o texto amarelo */
+    .glass-panel {
+        background: rgba(0, 20, 40, 0.95); /* Azul marinho profundo quase sólido */
+        backdrop-filter: blur(15px);
+        border: 2px solid rgba(255, 215, 0, 0.5); /* Borda dourada mais visível */
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     }
 </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="p-4">
+    <div class="glass-panel max-w-md w-full p-8 md:p-12 rounded-3xl text-center text-white">
+        <!-- Título em Amarelo para contraste máximo sobre o fundo azul sólido -->
+        <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter mb-4 shadow-sm">
+            Desembainhar Espada
+        </h1>
+        
+        <p class="text-blue-100 mb-10 italic text-sm leading-relaxed">
+            "Lâmpada para os meus pés é tua palavra e luz, para o meu caminho."
+        </p>
 
-    <div class="glass-panel max-w-lg w-full p-8 rounded-3xl shadow-2xl text-center text-white">
-        <!-- Título e Boas-vindas -->
-        <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter mb-2">Desembainhar Espada</h1>
-        <p class="text-blue-200 mb-8 italic">"Lâmpada para os meus pés é tua palavra e luz, para o meu caminho."</p>
-
-        <div class="space-y-4">
-            <!-- Botão Iniciar (Leva para Login/Arena) -->
-            <a href="login.html" class="block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-extrabold py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg">
-                JOGAR AGORA
+        <div class="space-y-5">
+            <a href="login.html" class="block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg uppercase">
+                Entrar na Arena
             </a>
 
-            <!-- Botão Cadastro -->
-            <a href="cadastro.html" class="block w-full border-2 border-white/50 hover:border-yellow-400 hover:text-yellow-400 text-white font-bold py-4 rounded-xl transition-all">
-                CRIAR MINHA CONTA
+            <a href="cadastro.html" class="block w-full border-2 border-white/30 hover:border-yellow-400 hover:text-yellow-400 text-white font-bold py-4 rounded-xl transition-all uppercase text-sm">
+                Criar Minha Conta
             </a>
-        </div>
-
-        <div class="mt-12 flex justify-center gap-8 opacity-80">
-            <div class="text-xs">
-                <img src="imagens/logo-er.png" class="h-10 mx-auto mb-1" alt="Embaixadores">
-                ER
-            </div>
-            <div class="text-xs">
-                <img src="imagens/logo-mr.png" class="h-10 mx-auto mb-1" alt="Mensageiras">
-                MR
-            </div>
         </div>
         
-        <p class="mt-6 text-[10px] text-gray-400 uppercase tracking-widest">Eis-me Aqui</p>
+        <div class="mt-12 pt-6 border-t border-white/10 opacity-60">
+            <p class="text-[10px] text-gray-300 uppercase tracking-[0.3em]">Eis-me Aqui</p>
+        </div>
     </div>
-
 </body>
 </html>
