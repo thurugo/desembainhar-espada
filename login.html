@@ -88,10 +88,15 @@
                     window.location.href = 'arena.html';
                 }
             } catch (err) {
-                alert("Erro ao entrar: " + err.message + "\n\nCertifique-se de que confirmou seu e-mail no link enviado.");
-                btn.innerText = "ACESSAR JOGO";
-                btn.disabled = false;
-            }
+    console.error(err); // Isso ajuda a ver o erro técnico no F12
+    if (err.message === "Email not confirmed") {
+        alert("O e-mail ainda não foi confirmado. Verifique sua caixa de entrada.");
+    } else {
+        alert("Erro ao entrar: Usuário ou senha incorretos.");
+    }
+    btn.innerText = "ACESSAR JOGO";
+    btn.disabled = false;
+}
         });
     </script>
 </body>
