@@ -120,94 +120,95 @@
     </div>
 
     <script>
-        // 1. Configuração Global do Supabase
-        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+        // 1. Configuração Global
+const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        // 2. Função Principal de Cadastro
-        async function executarCadastro() {
-            const btn = document.getElementById('btn-registrar');
-            
-            // Coleta de dados
-            const nome = document.getElementById('reg-nome').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-senha').value;
-            const nascimento = document.getElementById('reg-nascimento').value;
-            const orgEl = document.querySelector('input[name="organizacao"]:checked');
-            const organizacao = orgEl ? orgEl.value : 'ER';
+// 2. Função Principal com o Plano B (Re-tentativa)
+async function executarCadastro() {
+    const btn = document.getElementById('btn-registrar');
+    
+    // Coleta de dados
+    const nome = document.getElementById('reg-nome').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-senha').value;
+    const nascimento = document.getElementById('reg-nascimento').value;
+    const orgEl = document.querySelector('input[name="organizacao"]:checked');
+    const organizacao = orgEl ? orgEl.value : 'ER';
 
-            // Validação Básica
-            if (!nome || !email || !password || !nascimento) {
-                alert("Por favor, preencha todos os campos corretamente.");
-                return;
-            }
-
-            if (password.length < 6) {
-                alert("A senha precisa ter pelo menos 6 caracteres.");
-                return;
-            }
-
-            // Estado de Processamento
-            btn.disabled = true;
-            btn.innerText = "Sincronizando Dados...";
-
-            try {
-    const { data, error } = await supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-        options: { data: { full_name: nome, org: organizacao } }
-    });
-
-    if (error) throw error;
-
-    if (data.user) {
-        // Tentativa de salvar o perfil
-        const salvarPerfil = async (tentativa = 1) => {
-            const { error: pError } = await supabaseClient
-                .from('perfis')
-                .upsert({ 
-                    id: data.user.id, 
-                    nome, 
-                    data_nascimento: nascimento, 
-                    organizacao, 
-                    email 
-                });
-
-            if (pError) {
-                // Se der erro de FK, tenta de novo em 2 segundos (máximo 3 tentativas)
-                if (tentativa < 3) {
-                    console.log("Aguardando sincronização...");
-                    await new Promise(r => setTimeout(r, 2000));
-                    return salvarPerfil(tentativa + 1);
-                }
-                throw pError;
-            }
-            return true;
-        };
-
-        await salvarPerfil();
-
-        // Feedback de Sucesso (mantendo seu layout bonito)
-        document.getElementById('cadastro-container').innerHTML = `
-            <div class="text-center p-8 border-2 border-yellow-400 rounded-3xl bg-blue-900/30">
-                <h2 class="text-yellow-400 font-black text-3xl mb-4">CONTA PRONTA!</h2>
-                <p class="text-white mb-6 font-bold">Verifique o link enviado para:<br>${email}</p>
-                <a href="login.html" class="inline-block w-full bg-yellow-500 text-blue-900 py-4 rounded-xl font-black uppercase shadow-xl">Ir para Login</a>
-            </div>
-        `;
+    // Validação Básica
+    if (!nome || !email || !password || !nascimento) {
+        alert("Por favor, preencha todos os campos.");
+        return;
     }
-} catch (err) {
-    // Se o usuário já foi criado mas o perfil falhou, redirecionamos para o login
-    if (err.message.includes("violates foreign key")) {
-        alert("Sua conta foi criada com sucesso! Você já pode confirmar o e-mail e fazer o login.");
-        window.location.href = 'login.html';
-    } else {
-        alert("Erro: " + err.message);
+
+    btn.disabled = true;
+    btn.innerText = "Sincronizando...";
+
+    try {
+        // PASSO 1: Registrar no Auth
+        const { data, error } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { full_name: nome, org: organizacao } }
+        });
+
+        if (error) throw error;
+
+        if (data.user) {
+            // PASSO 2: Função interna de re-tentativa (Plano B)
+            const salvarPerfilComSeguranca = async (tentativa = 1) => {
+                const { error: pError } = await supabaseClient
+                    .from('perfis')
+                    .upsert({ 
+                        id: data.user.id, 
+                        nome: nome, 
+                        data_nascimento: nascimento, 
+                        organizacao: organizacao, 
+                        email: email 
+                    }, { onConflict: 'id' });
+
+                if (pError) {
+                    // Se o erro for de Foreign Key, tenta novamente até 3 vezes
+                    if (pError.message.includes("foreign key") && tentativa < 3) {
+                        console.log(`Tentativa ${tentativa} falhou. Sincronizando...`);
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        return salvarPerfilComSeguranca(tentativa + 1);
+                    }
+                    throw pError;
+                }
+                return true;
+            };
+
+            // Executa a gravação do perfil
+            await salvarPerfilComSeguranca();
+
+            // PASSO 3: Sucesso Total
+            document.getElementById('cadastro-container').innerHTML = `
+                <div class="text-center p-8 border-2 border-yellow-400 rounded-3xl bg-blue-900/40">
+                    <h2 class="text-yellow-400 font-black text-2xl mb-4">CONTA CRIADA!</h2>
+                    <p class="text-white mb-6 leading-relaxed">
+                        Enviamos um link de ativação para:<br>
+                        <strong class="text-yellow-200">${email}</strong>
+                    </p>
+                    <a href="login.html" class="inline-block w-full bg-yellow-500 text-blue-900 py-4 rounded-xl font-black uppercase shadow-lg">Ir para Login</a>
+                </div>
+            `;
+        }
+    } catch (err) {
+        console.error("Erro técnico:", err);
+        // Se o erro de FK persistir após as tentativas, o usuário já existe no Auth
+        if (err.message.includes("foreign key")) {
+            alert("Sua conta foi criada no sistema! Por favor, confirme o e-mail e tente fazer o login.");
+            window.location.href = 'login.html';
+        } else {
+            alert("Erro no cadastro: " + err.message);
+        }
         btn.disabled = false;
         btn.innerText = "FINALIZAR CADASTRO";
     }
-}
+}   
     </script>
 </body>
 </html>
