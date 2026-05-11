@@ -89,14 +89,7 @@
     </div>
 
     <script>
-        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
-
-        const form = document.getElementById('registro-form');
-        
-        form.addEventListener('submit', async (e) => {
-            // ESSENCIAL: Impede o recarregamento que limpava os campos
+       form.addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
             const btn = document.getElementById('btn-registrar');
@@ -119,12 +112,15 @@
 
                 if (error) throw error;
 
+                // Se o usuário foi criado, esperamos 1 segundo para o DB processar a FK
                 if (data.user) {
-                    // 2. Salvar na tabela de perfis (incluindo sua idade, Vitor)
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // 2. Salvar na tabela de perfis
                     const { error: pError } = await supabaseClient
                         .from('perfis')
                         .insert([{ 
-                            id: data.user.id, 
+                            id: data.user.id, // O ID que veio do Auth
                             nome, 
                             data_nascimento: nascimento, 
                             organizacao, 
@@ -133,19 +129,21 @@
 
                     if (pError) throw pError;
 
-                    // 3. Sucesso: Mensagem clara de confirmação
+                    // 3. Sucesso: Mensagem clara
                     document.getElementById('cadastro-container').innerHTML = `
                         <div class="text-center p-6 bg-white/10 rounded-2xl border border-yellow-400/50">
                             <h3 class="text-yellow-400 font-black text-2xl mb-4">CADASTRO OK!</h3>
-                            <p class="text-white mb-6">Verifique seu e-mail para confirmar a conta antes de entrar na arena.</p>
-                            <a href="login.html" class="inline-block bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Fazer Login</a>
+                            <p class="text-white mb-6">Enviamos um e-mail para <strong>${email}</strong>. Confirme-o antes de entrar.</p>
+                            <a href="login.html" class="inline-block bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Ir para Login</a>
                         </div>
                     `;
                 }
             } catch (err) {
-                alert("Erro: " + err.message);
+                // Se der erro de FK, avisamos de forma amigável
+                console.error(err);
+                alert("Erro ao sincronizar perfil. Tente clicar novamente em instantes ou verifique se o e-mail já existe.");
                 btn.disabled = false;
-                btn.innerText = "FINALIZAR CADASTRO";
+                btn.innerText = "TENTAR NOVAMENTE";
             }
         });
     </script>
