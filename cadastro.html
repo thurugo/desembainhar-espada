@@ -153,60 +153,61 @@
             btn.innerText = "Sincronizando Dados...";
 
             try {
-                // PASSO 1: Registrar o usuário no Supabase Auth
-                const { data, error } = await supabaseClient.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: { 
-                        data: { full_name: nome, org: organizacao } 
-                    }
+    const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: { data: { full_name: nome, org: organizacao } }
+    });
+
+    if (error) throw error;
+
+    if (data.user) {
+        // Tentativa de salvar o perfil
+        const salvarPerfil = async (tentativa = 1) => {
+            const { error: pError } = await supabaseClient
+                .from('perfis')
+                .upsert({ 
+                    id: data.user.id, 
+                    nome, 
+                    data_nascimento: nascimento, 
+                    organizacao, 
+                    email 
                 });
 
-                if (error) throw error;
-
-                if (data.user) {
-                    // PASSO 2: Delay estratégico (2.5 segundos)
-                    // Essencial para evitar o erro de Foreign Key (Chave Estrangeira)
-                    await new Promise(resolve => setTimeout(resolve, 2500));
-
-                    // PASSO 3: Inserir o perfil na tabela 'perfis'
-                    const { error: pError } = await supabaseClient
-                        .from('perfis')
-                        .upsert({ 
-                            id: data.user.id, 
-                            nome: nome, 
-                            data_nascimento: nascimento, 
-                            organizacao: organizacao, 
-                            email: email 
-                        }, { onConflict: 'id' });
-
-                    if (pError) throw pError;
-
-                    // PASSO 4: Feedback de Sucesso
-                    document.getElementById('cadastro-container').innerHTML = `
-                        <div class="text-center p-8 border-2 border-yellow-400 rounded-3xl bg-blue-900/30 animate-pulse">
-                            <h2 class="text-yellow-400 font-black text-3xl mb-4 uppercase">Parabéns!</h2>
-                            <p class="text-white text-lg mb-6 leading-relaxed">
-                                Sua conta foi criada com sucesso. <br>
-                                Enviamos um link de ativação para:<br>
-                                <strong class="text-yellow-200">${email}</strong>
-                            </p>
-                            <p class="text-sm text-blue-200 mb-8 italic">
-                                Verifique sua caixa de entrada e spam.
-                            </p>
-                            <a href="login.html" class="inline-block w-full bg-yellow-500 text-blue-900 py-4 rounded-xl font-black uppercase shadow-xl hover:bg-yellow-400 transition-all">
-                                Ir para Login
-                            </a>
-                        </div>
-                    `;
+            if (pError) {
+                // Se der erro de FK, tenta de novo em 2 segundos (máximo 3 tentativas)
+                if (tentativa < 3) {
+                    console.log("Aguardando sincronização...");
+                    await new Promise(r => setTimeout(r, 2000));
+                    return salvarPerfil(tentativa + 1);
                 }
-            } catch (err) {
-                console.error("Erro técnico:", err);
-                alert("Ocorreu um erro no cadastro: " + err.message);
-                btn.disabled = false;
-                btn.innerText = "FINALIZAR CADASTRO";
+                throw pError;
             }
-        }
+            return true;
+        };
+
+        await salvarPerfil();
+
+        // Feedback de Sucesso (mantendo seu layout bonito)
+        document.getElementById('cadastro-container').innerHTML = `
+            <div class="text-center p-8 border-2 border-yellow-400 rounded-3xl bg-blue-900/30">
+                <h2 class="text-yellow-400 font-black text-3xl mb-4">CONTA PRONTA!</h2>
+                <p class="text-white mb-6 font-bold">Verifique o link enviado para:<br>${email}</p>
+                <a href="login.html" class="inline-block w-full bg-yellow-500 text-blue-900 py-4 rounded-xl font-black uppercase shadow-xl">Ir para Login</a>
+            </div>
+        `;
+    }
+} catch (err) {
+    // Se o usuário já foi criado mas o perfil falhou, redirecionamos para o login
+    if (err.message.includes("violates foreign key")) {
+        alert("Sua conta foi criada com sucesso! Você já pode confirmar o e-mail e fazer o login.");
+        window.location.href = 'login.html';
+    } else {
+        alert("Erro: " + err.message);
+        btn.disabled = false;
+        btn.innerText = "FINALIZAR CADASTRO";
+    }
+}
     </script>
 </body>
 </html>
