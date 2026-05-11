@@ -1,121 +1,157 @@
-<!-- Tela de Cadastro Unificada -->
-<div id="auth-container" class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl text-gray-800">
-    <div class="text-center mb-8">
-        <h2 class="text-2xl font-bold text-blue-900">Cadastre-se para Jogar</h2>
-        <p class="text-gray-500">Escolha sua organização e comece a gincana!</p>
-    </div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <!-- Meta tag vital para que o celular não diminua o layout -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cadastro - Desembainhar Espada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            /* Fundo unificado ER e MR */
+            background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .glass-panel {
+            background: rgba(0, 31, 63, 0.85);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+        }
+        /* Impede zoom automático em campos de input no iPhone */
+        input { font-size: 16px !important; }
+    </style>
+</head>
+<body class="p-2 md:p-6">
 
-    <form id="registro-form" class="space-y-4">
-        <!-- Seletor de Organização -->
-        <div class="flex gap-4 mb-6">
-            <label class="flex-1 cursor-pointer">
-                <input type="radio" name="organizacao" value="ER" class="peer hidden" checked>
-                <div class="peer-checked:bg-blue-900 peer-checked:text-white border-2 border-blue-900 p-2 text-center rounded-lg text-sm font-bold transition-all">
-                    Embaixadores
-                </div>
-            </label>
-            <label class="flex-1 cursor-pointer">
-                <input type="radio" name="organizacao" value="MR" class="peer hidden">
-                <div class="peer-checked:bg-pink-600 peer-checked:text-white border-2 border-pink-600 p-2 text-center rounded-lg text-sm font-bold transition-all text-pink-600">
-                    Mensageiras
-                </div>
-            </label>
+    <div id="cadastro-container" class="glass-panel w-full max-w-xl p-5 md:p-8 rounded-3xl shadow-2xl text-white">
+        
+        <div class="text-center mb-6">
+            <h2 class="text-2xl md:text-3xl font-black text-yellow-400 uppercase tracking-tight">Criar Conta</h2>
+            <p class="text-blue-200 text-xs mt-1 italic">"Eis-me Aqui"</p>
         </div>
 
-        <input type="text" id="reg-nome" placeholder="Nome Completo" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+        <form id="registro-form" class="space-y-4">
+            <!-- Nome Completo -->
+            <div class="flex flex-col">
+                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Nome Completo</label>
+                <input type="text" id="reg-nome" placeholder="Seu nome completo" 
+                    class="w-full p-4 rounded-xl bg-white text-blue-900 font-medium outline-none focus:ring-2 focus:ring-yellow-400" required>
+            </div>
+
+            <!-- E-mail e Senha -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">E-mail</label>
+                    <input type="email" id="reg-email" placeholder="seu@email.com" 
+                        class="p-4 rounded-xl bg-white text-blue-900 outline-none" required>
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Senha</label>
+                    <input type="password" id="reg-senha" placeholder="Mínimo 6 dígitos" 
+                        class="p-4 rounded-xl bg-white text-blue-900 outline-none" required>
+                </div>
+            </div>
+
+            <!-- Data de Nascimento (com título visível para celular) e Organização -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                    <label for="reg-nascimento" class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Data de Nascimento</label>
+                    <input type="date" id="reg-nascimento" 
+                        class="p-4 rounded-xl bg-white text-blue-900 outline-none" required>
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold uppercase mb-2 ml-1 text-blue-200 text-center">Organização</label>
+                    <div class="flex justify-around bg-blue-900/50 p-3 rounded-xl border border-white/20">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="organizacao" value="ER" class="accent-yellow-400" checked>
+                            <span class="text-sm font-bold">ER</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="radio" name="organizacao" value="MR" class="accent-yellow-400">
+                            <span class="text-sm font-bold">MR</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botão de Ação -->
+            <button type="submit" id="btn-registrar" 
+                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl transition-all active:scale-95 shadow-lg uppercase mt-4">
+                Finalizar Cadastro
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="login.html" class="text-xs text-blue-200 hover:text-yellow-400 underline">Já tenho conta? Entrar agora</a>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        const form = document.getElementById('registro-form');
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <!-- Campo Nome da Igreja -->
-    <div class="flex flex-col">
-        <label for="reg-igreja" class="text-xs font-bold text-blue-900 mb-1 ml-1 uppercase">Igreja / Grupo</label>
-        <input type="text" id="reg-igreja" placeholder="Nome da Igreja" class="p-3 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-    </div>
+        form.addEventListener('submit', async (e) => {
+            // ESSENCIAL: Impede o recarregamento que limpava os campos
+            e.preventDefault(); 
+            
+            const btn = document.getElementById('btn-registrar');
+            btn.disabled = true;
+            btn.innerText = "PROCESSANDO...";
 
-    <!-- Campo Data de Nascimento com Título Visível -->
-    <div class="flex flex-col">
-        <label for="reg-nascimento" class="text-xs font-bold text-blue-900 mb-1 ml-1 uppercase">Data de Nascimento</label>
-        <input type="date" id="reg-nascimento" class="p-3 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-    </div>
-</div>
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-senha').value;
+            const nome = document.getElementById('reg-nome').value;
+            const nascimento = document.getElementById('reg-nascimento').value;
+            const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
 
-        <input type="email" id="reg-email" placeholder="E-mail" class="w-full p-3 border rounded-lg outline-none" required>
-        <input type="password" id="reg-senha" placeholder="Crie uma Senha" class="w-full p-3 border rounded-lg outline-none" required>
+            try {
+                // 1. Registro no Supabase Auth
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { full_name: nome, org: organizacao } }
+                });
 
-        <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-bold hover:bg-blue-800 transition-colors">
-            CRIAR CONTA E JOGAR
-        </button>
-    </form>
-    
-    <p class="text-center mt-4 text-sm text-gray-600">
-        Já tem conta? <a href="index.html" onclick="mostrarLogin()" class="text-blue-700 font-bold">Entrar</a>
-    </p>
-</div>
+                if (error) throw error;
 
-<script>
-    // Lógica de Registro no Supabase
-    // Certifique-se de que o Supabase está inicializado com suas chaves
-const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+                if (data.user) {
+                    // 2. Salvar na tabela de perfis (incluindo sua idade, Vitor)
+                    const { error: pError } = await supabaseClient
+                        .from('perfis')
+                        .insert([{ 
+                            id: data.user.id, 
+                            nome, 
+                            data_nascimento: nascimento, 
+                            organizacao, 
+                            email 
+                        }]);
 
-document.getElementById('registro-form').addEventListener('submit', async (e) => {
-    // CRÍTICO: Impede o recarregamento automático da página
-    e.preventDefault(); 
-    
-    const btn = e.target.querySelector('button');
-    const originalBtnText = btn.innerText;
-    btn.innerText = "PROCESSANDO...";
-    btn.disabled = true;
+                    if (pError) throw pError;
 
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-senha').value;
-    const nome = document.getElementById('reg-nome').value;
-    const nascimento = document.getElementById('reg-nascimento').value;
-    const organizacao = document.querySelector('input[name="organizacao"]:checked').value;
-
-    try {
-        // 1. Criar usuário no Supabase Auth
-        const { data, error } = await supabaseClient.auth.signUp({ 
-            email, 
-            password,
-            options: {
-                data: { // Salva metadados básicos no auth
-                    full_name: nome,
-                    org: organizacao
+                    // 3. Sucesso: Mensagem clara de confirmação
+                    document.getElementById('cadastro-container').innerHTML = `
+                        <div class="text-center p-6 bg-white/10 rounded-2xl border border-yellow-400/50">
+                            <h3 class="text-yellow-400 font-black text-2xl mb-4">CADASTRO OK!</h3>
+                            <p class="text-white mb-6">Verifique seu e-mail para confirmar a conta antes de entrar na arena.</p>
+                            <a href="login.html" class="inline-block bg-yellow-500 text-blue-900 px-8 py-3 rounded-lg font-black uppercase">Fazer Login</a>
+                        </div>
+                    `;
                 }
+            } catch (err) {
+                alert("Erro: " + err.message);
+                btn.disabled = false;
+                btn.innerText = "FINALIZAR CADASTRO";
             }
         });
-
-        if (error) throw error;
-
-        if (data.user) {
-            // 2. Salvar dados na tabela 'perfis'
-            const { error: profileError } = await supabaseClient
-                .from('perfis')
-                .insert([{ 
-                    id: data.user.id, 
-                    nome: nome, 
-                    data_nascimento: nascimento, 
-                    organizacao: organizacao, 
-                    email: email 
-                }]);
-
-            if (profileError) throw profileError;
-
-            // 3. Feedback de Sucesso (Não limpa apenas os campos, avisa o usuário)
-            document.getElementById('registro-form').innerHTML = `
-                <div class="text-center p-6 bg-green-100 rounded-xl border border-green-200">
-                    <h3 class="text-green-800 font-bold text-xl mb-2">CADASTRO REALIZADO!</h3>
-                    <p class="text-green-700 mb-4">Enviamos um e-mail de confirmação para <strong>${email}</strong>.</p>
-                    <p class="text-sm text-green-600 mb-6">Por favor, clique no link enviado para ativar sua conta antes de fazer login.</p>
-                    <a href="login.html" class="inline-block bg-green-600 text-white px-6 py-2 rounded-lg font-bold">IR PARA LOGIN</a>
-                </div>
-            `;
-        }
-    } catch (err) {
-        alert("Erro no cadastro: " + err.message);
-        btn.innerText = originalBtnText;
-        btn.disabled = false;
-    }
-});
-</script>
+    </script>
+</body>
+</html>
