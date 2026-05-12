@@ -2,95 +2,141 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login - Desembainhar Espada</title>
+    <!-- Bibliotecas Necessárias -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-    body {
-        background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
-        background-size: cover;
-        min-height: 100vh;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    /* Painel idêntico ao de cadastro para manter o padrão */
-    .glass-panel {
-        background: rgba(0, 20, 40, 0.96);
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-    }
-    input { font-size: 16px !important; color: white !important; }
-</style>
+    
+    <style>
+        body {
+            /* Fundo unificado seguindo o padrão de Vitória */
+            background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Painel de Alto Contraste (96% opaco para destacar textos amarelos) */
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.96);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Inputs otimizados para Mobile */
+        input { 
+            font-size: 16px !important; 
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        input:focus {
+            border-color: #fbbf24 !important;
+            outline: none;
+        }
+    </style>
 </head>
 <body class="p-4">
+
     <div id="login-container" class="glass-panel w-full max-w-md p-8 md:p-12 rounded-3xl text-center text-white">
-        <h2 class="text-3xl font-black text-yellow-400 uppercase mb-6 shadow-sm">Entrar na Arena</h2>
         
+        <div class="mb-8">
+            <h2 class="text-3xl font-black text-yellow-400 uppercase tracking-tighter shadow-sm">Entrar na Arena</h2>
+            <p class="text-blue-200 text-xs mt-1 italic uppercase tracking-widest">Prepare sua Espada</p>
+        </div>
+
         <div class="space-y-5">
+            <!-- E-mail -->
             <div class="flex flex-col text-left">
-                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">E-mail</label>
+                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">E-mail</label>
                 <input type="email" id="login-email" placeholder="seu@email.com" 
-                    class="p-4 rounded-xl bg-white/10 border border-white/20 outline-none focus:border-yellow-400">
+                    class="w-full p-4 rounded-xl transition-all">
             </div>
             
+            <!-- Senha -->
             <div class="flex flex-col text-left">
-                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200">Senha</label>
-                <input type="password" id="login-senha" placeholder="Sua senha" 
-                    class="p-4 rounded-xl bg-white/10 border border-white/20 outline-none focus:border-yellow-400">
+                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Senha</label>
+                <input type="password" id="login-senha" placeholder="Sua senha secreta" 
+                    class="w-full p-4 rounded-xl transition-all">
             </div>
 
+            <!-- Botão de Acesso -->
             <button onclick="executarLogin()" id="btn-login"
-                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl transition-all shadow-lg uppercase mt-2">
+                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-xl transition-all active:scale-95 shadow-lg uppercase mt-2 text-lg">
                 Acessar Jogo
             </button>
         </div>
 
-        <div class="mt-8 pt-6 border-t border-white/10">
-            <a href="cadastro.html" class="text-xs text-blue-200 hover:text-yellow-400 underline uppercase font-bold">Criar uma nova conta</a>
+        <!-- Link para Cadastro -->
+        <div class="mt-10 pt-6 border-t border-white/10">
+            <p class="text-blue-200 text-xs mb-2">Ainda não tem conta?</p>
+            <a href="cadastro.html" class="text-sm text-yellow-400 hover:text-yellow-300 underline uppercase font-black tracking-tight">
+                Criar conta agora
+            </a>
         </div>
     </div>
 
     <script>
+        // 1. Configuração Global
         const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
         const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        async function executarLogin() {
             const btn = document.getElementById('btn-login');
-            btn.innerText = "VERIFICANDO...";
-            btn.disabled = true;
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-senha').value;
 
-            const email = document.getElementById('log-email').value;
-            const password = document.getElementById('log-senha').value;
+            if (!email || !password) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "VERIFICANDO...";
 
             try {
+                // PASSO 1: Autenticação no Supabase
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
-                    password: password,
+                    password: password
                 });
 
                 if (error) throw error;
 
                 if (data.user) {
-                    // Login bem sucedido, redireciona para a arena
+                    // PASSO 2: Buscar o nome e organização na tabela 'perfis'
+                    const { data: perfil, error: pError } = await supabaseClient
+                        .from('perfis')
+                        .select('nome, organizacao')
+                        .eq('id', data.user.id)
+                        .single();
+
+                    if (pError) {
+                        console.warn("Perfil não encontrado, usando nome genérico.");
+                    }
+
+                    // PASSO 3: Salvar dados no navegador para a Arena usar
+                    localStorage.setItem('usuario_nome', perfil ? perfil.nome : "Guerreiro");
+                    localStorage.setItem('usuario_org', perfil ? perfil.organizacao : "ER");
+                    
+                    // PASSO 4: Redirecionar para a Arena
                     window.location.href = 'arena.html';
                 }
+
             } catch (err) {
-    console.error(err); // Isso ajuda a ver o erro técnico no F12
-    if (err.message === "Email not confirmed") {
-        alert("O e-mail ainda não foi confirmado. Verifique sua caixa de entrada.");
-    } else {
-        alert("Erro ao entrar: Usuário ou senha incorretos.");
-    }
-    btn.innerText = "ACESSAR JOGO";
-    btn.disabled = false;
-}
-        });
+                console.error("Erro no login:", err);
+                alert("Erro ao entrar: Verifique se o e-mail e a senha estão corretos ou se o e-mail foi confirmado.");
+                btn.disabled = false;
+                btn.innerText = "ACESSAR JOGO";
+            }
+        }
     </script>
 </body>
 </html>
