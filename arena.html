@@ -88,30 +88,45 @@
         }
 
         async function gerenciarRodada() {
-            const btn = document.getElementById('btn-acao');
-            const seletor = document.getElementById('seletor-container');
+    const btn = document.getElementById('btn-acao');
+    const seletor = document.getElementById('seletor-container');
+    
+    if (btn.innerText === "COMEÇAR GINCANA") {
+        btn.disabled = true;
+        btn.innerText = "FORJANDO ESPADA...";
+        const versao = document.getElementById('versao-biblia').value;
+        
+        // Caminho relativo para a raiz onde os arquivos foram subidos
+        const caminhoArquivo = `./${versao}`;
+
+        try {
+            console.log("Tentando carregar:", caminhoArquivo);
+            const response = await fetch(caminhoArquivo);
             
-            if (btn.innerText === "COMEÇAR GINCANA") {
-                btn.disabled = true;
-                btn.innerText = "FORJANDO ESPADA...";
-                const versao = document.getElementById('versao-biblia').value;
-                
-                try {
-                    const response = await fetch(`./${versao}`);
-                    bibliaData = await response.json();
-                    seletor.classList.add('hidden'); // Esconde o seletor após carregar
-                    iniciarSorteio();
-                } catch (e) {
-                    alert("Erro ao carregar o arquivo da Bíblia. Verifique se o nome do arquivo no GitHub está correto.");
-                    btn.disabled = false;
-                    btn.innerText = "COMEÇAR GINCANA";
-                }
-            } else if (btn.innerText === "PRÓXIMA RODADA") {
-                iniciarSorteio();
-            } else if (btn.innerText === "ENCONTREI!") {
-                ativarVoz();
+            if (!response.ok) {
+                // Se o arquivo não for encontrado, dispara o erro específico
+                throw new Error(`Arquivo ${versao} não encontrado no servidor.`);
             }
+
+            bibliaData = await response.json();
+            seletor.classList.add('hidden');
+            iniciarSorteio();
+        } catch (e) {
+            console.error("Erro detalhado:", e);
+            // Alerta detalhado para você verificar o nome exato
+            alert(`Erro: Não foi possível encontrar o arquivo "${versao}". 
+            
+Verifique no seu GitHub se o nome é exatamente este (letras minúsculas/maiúsculas e se a extensão é .json e não .sjon).`);
+            
+            btn.disabled = false;
+            btn.innerText = "COMEÇAR GINCANA";
         }
+    } else if (btn.innerText === "PRÓXIMA RODADA") {
+        iniciarSorteio();
+    } else if (btn.innerText === "ENCONTREI!") {
+        ativarVoz();
+    }
+}
 
         function iniciarSorteio() {
             rodada++;
