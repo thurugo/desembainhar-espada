@@ -9,36 +9,45 @@
     <style>
         body {
             background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
-            background-size: cover; min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
-            color: white; font-family: sans-serif;
+            background-size: cover; 
+            min-height: 100vh;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            color: white; 
+            font-family: sans-serif;
         }
         .glass-panel {
-            background: rgba(0, 20, 40, 0.96); backdrop-filter: blur(15px);
+            background: rgba(0, 20, 40, 0.96); 
+            backdrop-filter: blur(15px);
             border: 2px solid rgba(255, 215, 0, 0.5);
         }
         .pulse-red { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.3); color: white; }
-    </select>
+        option { background: #001428; color: white; }
+    </style>
 </head>
 <body class="p-4">
 
+    <!-- Painel de Status -->
     <div class="w-full max-w-2xl flex justify-between items-center mb-4 mt-2 px-2">
         <div class="flex flex-col">
             <span id="nome-usuario" class="text-yellow-400 font-black text-lg uppercase italic">Guerreiro</span>
             <span class="text-blue-200 text-[10px] uppercase tracking-widest">Rodada: <span id="rodada-atual">0</span>/10</span>
         </div>
         <div class="text-right">
-            <span class="block text-[10px] uppercase text-blue-300">Pontuação Total</span>
+            <span class="block text-[10px] uppercase text-blue-300">Pontos Totais</span>
             <span id="pontos-totais" class="text-2xl font-black text-white">0</span>
         </div>
     </div>
 
+    <!-- Arena Central -->
     <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
+        
         <div id="seletor-container" class="mb-6">
-            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Selecione sua Versão:</label>
-            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none border border-yellow-500/30">
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Escolha sua Versão:</label>
+            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none">
                 <option value="nvi.json">NVI - Nova Versão Internacional</option>
                 <option value="acf.json">ACF - Almeida Corrigida e Fiel</option>
                 <option value="aa.json">AA - Almeida Revisada (Imprensa Bíblica)</option>
@@ -49,13 +58,14 @@
 
         <div id="display-sorteio">
             <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
-            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Escolha a versão e clique para começar</p>
+            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Prepare sua Bíblia física</p>
         </div>
 
+        <!-- Área de Voz -->
         <div id="ia-area" class="hidden mb-6">
-            <div id="indicador-voz" class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Escutando...</div>
+            <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">Escutando...</div>
             <div class="bg-black/40 p-4 rounded-xl border border-white/10 min-h-[60px] flex items-center justify-center">
-                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Lendo versículo..."</p>
+                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Aguardando leitura..."</p>
             </div>
         </div>
 
@@ -70,8 +80,7 @@
         const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        let bibliaData = null;
-        let rodada = 0, pontosAcumulados = 0, tempoRestante = 60, timerInterval, textoOficial = "";
+        let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = 60, timerInterval, textoOficial = "";
         let recognition;
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -87,29 +96,18 @@
             const seletorDiv = document.getElementById('seletor-container');
             
             if (btn.innerText === "COMEÇAR GINCANA") {
-                const selectEl = document.getElementById('versao-biblia');
-                // Trim remove qualquer espaço acidental
-                const versao = selectEl.value.trim();
-                
+                const versao = document.getElementById('versao-biblia').value;
                 btn.disabled = true;
                 btn.innerText = "FORJANDO ESPADA...";
 
-                // Tenta carregar usando o caminho absoluto do site
-                const urlBase = window.location.origin;
-                const caminhoFinal = `${urlBase}/${versao}`;
-
-                console.log("Tentando carregar do endereço:", caminhoFinal);
-
                 try {
-                    const response = await fetch(caminhoFinal);
-                    if (!response.ok) throw new Error(`Status: ${response.status}`);
-                    
+                    const response = await fetch(`./${versao}`);
+                    if (!response.ok) throw new Error("Erro no arquivo");
                     bibliaData = await response.json();
                     seletorDiv.classList.add('hidden');
                     iniciarSorteio();
                 } catch (e) {
-                    console.error("Erro no Fetch:", e);
-                    alert(`Não foi possível encontrar o arquivo "${versao}" na raiz do seu site.\n\nVerifique se o nome no GitHub está exatamente em minúsculo e se o arquivo está na pasta principal.`);
+                    alert("Erro ao carregar a bíblia selecionada. Verifique o arquivo no seu GitHub.");
                     btn.disabled = false;
                     btn.innerText = "COMEÇAR GINCANA";
                 }
@@ -129,7 +127,7 @@
             
             textoOficial = livro.chapters[capIdx][verIdx];
             document.getElementById('endereco').innerText = `${livro.name} ${capIdx + 1}:${verIdx + 1}`;
-            document.getElementById('instrucao').innerText = "ENCONTRE NA BÍBLIA FÍSICA!";
+            document.getElementById('instrucao').innerText = "ENCONTRE E LEIA EM VOZ ALTA!";
             
             tempoRestante = 60;
             iniciarTimer();
@@ -153,7 +151,7 @@
 
         function ativarVoz() {
             if (!recognition) {
-                alert("Seu navegador não suporta voz.");
+                alert("Navegador sem suporte a voz.");
                 finalizarRodada(true);
                 return;
             }
