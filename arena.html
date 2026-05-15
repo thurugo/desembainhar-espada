@@ -32,35 +32,36 @@
             <span class="text-blue-200 text-[10px] uppercase tracking-widest">Rodada: <span id="rodada-atual">0</span>/10</span>
         </div>
         <div class="text-right">
-            <span class="block text-[10px] uppercase text-blue-300">Pontuação Total</span>
+            <span class="block text-[10px] uppercase text-blue-300">Pontos Ganhos</span>
             <span id="pontos-totais" class="text-2xl font-black text-white">0</span>
         </div>
     </div>
 
     <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
         
-        <div id="seletor-container" class="mb-6 text-left">
-            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest text-center">Selecione sua Versão:</label>
-            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none border border-yellow-500/30">
+        <div id="seletor-container" class="mb-6">
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Escolha sua Versão:</label>
+            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none border border-yellow-500/30 mb-4">
                 <option value="NVI.json">NVI - Nova Versão Internacional</option>
                 <option value="ACF.json">ACF - Almeida Corrigida e Fiel</option>
                 <option value="ARA.json">ARA - Almeida Revista e Atualizada</option>
                 <option value="ARC.json">ARC - Almeida Revista e Corrigida</option>
                 <option value="NTLH.json">NTLH - Nova Trad. na Linguagem de Hoje</option>
             </select>
+            <p class="text-[10px] text-blue-300 italic mb-2">Ao clicar em começar, autorize o uso do microfone.</p>
         </div>
 
-        <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-4 transition-colors">60</div>
+        <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-4">60</div>
 
         <div id="display-sorteio">
-            <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center text-center">---</h2>
-            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Prepare sua Espada</p>
+            <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
+            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Aguardando início</p>
         </div>
 
         <div id="ia-area" class="hidden mb-6">
-            <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Escutando...</div>
+            <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Validando Leitura...</div>
             <div class="bg-black/40 p-4 rounded-xl border border-white/10 min-h-[60px] flex items-center justify-center">
-                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Aguardando leitura..."</p>
+                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Escutando sua voz..."</p>
             </div>
         </div>
 
@@ -76,8 +77,10 @@
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
         let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = 60, timerInterval, textoOficial = "";
+        let tempoNoClique = 0;
         let recognition;
 
+        // Inicialização da IA de Voz
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
@@ -91,43 +94,47 @@
             const seletorDiv = document.getElementById('seletor-container');
             
             if (btn.innerText === "COMEÇAR GINCANA") {
+                // PEDIR ACESSO AO MICROFONE IMEDIATAMENTE
+                if (recognition) {
+                    try { 
+                        recognition.start(); 
+                        setTimeout(() => recognition.stop(), 500); 
+                    } catch(e) { console.log("Permissão já solicitada"); }
+                }
+
                 const versao = document.getElementById('versao-biblia').value;
                 btn.disabled = true;
-                btn.innerText = "CARREGANDO ESPADA...";
+                btn.innerText = "CARREGANDO...";
 
                 try {
-                    // O caminho agora aponta para a pasta biblias/ com o nome MAIÚSCULO
                     const response = await fetch(`./biblias/${versao}`);
-                    if (!response.ok) throw new Error("Erro de rede");
-                    
                     bibliaData = await response.json();
                     seletorDiv.classList.add('hidden');
                     iniciarSorteio();
                 } catch (e) {
-                    console.error(e);
-                    alert(`Erro: Não encontramos o arquivo "biblias/${versao}". Verifique se o nome no GitHub está exatamente igual ao selecionado.`);
+                    alert("Erro ao carregar Bíblia. Verifique a pasta /biblias/");
                     btn.disabled = false;
                     btn.innerText = "COMEÇAR GINCANA";
                 }
             } else if (btn.innerText === "PRÓXIMA RODADA") {
                 iniciarSorteio();
             } else if (btn.innerText === "ENCONTREI!") {
-                ativarVoz();
+                clicouEncontrei();
             }
         }
 
         function iniciarSorteio() {
             rodada++;
             document.getElementById('rodada-atual').innerText = rodada;
+            document.getElementById('ia-area').classList.add('hidden');
             
-            // Sorteio aleatório no JSON do damarals
             const livro = bibliaData[Math.floor(Math.random() * bibliaData.length)];
             const capIdx = Math.floor(Math.random() * livro.chapters.length);
             const verIdx = Math.floor(Math.random() * livro.chapters[capIdx].length);
             
             textoOficial = livro.chapters[capIdx][verIdx];
             document.getElementById('endereco').innerText = `${livro.name} ${capIdx + 1}:${verIdx + 1}`;
-            document.getElementById('instrucao').innerText = "BUSQUE E LEIA EM VOZ ALTA!";
+            document.getElementById('instrucao').innerText = "ENCONTRE E LEIA!";
             
             tempoRestante = 60;
             iniciarTimer();
@@ -149,32 +156,50 @@
             }, 1000);
         }
 
-        function ativarVoz() {
-            if (!recognition) { alert("Sem suporte a voz."); finalizarRodada(true); return; }
+        function clicouEncontrei() {
+            // 1. Congela o tempo para a pontuação
+            clearInterval(timerInterval);
+            tempoNoClique = tempoRestante;
+            
+            // 2. Prepara interface de voz
             document.getElementById('ia-area').classList.remove('hidden');
-            document.getElementById('btn-acao').innerText = "IA ESCUTANDO...";
-            document.getElementById('btn-acao').disabled = true;
-            recognition.start();
+            const btn = document.getElementById('btn-acao');
+            btn.innerText = "IA OUVINDO...";
+            btn.disabled = true;
 
-            recognition.onresult = (event) => {
-                const transcricao = Array.from(event.results).map(r => r[0].transcript).join('');
-                document.getElementById('texto-capturado').innerText = `"${transcricao}"`;
-                const limpar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '');
-                
-                // Valida se o que foi falado contém o início do versículo oficial
-                if (limpar(transcricao).includes(limpar(textoOficial).substring(0, 10))) {
-                    finalizarRodada(true);
-                }
-            };
+            // 3. Inicia reconhecimento
+            if(recognition) {
+                recognition.start();
+                recognition.onresult = (event) => {
+                    const transcricao = Array.from(event.results).map(r => r[0].transcript).join('');
+                    document.getElementById('texto-capturado').innerText = `"${transcricao}"`;
+                    
+                    if (validarLeitura(transcricao)) {
+                        finalizarRodada(true);
+                    }
+                };
+            } else {
+                alert("Voz não suportada. Validando automaticamente.");
+                finalizarRodada(true);
+            }
+        }
+
+        function validarLeitura(falado) {
+            const limpar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '');
+            const tOficial = limpar(textoOficial);
+            const tFalado = limpar(falado);
+
+            // Comparação por inclusão de palavras-chave (primeiros 15 caracteres)
+            return tFalado.includes(tOficial.substring(0, 15));
         }
 
         async function finalizarRodada(sucesso) {
-            clearInterval(timerInterval);
             if(recognition) try { recognition.stop(); } catch(e) {}
             document.getElementById('ia-area').classList.add('hidden');
             
             if (sucesso) {
-                pontosAcumulados += tempoRestante;
+                // A pontuação é o tempo que sobrou no momento do clique
+                pontosAcumulados += tempoNoClique;
                 document.getElementById('pontos-totais').innerText = pontosAcumulados;
             }
 
