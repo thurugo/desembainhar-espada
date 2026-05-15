@@ -40,7 +40,7 @@
     <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
         
         <div id="seletor-container" class="mb-6">
-            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Escolha sua Versão:</label>
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Versão da Espada:</label>
             <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none mb-4">
                 <option value="NVI.json">NVI - Nova Versão Internacional</option>
                 <option value="ACF.json">ACF - Almeida Corrigida e Fiel</option>
@@ -50,26 +50,28 @@
             </select>
         </div>
 
-        <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-4">60</div>
+        <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-2">60</div>
+        <div id="anti-trapaca-container" class="hidden mb-4">
+            <span class="text-[10px] uppercase text-red-400 font-bold">Comece a ler em:</span>
+            <span id="timer-voz" class="text-2xl font-black text-red-500">5</span>
+        </div>
 
         <div id="display-sorteio">
             <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
-            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Aguardando início</p>
+            <div id="resultado-rodada" class="hidden font-black text-xl mb-4 uppercase italic"></div>
         </div>
 
         <div id="ia-area" class="hidden mb-6">
             <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Ouvindo...</div>
             <div class="bg-black/40 p-4 rounded-xl border border-white/10 min-h-[60px] flex items-center justify-center">
-                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Inicie a leitura..."</p>
+                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Escutando..."</p>
             </div>
         </div>
 
-        <div id="controles">
-            <button id="btn-acao" onclick="gerenciarRodada()" 
-                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95">
-                Começar Gincana
-            </button>
-        </div>
+        <button id="btn-acao" onclick="gerenciarRodada()" 
+            class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95">
+            Começar Gincana
+        </button>
     </div>
 
     <script>
@@ -78,7 +80,7 @@
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
         let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = 60, timerInterval, textoOficial = "";
-        let pontosDestaRodada = 0, transcricaoFinal = "", rodadaFinalizada = false;
+        let pontosDestaRodada = 0, transcricaoFinal = "", antiTrapacaInterval, vozDetectada = false;
         let recognition;
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,40 +93,32 @@
 
         async function gerenciarRodada() {
             const btn = document.getElementById('btn-acao');
-            const seletorDiv = document.getElementById('seletor-container');
-            
             if (btn.innerText === "COMEÇAR GINCANA") {
-                // Solicita microfone antecipadamente
                 if(recognition) try { recognition.start(); setTimeout(() => recognition.stop(), 500); } catch(e){}
-
                 const versao = document.getElementById('versao-biblia').value;
                 btn.disabled = true; btn.innerText = "CARREGANDO...";
-
                 try {
                     const response = await fetch(`./biblias/${versao}`);
                     bibliaData = await response.json();
-                    seletorDiv.classList.add('hidden');
+                    document.getElementById('seletor-container').classList.add('hidden');
                     iniciarSorteio();
-                } catch (e) {
-                    alert("Erro ao carregar Bíblia.");
-                    btn.disabled = false; btn.innerText = "COMEÇAR GINCANA";
-                }
+                } catch (e) { alert("Erro ao carregar Bíblia."); btn.disabled = false; btn.innerText = "COMEÇAR GINCANA"; }
             } else if (btn.innerText === "PRÓXIMA RODADA") {
                 iniciarSorteio();
             } else if (btn.innerText === "ENCONTREI!") {
                 pararParaLeitura();
             } else if (btn.innerText === "FINALIZAR LEITURA") {
-                confirmarValidacao();
+                processarValidacao();
             }
         }
 
         function iniciarSorteio() {
             rodada++;
-            rodadaFinalizada = false;
-            transcricaoFinal = "";
+            vozDetectada = false;
             document.getElementById('rodada-atual').innerText = rodada;
             document.getElementById('ia-area').classList.add('hidden');
-            document.getElementById('texto-capturado').innerText = "Aguardando leitura...";
+            document.getElementById('resultado-rodada').classList.add('hidden');
+            document.getElementById('anti-trapaca-container').classList.add('hidden');
             
             const livro = bibliaData[Math.floor(Math.random() * bibliaData.length)];
             const capIdx = Math.floor(Math.random() * livro.chapters.length);
@@ -132,7 +126,6 @@
             
             textoOficial = livro.chapters[capIdx][verIdx];
             document.getElementById('endereco').innerText = `${livro.name} ${capIdx + 1}:${verIdx + 1}`;
-            document.getElementById('instrucao').innerText = "ENCONTRE E CLIQUE EM ENCONTREI!";
             
             tempoRestante = 60;
             iniciarTimer();
@@ -154,11 +147,24 @@
 
         function pararParaLeitura() {
             clearInterval(timerInterval);
-            pontosDestaRodada = tempoRestante; // Salva os pontos do momento do clique
+            pontosDestaRodada = tempoRestante;
             
+            // Inicia Timer Anti-Trapaça
+            document.getElementById('anti-trapaca-container').classList.remove('hidden');
+            let tempoVoz = 5;
+            document.getElementById('timer-voz').innerText = tempoVoz;
+            
+            antiTrapacaInterval = setInterval(() => {
+                tempoVoz--;
+                document.getElementById('timer-voz').innerText = tempoVoz;
+                if (tempoVoz <= 0 && !vozDetectada) {
+                    clearInterval(antiTrapacaInterval);
+                    alert("Tempo para início de leitura esgotado! Rodada inválida.");
+                    finalizarRodada(false);
+                }
+            }, 1000);
+
             document.getElementById('ia-area').classList.remove('hidden');
-            document.getElementById('instrucao').innerText = "LEIA O VERSÍCULO EM VOZ ALTA";
-            
             const btn = document.getElementById('btn-acao');
             btn.innerText = "FINALIZAR LEITURA";
             btn.className = "w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
@@ -166,34 +172,46 @@
             if(recognition) {
                 recognition.start();
                 recognition.onresult = (event) => {
+                    vozDetectada = true;
+                    clearInterval(antiTrapacaInterval);
+                    document.getElementById('anti-trapaca-container').classList.add('hidden');
                     transcricaoFinal = Array.from(event.results).map(r => r[0].transcript).join('');
                     document.getElementById('texto-capturado').innerText = `"${transcricaoFinal}"`;
                 };
             }
         }
 
-        function confirmarValidacao() {
+        function processarValidacao() {
             if(recognition) recognition.stop();
             
             const limpar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '');
             const oficial = limpar(textoOficial);
             const falado = limpar(transcricaoFinal);
 
-            // Valida se o falado contém pelo menos o início ou parte significativa do oficial
-            if (falado.includes(oficial.substring(0, 10)) || oficial.includes(falado.substring(0, 10)) && falado.length > 5) {
+            // Validação
+            const eValido = falado.includes(oficial.substring(0, 12)) || oficial.includes(falado.substring(0, 12));
+            exibirResultado(eValido && vozDetectada);
+        }
+
+        function exibirResultado(sucesso) {
+            const resDiv = document.getElementById('resultado-rodada');
+            resDiv.classList.remove('hidden');
+            
+            if (sucesso) {
+                resDiv.innerText = `RODADA VÁLIDA! +${pontosDestaRodada} PONTOS`;
+                resDiv.className = "font-black text-xl mb-4 uppercase italic text-green-400";
                 finalizarRodada(true);
             } else {
-                alert("A leitura não condiz com o versículo sorteado. Tente a próxima rodada!");
+                resDiv.innerText = "RODADA INVÁLIDA!";
+                resDiv.className = "font-black text-xl mb-4 uppercase italic text-red-500";
                 finalizarRodada(false);
             }
         }
 
         async function finalizarRodada(sucesso) {
-            if(rodadaFinalizada) return; // Evita duplicar pontos
-            rodadaFinalizada = true;
-            
             clearInterval(timerInterval);
-            document.getElementById('ia-area').classList.add('hidden');
+            clearInterval(antiTrapacaInterval);
+            if(recognition) try { recognition.stop(); } catch(e) {}
             
             if (sucesso) {
                 pontosAcumulados += pontosDestaRodada;
