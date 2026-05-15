@@ -16,6 +16,7 @@
         .glass-panel {
             background: rgba(0, 20, 40, 0.96); backdrop-filter: blur(15px);
             border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
         }
         .pulse-red { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -25,43 +26,41 @@
 </head>
 <body class="p-4">
 
-    <!-- Status da Gincana -->
     <div class="w-full max-w-2xl flex justify-between items-center mb-4 mt-2 px-2">
         <div class="flex flex-col">
             <span id="nome-usuario" class="text-yellow-400 font-black text-lg uppercase italic">Guerreiro</span>
             <span class="text-blue-200 text-[10px] uppercase tracking-widest">Rodada: <span id="rodada-atual">0</span>/10</span>
         </div>
         <div class="text-right">
-            <span class="block text-[10px] uppercase text-blue-300">Pontos Totais</span>
+            <span class="block text-[10px] uppercase text-blue-300">Pontuação Total</span>
             <span id="pontos-totais" class="text-2xl font-black text-white">0</span>
         </div>
     </div>
 
-    <!-- Arena Central -->
     <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
         
-        <div id="seletor-container" class="mb-6">
-            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Escolha sua Espada:</label>
-            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none">
-                <option value="nvi.json">NVI - Nova Versão Internacional</option>
-                <option value="acf.json">ACF - Almeida Corrigida e Fiel</option>
-                <option value="ara.json">ARA - Almeida Revista e Atualizada</option>
-                <option value="arc.json">ARC - Almeida Revista e Corrigida</option>
-                <option value="ntlh.json">NTLH - Nova Trad. na Linguagem de Hoje</option>
+        <div id="seletor-container" class="mb-6 text-left">
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest text-center">Selecione sua Versão:</label>
+            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none border border-yellow-500/30">
+                <option value="NVI.json">NVI - Nova Versão Internacional</option>
+                <option value="ACF.json">ACF - Almeida Corrigida e Fiel</option>
+                <option value="ARA.json">ARA - Almeida Revista e Atualizada</option>
+                <option value="ARC.json">ARC - Almeida Revista e Corrigida</option>
+                <option value="NTLH.json">NTLH - Nova Trad. na Linguagem de Hoje</option>
             </select>
         </div>
 
-        <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-4">60</div>
+        <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-4 transition-colors">60</div>
 
         <div id="display-sorteio">
-            <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
-            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Aguardando início</p>
+            <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center text-center">---</h2>
+            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Prepare sua Espada</p>
         </div>
 
         <div id="ia-area" class="hidden mb-6">
             <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Escutando...</div>
             <div class="bg-black/40 p-4 rounded-xl border border-white/10 min-h-[60px] flex items-center justify-center">
-                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Lendo..."</p>
+                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Aguardando leitura..."</p>
             </div>
         </div>
 
@@ -94,10 +93,10 @@
             if (btn.innerText === "COMEÇAR GINCANA") {
                 const versao = document.getElementById('versao-biblia').value;
                 btn.disabled = true;
-                btn.innerText = "CARREGANDO...";
+                btn.innerText = "CARREGANDO ESPADA...";
 
-                // Busca na pasta /biblias/
                 try {
+                    // O caminho agora aponta para a pasta biblias/ com o nome MAIÚSCULO
                     const response = await fetch(`./biblias/${versao}`);
                     if (!response.ok) throw new Error("Erro de rede");
                     
@@ -106,7 +105,7 @@
                     iniciarSorteio();
                 } catch (e) {
                     console.error(e);
-                    alert(`Não foi possível encontrar o arquivo "biblias/${versao}". Verifique se a pasta e o arquivo existem no seu GitHub.`);
+                    alert(`Erro: Não encontramos o arquivo "biblias/${versao}". Verifique se o nome no GitHub está exatamente igual ao selecionado.`);
                     btn.disabled = false;
                     btn.innerText = "COMEÇAR GINCANA";
                 }
@@ -121,13 +120,14 @@
             rodada++;
             document.getElementById('rodada-atual').innerText = rodada;
             
+            // Sorteio aleatório no JSON do damarals
             const livro = bibliaData[Math.floor(Math.random() * bibliaData.length)];
             const capIdx = Math.floor(Math.random() * livro.chapters.length);
             const verIdx = Math.floor(Math.random() * livro.chapters[capIdx].length);
             
             textoOficial = livro.chapters[capIdx][verIdx];
             document.getElementById('endereco').innerText = `${livro.name} ${capIdx + 1}:${verIdx + 1}`;
-            document.getElementById('instrucao').innerText = "ENCONTRE E LEIA EM VOZ ALTA!";
+            document.getElementById('instrucao').innerText = "BUSQUE E LEIA EM VOZ ALTA!";
             
             tempoRestante = 60;
             iniciarTimer();
@@ -152,7 +152,7 @@
         function ativarVoz() {
             if (!recognition) { alert("Sem suporte a voz."); finalizarRodada(true); return; }
             document.getElementById('ia-area').classList.remove('hidden');
-            document.getElementById('btn-acao').innerText = "ESCUTANDO...";
+            document.getElementById('btn-acao').innerText = "IA ESCUTANDO...";
             document.getElementById('btn-acao').disabled = true;
             recognition.start();
 
@@ -160,6 +160,8 @@
                 const transcricao = Array.from(event.results).map(r => r[0].transcript).join('');
                 document.getElementById('texto-capturado').innerText = `"${transcricao}"`;
                 const limpar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '');
+                
+                // Valida se o que foi falado contém o início do versículo oficial
                 if (limpar(transcricao).includes(limpar(textoOficial).substring(0, 10))) {
                     finalizarRodada(true);
                 }
@@ -170,16 +172,23 @@
             clearInterval(timerInterval);
             if(recognition) try { recognition.stop(); } catch(e) {}
             document.getElementById('ia-area').classList.add('hidden');
+            
             if (sucesso) {
                 pontosAcumulados += tempoRestante;
                 document.getElementById('pontos-totais').innerText = pontosAcumulados;
             }
+
             const btn = document.getElementById('btn-acao');
             btn.disabled = false;
             btn.classList.replace('bg-green-500', 'bg-yellow-500');
             btn.classList.remove('text-white');
-            if (rodada < 10) { btn.innerText = "PRÓXIMA RODADA"; } 
-            else { btn.innerText = "SALVAR NO RANKING"; btn.onclick = enviarPontuacao; }
+
+            if (rodada < 10) {
+                btn.innerText = "PRÓXIMA RODADA";
+            } else {
+                btn.innerText = "SALVAR NO RANKING";
+                btn.onclick = enviarPontuacao;
+            }
         }
 
         async function enviarPontuacao() {
