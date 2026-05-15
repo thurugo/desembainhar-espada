@@ -51,20 +51,21 @@
         </div>
 
         <div id="timer-display" class="text-6xl font-black text-yellow-500 mb-2">60</div>
-        <div id="anti-trapaca-container" class="hidden mb-4">
-            <span class="text-[10px] uppercase text-red-400 font-bold">Comece a ler em:</span>
-            <span id="timer-voz" class="text-2xl font-black text-red-500">5</span>
+        
+        <div id="anti-trapaca-container" class="hidden bg-red-900/40 p-3 rounded-xl border border-red-500/50 mb-4">
+            <span class="block text-[10px] uppercase text-red-200 font-bold tracking-widest">Inicie a leitura em:</span>
+            <span id="timer-voz" class="text-3xl font-black text-red-500">5</span>
         </div>
 
         <div id="display-sorteio">
             <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
-            <div id="resultado-rodada" class="hidden font-black text-xl mb-4 uppercase italic"></div>
+            <div id="resultado-rodada" class="hidden py-4 px-6 rounded-2xl font-black text-xl mb-4 uppercase italic border-2"></div>
         </div>
 
         <div id="ia-area" class="hidden mb-6">
-            <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Ouvindo...</div>
+            <div class="inline-block mb-3 text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold uppercase pulse-red">IA Escutando...</div>
             <div class="bg-black/40 p-4 rounded-xl border border-white/10 min-h-[60px] flex items-center justify-center">
-                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Escutando..."</p>
+                <p id="texto-capturado" class="text-blue-100 italic text-sm">"Aguardando voz..."</p>
             </div>
         </div>
 
@@ -80,7 +81,7 @@
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
         let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = 60, timerInterval, textoOficial = "";
-        let pontosDestaRodada = 0, transcricaoFinal = "", antiTrapacaInterval, vozDetectada = false;
+        let pontosReserva = 0, transcricaoFinal = "", antiTrapacaInterval, vozDetectada = false;
         let recognition;
 
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -96,17 +97,17 @@
             if (btn.innerText === "COMEÇAR GINCANA") {
                 if(recognition) try { recognition.start(); setTimeout(() => recognition.stop(), 500); } catch(e){}
                 const versao = document.getElementById('versao-biblia').value;
-                btn.disabled = true; btn.innerText = "CARREGANDO...";
+                btn.disabled = true; btn.innerText = "FORJANDO...";
                 try {
                     const response = await fetch(`./biblias/${versao}`);
                     bibliaData = await response.json();
                     document.getElementById('seletor-container').classList.add('hidden');
                     iniciarSorteio();
-                } catch (e) { alert("Erro ao carregar Bíblia."); btn.disabled = false; btn.innerText = "COMEÇAR GINCANA"; }
+                } catch (e) { alert("Erro ao carregar arquivos."); btn.disabled = false; btn.innerText = "COMEÇAR GINCANA"; }
             } else if (btn.innerText === "PRÓXIMA RODADA") {
                 iniciarSorteio();
             } else if (btn.innerText === "ENCONTREI!") {
-                pararParaLeitura();
+                cliqueEncontrei();
             } else if (btn.innerText === "FINALIZAR LEITURA") {
                 processarValidacao();
             }
@@ -119,6 +120,7 @@
             document.getElementById('ia-area').classList.add('hidden');
             document.getElementById('resultado-rodada').classList.add('hidden');
             document.getElementById('anti-trapaca-container').classList.add('hidden');
+            document.getElementById('timer-display').classList.remove('hidden');
             
             const livro = bibliaData[Math.floor(Math.random() * bibliaData.length)];
             const capIdx = Math.floor(Math.random() * livro.chapters.length);
@@ -141,26 +143,36 @@
             timerInterval = setInterval(() => {
                 tempoRestante--;
                 document.getElementById('timer-display').innerText = tempoRestante;
-                if (tempoRestante <= 0) finalizarRodada(false);
+                if (tempoRestante <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Tempo esgotado!");
+                    finalizarRodada(false);
+                }
             }, 1000);
         }
 
-        function pararParaLeitura() {
+        function cliqueEncontrei() {
             clearInterval(timerInterval);
-            pontosDestaRodada = tempoRestante;
+            pontosReserva = tempoRestante; // Congela os pontos
+            document.getElementById('timer-display').classList.add('hidden'); // Oculta o timer de 60s
             
-            // Inicia Timer Anti-Trapaça
-            document.getElementById('anti-trapaca-container').classList.remove('hidden');
+            // Ativa Timer Anti-Trapaça de 5 segundos
+            const containerVoz = document.getElementById('anti-trapaca-container');
+            const displayVoz = document.getElementById('timer-voz');
+            containerVoz.classList.remove('hidden');
+            
             let tempoVoz = 5;
-            document.getElementById('timer-voz').innerText = tempoVoz;
+            displayVoz.innerText = tempoVoz;
             
             antiTrapacaInterval = setInterval(() => {
                 tempoVoz--;
-                document.getElementById('timer-voz').innerText = tempoVoz;
-                if (tempoVoz <= 0 && !vozDetectada) {
+                displayVoz.innerText = tempoVoz;
+                if (tempoVoz <= 0) {
                     clearInterval(antiTrapacaInterval);
-                    alert("Tempo para início de leitura esgotado! Rodada inválida.");
-                    finalizarRodada(false);
+                    if (!vozDetectada) {
+                        alert("Você demorou para começar a ler! Rodada anulada.");
+                        finalizarRodada(false);
+                    }
                 }
             }, 1000);
 
@@ -173,8 +185,8 @@
                 recognition.start();
                 recognition.onresult = (event) => {
                     vozDetectada = true;
-                    clearInterval(antiTrapacaInterval);
-                    document.getElementById('anti-trapaca-container').classList.add('hidden');
+                    clearInterval(antiTrapacaInterval); // Para o timer de 5s assim que ouvir algo
+                    containerVoz.classList.add('hidden');
                     transcricaoFinal = Array.from(event.results).map(r => r[0].transcript).join('');
                     document.getElementById('texto-capturado').innerText = `"${transcricaoFinal}"`;
                 };
@@ -182,28 +194,29 @@
         }
 
         function processarValidacao() {
-            if(recognition) recognition.stop();
+            if(recognition) try { recognition.stop(); } catch(e){}
             
             const limpar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '');
             const oficial = limpar(textoOficial);
             const falado = limpar(transcricaoFinal);
 
-            // Validação
-            const eValido = falado.includes(oficial.substring(0, 12)) || oficial.includes(falado.substring(0, 12));
-            exibirResultado(eValido && vozDetectada);
+            // Validação (checa se o falado contém o início do versículo oficial)
+            const sucesso = falado.includes(oficial.substring(0, 10)) && vozDetectada;
+            
+            exibirMensagemResultado(sucesso);
         }
 
-        function exibirResultado(sucesso) {
-            const resDiv = document.getElementById('resultado-rodada');
-            resDiv.classList.remove('hidden');
+        function exibirMensagemResultado(sucesso) {
+            const msgDiv = document.getElementById('resultado-rodada');
+            msgDiv.classList.remove('hidden');
             
             if (sucesso) {
-                resDiv.innerText = `RODADA VÁLIDA! +${pontosDestaRodada} PONTOS`;
-                resDiv.className = "font-black text-xl mb-4 uppercase italic text-green-400";
+                msgDiv.innerText = `RODADA VÁLIDA! +${pontosReserva} PONTOS`;
+                msgDiv.className = "py-4 px-6 rounded-2xl font-black text-xl mb-4 uppercase italic border-2 border-green-500 text-green-400 bg-green-500/10";
                 finalizarRodada(true);
             } else {
-                resDiv.innerText = "RODADA INVÁLIDA!";
-                resDiv.className = "font-black text-xl mb-4 uppercase italic text-red-500";
+                msgDiv.innerText = "RODADA INVÁLIDA!";
+                msgDiv.className = "py-4 px-6 rounded-2xl font-black text-xl mb-4 uppercase italic border-2 border-red-500 text-red-500 bg-red-500/10";
                 finalizarRodada(false);
             }
         }
@@ -211,10 +224,11 @@
         async function finalizarRodada(sucesso) {
             clearInterval(timerInterval);
             clearInterval(antiTrapacaInterval);
-            if(recognition) try { recognition.stop(); } catch(e) {}
+            document.getElementById('anti-trapaca-container').classList.add('hidden');
+            document.getElementById('ia-area').classList.add('hidden');
             
             if (sucesso) {
-                pontosAcumulados += pontosDestaRodada;
+                pontosAcumulados += pontosReserva;
                 document.getElementById('pontos-totais').innerText = pontosAcumulados;
             }
 
@@ -223,6 +237,7 @@
 
             if (rodada < 10) {
                 btn.innerText = "PRÓXIMA RODADA";
+                btn.onclick = gerenciarRodada;
             } else {
                 btn.innerText = "SALVAR NO RANKING";
                 btn.onclick = enviarPontuacao;
