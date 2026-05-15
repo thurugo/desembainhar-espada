@@ -20,12 +20,10 @@
         .pulse-red { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.3); color: white; }
-        option { background: #001428; color: white; }
-    </style>
+    </select>
 </head>
 <body class="p-4">
 
-    <!-- Status Superior -->
     <div class="w-full max-w-2xl flex justify-between items-center mb-4 mt-2 px-2">
         <div class="flex flex-col">
             <span id="nome-usuario" class="text-yellow-400 font-black text-lg uppercase italic">Guerreiro</span>
@@ -37,13 +35,10 @@
         </div>
     </div>
 
-    <!-- Arena Central -->
     <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
-        
-        <!-- Seletor de Versão (Visível antes de começar) -->
         <div id="seletor-container" class="mb-6">
-            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2">Escolha sua Espada:</label>
-            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none focus:border-yellow-500">
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Selecione sua Versão:</label>
+            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none border border-yellow-500/30">
                 <option value="nvi.json">NVI - Nova Versão Internacional</option>
                 <option value="acf.json">ACF - Almeida Corrigida e Fiel</option>
                 <option value="aa.json">AA - Almeida Revisada (Imprensa Bíblica)</option>
@@ -54,7 +49,7 @@
 
         <div id="display-sorteio">
             <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
-            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Selecione a versão e comece!</p>
+            <p id="instrucao" class="text-blue-200 text-[10px] mb-6 uppercase tracking-widest italic">Escolha a versão e clique para começar</p>
         </div>
 
         <div id="ia-area" class="hidden mb-6">
@@ -88,57 +83,53 @@
         }
 
         async function gerenciarRodada() {
-    const btn = document.getElementById('btn-acao');
-    const seletor = document.getElementById('seletor-container');
-    
-    if (btn.innerText === "COMEÇAR GINCANA") {
-        btn.disabled = true;
-        btn.innerText = "FORJANDO ESPADA...";
-        const versao = document.getElementById('versao-biblia').value;
-        
-        // Caminho relativo para a raiz onde os arquivos foram subidos
-        const caminhoArquivo = `./${versao}`;
-
-        try {
-            console.log("Tentando carregar:", caminhoArquivo);
-            const response = await fetch(caminhoArquivo);
+            const btn = document.getElementById('btn-acao');
+            const seletorDiv = document.getElementById('seletor-container');
             
-            if (!response.ok) {
-                // Se o arquivo não for encontrado, dispara o erro específico
-                throw new Error(`Arquivo ${versao} não encontrado no servidor.`);
+            if (btn.innerText === "COMEÇAR GINCANA") {
+                const selectEl = document.getElementById('versao-biblia');
+                // Trim remove qualquer espaço acidental
+                const versao = selectEl.value.trim();
+                
+                btn.disabled = true;
+                btn.innerText = "FORJANDO ESPADA...";
+
+                // Tenta carregar usando o caminho absoluto do site
+                const urlBase = window.location.origin;
+                const caminhoFinal = `${urlBase}/${versao}`;
+
+                console.log("Tentando carregar do endereço:", caminhoFinal);
+
+                try {
+                    const response = await fetch(caminhoFinal);
+                    if (!response.ok) throw new Error(`Status: ${response.status}`);
+                    
+                    bibliaData = await response.json();
+                    seletorDiv.classList.add('hidden');
+                    iniciarSorteio();
+                } catch (e) {
+                    console.error("Erro no Fetch:", e);
+                    alert(`Não foi possível encontrar o arquivo "${versao}" na raiz do seu site.\n\nVerifique se o nome no GitHub está exatamente em minúsculo e se o arquivo está na pasta principal.`);
+                    btn.disabled = false;
+                    btn.innerText = "COMEÇAR GINCANA";
+                }
+            } else if (btn.innerText === "PRÓXIMA RODADA") {
+                iniciarSorteio();
+            } else if (btn.innerText === "ENCONTREI!") {
+                ativarVoz();
             }
-
-            bibliaData = await response.json();
-            seletor.classList.add('hidden');
-            iniciarSorteio();
-        } catch (e) {
-            console.error("Erro detalhado:", e);
-            // Alerta detalhado para você verificar o nome exato
-            alert(`Erro: Não foi possível encontrar o arquivo "${versao}". 
-            
-Verifique no seu GitHub se o nome é exatamente este (letras minúsculas/maiúsculas e se a extensão é .json e não .sjon).`);
-            
-            btn.disabled = false;
-            btn.innerText = "COMEÇAR GINCANA";
         }
-    } else if (btn.innerText === "PRÓXIMA RODADA") {
-        iniciarSorteio();
-    } else if (btn.innerText === "ENCONTREI!") {
-        ativarVoz();
-    }
-}
 
         function iniciarSorteio() {
             rodada++;
             document.getElementById('rodada-atual').innerText = rodada;
-            
             const livro = bibliaData[Math.floor(Math.random() * bibliaData.length)];
             const capIdx = Math.floor(Math.random() * livro.chapters.length);
             const verIdx = Math.floor(Math.random() * livro.chapters[capIdx].length);
             
             textoOficial = livro.chapters[capIdx][verIdx];
             document.getElementById('endereco').innerText = `${livro.name} ${capIdx + 1}:${verIdx + 1}`;
-            document.getElementById('instrucao').innerText = "ENCONTRE E LEIA NA BÍBLIA FÍSICA!";
+            document.getElementById('instrucao').innerText = "ENCONTRE NA BÍBLIA FÍSICA!";
             
             tempoRestante = 60;
             iniciarTimer();
@@ -162,7 +153,7 @@ Verifique no seu GitHub se o nome é exatamente este (letras minúsculas/maiúsc
 
         function ativarVoz() {
             if (!recognition) {
-                alert("Navegador sem suporte a voz.");
+                alert("Seu navegador não suporta voz.");
                 finalizarRodada(true);
                 return;
             }
@@ -174,9 +165,7 @@ Verifique no seu GitHub se o nome é exatamente este (letras minúsculas/maiúsc
             recognition.onresult = (event) => {
                 const transcricao = Array.from(event.results).map(r => r[0].transcript).join('');
                 document.getElementById('texto-capturado').innerText = `"${transcricao}"`;
-                
                 const limpar = (t) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '');
-                // Valida se o falado contém parte coerente do texto oficial
                 if (limpar(transcricao).includes(limpar(textoOficial).substring(0, 10))) {
                     finalizarRodada(true);
                 }
@@ -187,34 +176,23 @@ Verifique no seu GitHub se o nome é exatamente este (letras minúsculas/maiúsc
             clearInterval(timerInterval);
             if(recognition) try { recognition.stop(); } catch(e) {}
             document.getElementById('ia-area').classList.add('hidden');
-            
             if (sucesso) {
-                // Pontuação por rodada: $$P = t_{restante}$$
                 pontosAcumulados += tempoRestante;
                 document.getElementById('pontos-totais').innerText = pontosAcumulados;
             }
-
             const btn = document.getElementById('btn-acao');
             btn.disabled = false;
             btn.classList.replace('bg-green-500', 'bg-yellow-500');
             btn.classList.remove('text-white');
-
-            if (rodada < 10) {
-                btn.innerText = "PRÓXIMA RODADA";
-            } else {
-                btn.innerText = "SALVAR NO RANKING";
-                btn.onclick = enviarPontuacaoFinal;
-            }
+            if (rodada < 10) { btn.innerText = "PRÓXIMA RODADA"; } 
+            else { btn.innerText = "SALVAR NO RANKING"; btn.onclick = enviarPontuacao; }
         }
 
-        async function enviarPontuacaoFinal() {
+        async function enviarPontuacao() {
             const { data: { user } } = await supabaseClient.auth.getUser();
             if (user) {
-                const { error } = await supabaseClient
-                    .from('ranking')
-                    .insert([{ perfil_id: user.id, pontuacao: pontosAcumulados }]);
-                
-                if (!error) window.location.href = 'ranking.html';
+                await supabaseClient.from('ranking').insert([{ perfil_id: user.id, pontuacao: pontosAcumulados }]);
+                window.location.href = 'ranking.html';
             }
         }
 
