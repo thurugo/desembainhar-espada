@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Testes - Desembainhar Espada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
+            background-size: cover; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; font-family: sans-serif;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.96); backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+        input, select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.3); color: white; }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="w-full max-w-md text-center mb-6 mt-6">
+        <h1 class="text-3xl font-black text-yellow-400 uppercase tracking-tighter italic">Laboratório de Testes</h1>
+        <p class="text-blue-200 text-xs uppercase tracking-widest mt-1">Gere pontuações sem precisar jogar</p>
+    </div>
+
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl shadow-2xl">
+        
+        <div class="mb-6 border-b border-white/10 pb-6">
+            <h3 class="text-sm font-black text-yellow-500 uppercase tracking-widest mb-4">1. Inserir Registro Único</h3>
+            
+            <div class="mb-4">
+                <label class="block text-[10px] uppercase text-blue-300 font-bold mb-1">Pontuação desejada:</label>
+                <input type="number" id="teste-pontos" value="45" class="w-full p-3 rounded-xl outline-none focus:border-yellow-500 font-mono font-bold text-lg text-yellow-400">
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-[10px] uppercase text-blue-300 font-bold mb-1">Simular data da jogada:</label>
+                <select id="teste-data" class="w-full p-3 rounded-xl outline-none focus:border-yellow-500 text-sm">
+                    <option value="0">Hoje (Estreia)</option>
+                    <option value="1">Há 1 semana (1 sem)</option>
+                    <option value="3">Há 3 semanas (3 sem)</option>
+                    <option value="6">Há 6 semanas (Fora do filtro mensal)</option>
+                </select>
+            </div>
+
+            <button onclick="inserirPontuacaoUnica()" id="btn-unico"
+                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl uppercase tracking-wider text-sm transition-all active:scale-95 shadow-lg">
+                Injetar Esta Pontuação
+            </button>
+        </div>
+
+        <div>
+            <h3 class="text-sm font-black text-yellow-500 uppercase tracking-widest mb-2">2. Carga Rápida (Top 10)</h3>
+            <p class="text-[10px] text-blue-200 mb-4 leading-relaxed">Gera automaticamente 10 pontuações variadas de semanas diferentes para testar o comportamento do pódio instantaneamente.</p>
+            
+            <button onclick="gerarCargaLote()" id="btn-lote"
+                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl uppercase tracking-wider text-sm transition-all active:scale-95 shadow-lg">
+                Gerar 10 Jogadas Aleatórias
+            </button>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-white/10 flex justify-between text-xs">
+            <a href="arena.html" class="text-blue-300 hover:underline">Ir para Arena Real</a>
+            <a href="ranking.html" class="text-yellow-400 hover:underline font-bold">Verificar Ranking ➔</a>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        // Função para calcular datas retroativas
+        function obterDataRetroativa(semanasAtras) {
+            const data = new Date();
+            data.setDate(data.getDate() - (semanasAtras * 7));
+            return data.toISOString();
+        }
+
+        async function obterUsuarioAutenticado() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                alert("Nenhum usuário logado! Por favor, faça login na página anterior.");
+                window.location.href = 'login.html';
+                return null;
+            }
+            return user.id;
+        }
+
+        // 1. Inserção Individual
+        async function inserirPontuacaoUnica() {
+            const uid = await obterUsuarioAutenticado();
+            if (!uid) return;
+
+            const pontos = parseInt(document.getElementById('teste-pontos').value);
+            const semanas = parseInt(document.getElementById('teste-data').value);
+            const dataSimulada = obterDataRetroativa(semanas);
+
+            const btn = document.getElementById('btn-unico');
+            btn.disabled = true; btn.innerText = "INJETANDO...";
+
+            try {
+                const { error } = await supabaseClient
+                    .from('ranking')
+                    .insert([{ 
+                        perfil_id: uid, 
+                        pontuacao: pontos,
+                        created_at: dataSimulada // O Supabase aceita que enviemos a data manualmente para testes
+                    }]);
+
+                if (error) throw error;
+                alert(`Sucesso! Injetado: ${pontos} pontos com data de ${semanas} semana(s) atrás.`);
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao injetar dados: " + e.message);
+            } finally {
+                btn.disabled = false; btn.innerText = "Injetar Esta Pontuação";
+            }
+        }
+
+        // 2. Inserção em Lote (Cria um cenário completo de ranking)
+        async function gerarCargaLote() {
+            const uid = await obterUsuarioAutenticado();
+            if (!uid) return;
+
+            const btn = document.getElementById('btn-lote');
+            btn.disabled = true; btn.innerText = "GERANDO EM LOTE...";
+
+            // Array com 10 pontuações e idades de semanas diferentes
+            const jogadasFicticias = [
+                { pontuacao: 580, semanas: 0 },
+                { pontuacao: 510, semanas: 1 },
+                { pontuacao: 460, semanas: 1 },
+                { pontuacao: 420, semanas: 2 },
+                { pontuacao: 390, semanas: 3 },
+                { pontuacao: 350, semanas: 3 },
+                { pontuacao: 290, semanas: 4 },
+                { pontuacao: 240, semanas: 5 },
+                { pontuacao: 180, semanas: 6 },
+                { pontuacao: 110, semanas: 8 }
+            ];
+
+            try {
+                // Prepara os dados calculando as datas corretas
+                const dadosParaEnvio = jogadasFicticias.map(j => ({
+                    perfil_id: uid,
+                    pontuacao: j.pontuacao,
+                    created_at: obterDataRetroativa(j.semanas)
+                }));
+
+                const { error } = await supabaseClient
+                    .from('ranking')
+                    .insert(dadosParaEnvio);
+
+                if (error) throw error;
+                alert("Sucesso! 10 pontuações fictícias foram geradas para o seu perfil. Vá ao Ranking conferir os filtros de idade, tempo e permanência!");
+            } catch (e) {
+                console.error(e);
+                alert("Erro na carga em lote: " + e.message);
+            } finally {
+                btn.disabled = false; btn.innerText = "Gerar 10 Jogadas Aleatórias";
+            }
+        }
+    </script>
+</body>
+</html>
