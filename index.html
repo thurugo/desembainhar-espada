@@ -2,85 +2,72 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Desembainhar Espada - Início</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-    body {
-        margin: 0;
-        padding: 4px;
-        min-height: 100vh;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center;
-        color: white; 
-        font-family: sans-serif;
-        position: relative;
-    }
-
-    /* Camada de fundo corrigida: fixa no topo e centralizada na horizontal */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        /* AJUSTE AQUI: Mudado de 'center center' para 'center top' */
-        background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
-        background-size: cover; 
-        z-index: -1;
-    }
-
-    .glass-panel {
-        background: rgba(0, 20, 40, 0.5); 
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-    }
-    .pulse-red { animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
-    option { background: #001428; color: white; }
-
-    /* Efeito de contorno para a página de instruções (pode deixar em todas) */
-    .text-contour {
-        text-shadow: 
-            -1px -1px 0 #000,  
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000,
-             0px  4px 10px rgba(0,0,0,0.9);
-    }
-</style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada.png') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.5); /* Modificação 1: 50% de Transparência */
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
 </head>
 <body class="p-4">
-    <div class="glass-panel max-w-md w-full p-8 md:p-12 rounded-3xl text-center text-white">
-        <!-- Título em Amarelo para contraste máximo sobre o fundo azul sólido -->
-        <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter mb-4 shadow-sm">
-            Desembainhar Espada
-        </h1>
-        
-        <p class="text-blue-100 mb-10 italic text-sm leading-relaxed">
-            "Lâmpada para os meus pés é tua palavra e luz, para o meu caminho."
-        </p>
 
-        <div class="space-y-3 w-full">
-            <a href="login.html" class="block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-xl transition-all transform hover:scale-105 shadow-lg uppercase">
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl text-center shadow-2xl">
+        
+       <div class="flex justify-center items-center space-x-8 mb-6 mt-2">
+    <img src="logo-er.png" alt="Embaixadores do Rei" class="w-[50px] h-[50px] object-contain drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">
+    
+    <div class="h-8 w-[2px] bg-yellow-500/40"></div>
+    
+    <img src="logo-mr.png" alt="Mensageiras do Rei" class="w-[50px] h-[50px] object-contain drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]">
+</div>
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">
+                Desembainhar Espada
+            </h1>
+            <p class="text-blue-200 text-[10px] uppercase tracking-[0.3em] mt-1">Gincana de Agilidade Bíblica</p>
+        </div>
+
+        <div class="space-y-4 w-full">
+            <a href="arena.html" 
+                class="block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-2xl shadow-xl uppercase text-center text-md transition-all active:scale-95">
                 Entrar na Arena
             </a>
 
-            <a href="cadastro.html" class="block w-full border-2 border-white/30 hover:border-yellow-400 hover:text-yellow-400 text-white font-bold py-4 rounded-xl transition-all uppercase text-sm">
-                Criar Minha Conta
+            <a href="ranking.html" 
+                class="block w-full bg-blue-900/60 hover:bg-blue-900/80 text-white font-bold py-3.5 rounded-2xl border border-blue-500/30 uppercase text-center text-sm transition-all active:scale-95">
+                🏆 Ver Quadro de Líderes
             </a>
-            <a href="instrucoes.html" class="block w-full bg-blue-900/40 hover:bg-blue-900/60 text-yellow-400 font-bold py-3 rounded-2xl border border-yellow-500/30 uppercase text-center text-sm transition-all active:scale-95">
-        📖 Como Funciona o Jogo
-    </a>
+
+            <a href="instrucoes.html" 
+                class="block w-full bg-black/40 hover:bg-black/60 text-yellow-500 font-bold py-3 rounded-2xl border border-yellow-500/20 uppercase text-center text-xs transition-all active:scale-95">
+                📖 Como Funciona o Jogo
+            </a>
         </div>
-       
-        <div class="mt-12 pt-6 border-t border-white/10 opacity-60">
-            <p class="text-[10px] text-gray-300 uppercase tracking-[0.3em]">Eis-me Aqui</p>
+
+        <div class="mt-8 text-[9px] text-blue-300/60 uppercase tracking-widest font-mono">
+            Vitória • ES
         </div>
+
     </div>
+
 </body>
 </html>
