@@ -7,59 +7,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-    body {
-        margin: 0;
-        padding: 4px;
-        min-height: 100vh;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center;
-        color: white; 
-        font-family: sans-serif;
-        position: relative;
-    }
-
-    /* Camada de fundo corrigida: fixa no topo e centralizada na horizontal */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        /* AJUSTE AQUI: Mudado de 'center center' para 'center top' */
-        background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
-        background-size: cover; 
-        z-index: -1;
-    }
-
-    .glass-panel {
-        background: rgba(0, 20, 40, 0.5); 
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-    }
-    .pulse-red { animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
-    option { background: #001428; color: white; }
-
-    /* Efeito de contorno para a página de instruções (pode deixar em todas) */
-    .text-contour {
-        text-shadow: 
-            -1px -1px 0 #000,  
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000,
-             0px  4px 10px rgba(0,0,0,0.9);
-    }
-</style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.5); /* 50% de Transparência */
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        .pulse-red { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
+        option { background: #001428; color: white; }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
 </head>
 <body class="p-4">
 
     <div class="w-full max-w-2xl flex justify-between items-center mb-4 mt-2 px-2">
         <div class="flex flex-col">
-            <span id="nome-usuario" class="text-yellow-400 font-black text-lg uppercase italic">Guerreiro</span>
+            <span id="nome-usuario" class="text-yellow-400 font-black text-lg uppercase italic text-contour">Guerreiro</span>
             <span class="text-blue-200 text-[10px] uppercase tracking-widest">Rodada: <span id="rodada-atual">0</span>/10</span>
         </div>
         <div class="text-right">
@@ -90,7 +67,7 @@
 
         <div id="display-sorteio">
             <h2 id="endereco" class="text-3xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter min-h-[80px] flex items-center justify-center">---</h2>
-            <div id="resultado-rodada" class="hidden py-4 px-6 rounded-2xl font-black text-xl mb-4 uppercase italic border-2"></div>
+            <div id="resultado-rodada" class="hidden py-4 px-6 rounded-2xl mb-4 text-sm border-2"></div>
         </div>
 
         <div id="ia-area" class="hidden mb-6">
@@ -147,6 +124,8 @@
         function iniciarSorteio() {
             rodada++;
             vozDetectada = false;
+            transcricaoFinal = "";
+            document.getElementById('texto-capturado').innerText = "Aguardando voz...";
             document.getElementById('rodada-atual').innerText = rodada;
             document.getElementById('ia-area').classList.add('hidden');
             document.getElementById('resultado-rodada').classList.add('hidden');
@@ -233,19 +212,63 @@
             exibirMensagemResultado(sucesso);
         }
 
+        // NOVA FUNÇÃO: Gera a marcação de palavras erradas em vermelho
+        function gerarAuditoriaTexto(oficial, falado) {
+            const limparPalavra = (p) => p.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/gi, '').trim();
+            
+            const listaOficialLimpa = oficial.split(/\s+/).map(limparPalavra);
+            const listaFaladaOriginal = falado.split(/\s+/);
+            
+            let htmlResultado = "";
+            
+            listaFaladaOriginal.forEach(palavra => {
+                if (!palavra) return;
+                const pLimpa = limparPalavra(palavra);
+                
+                // Se a palavra dita existe dentro do versículo oficial, fica verde. Se não, fica vermelha.
+                if (listaOficialLimpa.includes(pLimpa)) {
+                    htmlResultado += `<span class="text-green-400">${palavra}</span> `;
+                } else {
+                    htmlResultado += `<span class="text-red-500 font-bold underline decoration-wavy">${palavra}</span> `;
+                }
+            });
+            
+            return htmlResultado || `<span class="text-gray-500 italic">Nenhum som legível detectado pela IA.</span>`;
+        }
+
         function exibirMensagemResultado(sucesso) {
             const msgDiv = document.getElementById('resultado-rodada');
             msgDiv.classList.remove('hidden');
             
+            // Renderiza os dois blocos comparativos
+            const auditoriaLeitura = gerarAuditoriaTexto(textoOficial, transcricaoFinal);
+            
+            let templateHTML = "";
+            
             if (sucesso) {
-                msgDiv.innerText = `RODADA VÁLIDA! +${pontosReserva} PONTOS`;
-                msgDiv.className = "py-4 px-6 rounded-2xl font-black text-xl mb-4 uppercase italic border-2 border-green-500 text-green-400 bg-green-500/10";
-                finalizarRodada(true);
+                templateHTML = `<div class="text-center text-green-400 font-black text-xl uppercase italic mb-3">✓ Rodada Válida! +${pontosReserva} Pontos</div>`;
+                msgDiv.className = "py-4 px-5 rounded-2xl border-2 border-green-500 text-left bg-green-950/40 backdrop-blur-sm mb-4 animate-fade-in";
             } else {
-                msgDiv.innerText = "RODADA INVÁLIDA!";
-                msgDiv.className = "py-4 px-6 rounded-2xl font-black text-xl mb-4 uppercase italic border-2 border-red-500 text-red-500 bg-red-500/10";
-                finalizarRodada(false);
+                templateHTML = `<div class="text-center text-red-500 font-black text-xl uppercase italic mb-3">✗ Rodada Inválida! (0 Pontos)</div>`;
+                msgDiv.className = "py-4 px-5 rounded-2xl border-2 border-red-500 text-left bg-red-955/40 backdrop-blur-sm mb-4 animate-fade-in";
             }
+            
+            // Bloco visual de Transparência
+            templateHTML += `
+                <div class="mt-2 pt-3 border-t border-white/10 text-xs space-y-3 font-sans normal-case tracking-normal">
+                    <div>
+                        <span class="block text-yellow-500 font-black uppercase text-[10px] tracking-wider">📖 Texto Esperado (Versão Escolhida):</span>
+                        <p class="text-white italic bg-black/30 p-2.5 rounded-xl mt-1 border border-white/5 select-none">${textoOficial}</p>
+                    </div>
+                    <div>
+                        <span class="block text-yellow-500 font-black uppercase text-[10px] tracking-wider">🎙️ Texto Capturado (Sua Leitura):</span>
+                        <p class="text-blue-100 bg-black/30 p-2.5 rounded-xl mt-1 border border-white/5">${auditoriaLeitura}</p>
+                    </div>
+                </div>
+            `;
+            
+            msgDiv.innerHTML = templateHTML;
+            finalizarRodada(sucesso);
         }
 
         async function finalizarRodada(sucesso) {
@@ -271,7 +294,6 @@
             }
         }
 
-        // MODIFICAÇÃO CENTRAL: Alinhado exatamente com o nome das colunas do seu banco de dados
         async function enviarPontuacao() {
             const btn = document.getElementById('btn-acao');
             btn.disabled = true;
@@ -286,7 +308,6 @@
                     return;
                 }
 
-                // Inserindo com as colunas reais: jogador_id e pontos
                 const { error } = await supabaseClient
                     .from('ranking')
                     .insert([{ 
