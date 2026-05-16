@@ -9,58 +9,75 @@
     <style>
         body {
             background: url('imagens/fundo_entrada.png') no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            font-family: sans-serif;
+            background-size: cover; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; font-family: sans-serif;
         }
         .glass-panel {
-            background: rgba(0, 20, 40, 0.96);
-            backdrop-filter: blur(15px);
+            background: rgba(0, 20, 40, 0.96); backdrop-filter: blur(15px);
             border: 2px solid rgba(255, 215, 0, 0.5);
         }
-        .podium-1 { border: 2px solid #fbbf24; background: rgba(251, 191, 36, 0.1); }
+        select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
+        option { background: #001428; color: white; }
     </style>
 </head>
 <body class="p-4">
 
-    <!-- Cabeçalho -->
-    <div class="w-full max-w-2xl text-center mb-8 mt-6">
-        <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter italic">Galeria de Honra</h1>
-        <p class="text-blue-200 text-xs uppercase tracking-[0.3em] mt-2">Os mais velozes na palavra</p>
+    <div class="w-full max-w-2xl text-center mb-6 mt-4">
+        <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter italic">Quadro de Líderes</h1>
+        <p class="text-blue-200 text-xs uppercase tracking-[0.2em] mt-1">Gincana de Agilidade Bíblica</p>
     </div>
 
-    <!-- Tabela de Ranking -->
-    <div class="glass-panel w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl mb-8">
+    <div class="glass-panel w-full max-w-2xl p-4 rounded-2xl mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 shadow-xl">
+        <div>
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1">Período:</label>
+            <select id="filtro-tempo" onchange="aplicarFiltros()" class="w-full p-2 rounded-lg text-xs outline-none">
+                <option value="geral">Todos os Tempos</option>
+                <option value="semanal">Esta Semana</option>
+                <option value="mensal">Este Mês</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1">Categoria de Idade:</label>
+            <select id="filtro-idade" onchange="aplicarFiltros()" class="w-full p-2 rounded-lg text-xs outline-none">
+                <option value="todos">Todas as Idades</option>
+                <option value="juniores">Juniores (9 a 11 anos)</option>
+                <option value="adolescentes">Adolescentes (12 a 17 anos)</option>
+                <option value="seniors">Sêniors (Acima de 18 anos)</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1">Organização:</label>
+            <select id="filtro-org" onchange="aplicarFiltros()" class="w-full p-2 rounded-lg text-xs outline-none">
+                <option value="todos">Todas as Organizações</option>
+                <option value="ER">ER - Embaixadores do Rei</option>
+                <option value="MR">MR - Mensageiras do Rei</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="glass-panel w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl mb-6">
         <table class="w-full text-left border-collapse">
             <thead class="bg-yellow-500 text-blue-900 uppercase font-black text-xs">
                 <tr>
-                    <th class="p-4">Pos</th>
-                    <th class="p-4">Guerreiro(a)</th>
-                    <th class="p-4">Org</th>
-                    <th class="p-4 text-right">Pontos</th>
+                    <th class="p-3 pl-4">Pos</th>
+                    <th class="p-3">Guerreiro(a)</th>
+                    <th class="p-3">Org</th>
+                    <th class="p-3 text-right pr-4">Pontos</th>
                 </tr>
             </thead>
             <tbody id="lista-ranking">
-                <!-- Linhas inseridas pelo JavaScript -->
                 <tr>
-                    <td colspan="4" class="p-10 text-center animate-pulse text-blue-200 uppercase text-xs">Carregando classificação...</td>
+                    <td colspan="4" class="p-10 text-center animate-pulse text-blue-200 uppercase text-xs">Carregando classificação geral...</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Botões de Navegação -->
-    <div class="flex space-x-4">
-        <a href="arena.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 px-8 rounded-xl uppercase shadow-lg transition-all active:scale-95">
+    <div class="flex space-x-4 mb-8">
+        <a href="arena.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-3 px-6 rounded-xl uppercase shadow-lg text-sm transition-all active:scale-95">
             Voltar à Arena
         </a>
-        <button onclick="logout()" class="border border-white/20 hover:bg-white/10 text-white py-4 px-8 rounded-xl uppercase font-bold">
-            Sair
-        </button>
     </div>
 
     <script>
@@ -68,9 +85,10 @@
         const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        async function carregarRanking() {
+        let dadosBrutosRanking = [];
+
+        async function puxarDadosDoSupabase() {
             try {
-                // Busca o ranking unindo com a tabela de perfis para pegar o nome e organização
                 const { data, error } = await supabaseClient
                     .from('ranking')
                     .select(`
@@ -78,46 +96,100 @@
                         created_at,
                         perfis (
                             nome,
-                            organizacao
+                            organizacao,
+                            data_nascimento
                         )
                     `)
-                    .order('pontuacao', { ascending: false })
-                    .limit(20);
+                    .order('pontuacao', { ascending: false });
 
                 if (error) throw error;
-
-                const tbody = document.getElementById('lista-ranking');
-                tbody.innerHTML = "";
-
-                data.forEach((item, index) => {
-                    const isTop = index === 0 ? 'podium-1' : '';
-                    const row = `
-                        <tr class="border-b border-white/5 ${isTop} transition-colors hover:bg-white/5">
-                            <td class="p-4 font-black ${index < 3 ? 'text-yellow-400' : 'text-blue-300'}">${index + 1}º</td>
-                            <td class="p-4 font-bold text-sm md:text-base">${item.perfis.nome}</td>
-                            <td class="p-4">
-                                <span class="px-2 py-1 rounded text-[10px] font-black ${item.perfis.organizacao === 'ER' ? 'bg-blue-600 text-white' : 'bg-pink-600 text-white'}">
-                                    ${item.perfis.organizacao}
-                                </span>
-                            </td>
-                            <td class="p-4 text-right font-mono font-bold text-yellow-400">${item.pontuacao}</td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
-                });
+                dadosBrutosRanking = data;
+                aplicarFiltros();
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="4" class="p-10 text-center text-red-400">Erro ao carregar dados.</td></tr>`;
+                document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="4" class="p-10 text-center text-red-400 text-xs">ERRO AO CONECTAR COM O BANCO DE DADOS.</td></tr>`;
             }
         }
 
-        function logout() {
-            localStorage.clear();
-            window.location.href = 'login.html';
+        function calcularIdade(dataNasc) {
+            if (!dataNasc) return 0;
+            const nascimento = new Date(dataNasc);
+            const hoje = new Date();
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            const m = hoje.getMonth() - nascimento.getMonth();
+            if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+                idade--;
+            }
+            return idade;
         }
 
-        window.onload = carregarRanking;
+        function aplicarFiltros() {
+            const tempo = document.getElementById('filtro-tempo').value;
+            const idadeFiltro = document.getElementById('filtro-idade').value;
+            const org = document.getElementById('filtro-org').value;
+
+            const agora = new Date();
+            
+            // Filtra os dados localmente para desempenho instantâneo
+            let dadosFiltrados = dadosBrutosRanking.filter(item => {
+                const perfil = item.perfis || {};
+                const dataPontuacao = new Date(item.created_at);
+                
+                // 1. Filtro de Tempo
+                if (tempo === 'semanal') {
+                    const umaSemanaAtras = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    if (dataPontuacao < umaSemanaAtras) return false;
+                } else if (tempo === 'mensal') {
+                    const umMesAtras = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    if (dataPontuacao < umMesAtras) return false;
+                }
+
+                // 2. Filtro de Organização
+                if (org !== 'todos' && perfil.organizacao !== org) return false;
+
+                // 3. Filtro de Idade
+                const idadeReal = calcularIdade(perfil.data_nascimento);
+                if (idadeFiltro === 'juniores' && (idadeReal < 9 || idadeReal > 11)) return false;
+                if (idadeFiltro === 'adolescentes' && (idadeReal < 12 || idadeReal > 17)) return false;
+                if (idadeFiltro === 'seniors' && idadeReal < 18) return false;
+
+                return true;
+            });
+
+            renderizarTabela(dadosFiltrados);
+        }
+
+        function renderizarTabela(lista) {
+            const tbody = document.getElementById('lista-ranking');
+            tbody.innerHTML = "";
+
+            if (lista.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-blue-300 uppercase text-xs">Nenhuma pontuação registrada nesta categoria.</td></tr>`;
+                return;
+            }
+
+            lista.forEach((item, index) => {
+                const perfil = item.perfis || { nome: "Guerreiro Antigo", organizacao: "ER" };
+                const badgeColor = perfil.organizacao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
+                
+                const row = `
+                    <tr class="border-b border-white/5 transition-colors hover:bg-white/5">
+                        <td class="p-3 pl-4 font-black ${index === 0 ? 'text-yellow-400 text-lg' : 'text-blue-300'}">${index + 1}º</td>
+                        <td class="p-3 font-bold text-sm">${perfil.nome}</td>
+                        <td class="p-3">
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black text-white ${badgeColor}">
+                                ${perfil.organizacao || 'ER'}
+                            </span>
+                        </td>
+                        <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontuacao}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        window.onload = puxarDadosDoSupabase;
     </script>
 </body>
 </html>
