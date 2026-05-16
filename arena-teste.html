@@ -90,23 +90,23 @@
         return user.id;
     }
 
-    // 1. Inserção Individual Corrigida para 'criado_em'
+    // 1. Inserção Individual Alinhada com o Banco
     async function inserirPontuacaoUnica() {
         const uid = await obterUsuarioAutenticado();
         if (!uid) return;
 
-        const pontos = parseInt(document.getElementById('teste-pontos').value);
+        const valorPontos = parseInt(document.getElementById('teste-pontos').value);
         const semanas = parseInt(document.getElementById('teste-data').value);
         const btn = document.getElementById('btn-unico');
         btn.disabled = true; btn.innerText = "INJETANDO...";
 
         let objetoInsercao = { 
-            perfil_id: uid, 
-            pontuacao: pontos 
+            jogador_id: uid, // Ajustado para jogador_id
+            pontos: valorPontos // Ajustado para pontos
         };
 
         if (semanas > 0) {
-            objetoInsercao.criado_em = obterDataRetroativa(semanas); // Ajustado aqui
+            objetoInsercao.criado_em = obterDataRetroativa(semanas);
         }
 
         try {
@@ -115,7 +115,7 @@
                 .insert([objetoInsercao]);
 
             if (error) throw error;
-            alert(`Sucesso! Injetado: ${pontos} pontos.`);
+            alert(`Sucesso! Injetado: ${valorPontos} pontos.`);
         } catch (e) {
             console.error(e);
             alert("Erro ao injetar dados: " + e.message);
@@ -124,7 +124,7 @@
         }
     }
 
-    // 2. Inserção em Lote Corrigida para 'criado_em'
+    // 2. Inserção em Lote Alinhada com o Banco
     async function gerarCargaLote() {
         const uid = await obterUsuarioAutenticado();
         if (!uid) return;
@@ -133,23 +133,23 @@
         btn.disabled = true; btn.innerText = "GERANDO EM LOTE...";
 
         const jogadasFicticias = [
-            { pontuacao: 580, semanas: 0 },
-            { pontuacao: 510, semanas: 1 },
-            { pontuacao: 460, semanas: 1 },
-            { pontuacao: 420, semanas: 2 },
-            { pontuacao: 390, semanas: 3 },
-            { pontuacao: 350, semanas: 3 },
-            { pontuacao: 290, semanas: 4 },
-            { pontuacao: 240, semanas: 5 },
-            { pontuacao: 180, semanas: 6 },
-            { pontuacao: 110, semanas: 8 }
+            { pontos: 580, semanas: 0 },
+            { pontos: 510, semanas: 1 },
+            { pontos: 460, semanas: 1 },
+            { pontos: 420, semanas: 2 },
+            { pontos: 390, semanas: 3 },
+            { pontos: 350, semanas: 3 },
+            { pontos: 290, semanas: 4 },
+            { pontos: 240, semanas: 5 },
+            { pontos: 180, semanas: 6 },
+            { pontos: 110, semanas: 8 }
         ];
 
         try {
             const dadosParaEnvio = jogadasFicticias.map(j => ({
-                perfil_id: uid,
-                pontuacao: j.pontuacao,
-                criado_em: obterDataRetroativa(j.semanas) // Ajustado aqui
+                jogador_id: uid, // Ajustado para jogador_id
+                pontos: j.pontos, // Ajustado para pontos
+                criado_em: obterDataRetroativa(j.semanas)
             }));
 
             const { error } = await supabaseClient
