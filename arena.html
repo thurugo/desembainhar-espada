@@ -20,7 +20,7 @@
         }
         .pulse-red { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        select { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.3); color: white; }
+        select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
         option { background: #001428; color: white; }
     </style>
 </head>
@@ -103,7 +103,7 @@
                     bibliaData = await response.json();
                     document.getElementById('seletor-container').classList.add('hidden');
                     iniciarSorteio();
-                } catch (e) { alert("Erro ao carregar arquivos."); btn.disabled = false; btn.innerText = "COMEÇAR GINCANA"; }
+                } catch (e) { alert("Erro ao carregar arquivos da Bíblia."); btn.disabled = false; btn.innerText = "COMEÇAR GINCANA"; }
             } else if (btn.innerText === "PRÓXIMA RODADA") {
                 iniciarSorteio();
             } else if (btn.innerText === "ENCONTREI!") {
@@ -145,7 +145,6 @@
                 document.getElementById('timer-display').innerText = tempoRestante;
                 if (tempoRestante <= 0) {
                     clearInterval(timerInterval);
-                    alert("Tempo esgotado!");
                     finalizarRodada(false);
                 }
             }, 1000);
@@ -153,10 +152,9 @@
 
         function cliqueEncontrei() {
             clearInterval(timerInterval);
-            pontosReserva = tempoRestante; // Congela os pontos
-            document.getElementById('timer-display').classList.add('hidden'); // Oculta o timer de 60s
+            pontosReserva = tempoRestante; 
+            document.getElementById('timer-display').classList.add('hidden'); 
             
-            // Ativa Timer Anti-Trapaça de 5 segundos
             const containerVoz = document.getElementById('anti-trapaca-container');
             const displayVoz = document.getElementById('timer-voz');
             containerVoz.classList.remove('hidden');
@@ -170,7 +168,7 @@
                 if (tempoVoz <= 0) {
                     clearInterval(antiTrapacaInterval);
                     if (!vozDetectada) {
-                        alert("Você demorou para começar a ler! Rodada anulada.");
+                        alert("Tempo limite esgotado para iniciar a leitura!");
                         finalizarRodada(false);
                     }
                 }
@@ -185,7 +183,7 @@
                 recognition.start();
                 recognition.onresult = (event) => {
                     vozDetectada = true;
-                    clearInterval(antiTrapacaInterval); // Para o timer de 5s assim que ouvir algo
+                    clearInterval(antiTrapacaInterval); 
                     containerVoz.classList.add('hidden');
                     transcricaoFinal = Array.from(event.results).map(r => r[0].transcript).join('');
                     document.getElementById('texto-capturado').innerText = `"${transcricaoFinal}"`;
@@ -200,9 +198,7 @@
             const oficial = limpar(textoOficial);
             const falado = limpar(transcricaoFinal);
 
-            // Validação (checa se o falado contém o início do versículo oficial)
             const sucesso = falado.includes(oficial.substring(0, 10)) && vozDetectada;
-            
             exibirMensagemResultado(sucesso);
         }
 
@@ -244,39 +240,45 @@
             }
         }
 
+        // MODIFICAÇÃO CENTRAL: Alinhado exatamente com o nome das colunas do seu banco de dados
         async function enviarPontuacao() {
-    const btn = document.getElementById('btn-acao');
-    btn.disabled = true;
-    btn.innerText = "SALVANDO...";
-    
-    try {
-        const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-        
-        if (authError || !user) {
-            alert("Erro de autenticação! Faça login novamente.");
-            window.location.href = 'login.html';
-            return;
+            const btn = document.getElementById('btn-acao');
+            btn.disabled = true;
+            btn.innerText = "SALVANDO...";
+            
+            try {
+                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+                
+                if (authError || !user) {
+                    alert("Sessão expirada. Faça login novamente.");
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Inserindo com as colunas reais: jogador_id e pontos
+                const { error } = await supabaseClient
+                    .from('ranking')
+                    .insert([{ 
+                        jogador_id: user.id, 
+                        pontos: pontosAcumulados 
+                    }]);
+
+                if (error) throw error;
+
+                alert(`Excelente! Sua pontuação de ${pontosAcumulados} pontos foi salva!`);
+                window.location.href = 'ranking.html';
+
+            } catch (err) {
+                console.error(err);
+                alert(`Erro ao salvar: ${err.message || err}`);
+                btn.disabled = false;
+                btn.innerText = "SALVAR NO RANKING";
+            }
         }
 
-        console.log("Enviando dados para o Supabase... Usuário:", user.id, "Pontos:", pontosAcumulados);
-
-        // Envia os dados para a tabela ranking
-        const { data, error } = await supabaseClient
-            .from('ranking')
-            .insert([{ perfil_id: user.id, pontuacao: pontosAcumulados }]);
-
-        if (error) throw error;
-
-        alert(`Pontuação de ${pontosAcumulados} pontos salva com sucesso!`);
-        window.location.href = 'ranking.html';
-
-    } catch (err) {
-        console.error("Erro detalhado do Supabase:", err);
-        alert(`Falha ao salvar no banco de dados!\n\nMotivo: ${err.message || err}\n\nVerifique se o RLS está desativado para inserção na tabela 'ranking' ou se o nome das colunas está correto.`);
-        btn.disabled = false;
-        btn.innerText = "SALVAR NO RANKING";
-    }
-};
+        window.onload = () => {
+            document.getElementById('nome-usuario').innerText = localStorage.getItem('usuario_nome') || "Guerreiro";
+        };
     </script>
 </body>
 </html>
