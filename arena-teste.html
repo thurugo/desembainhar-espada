@@ -70,101 +70,101 @@
     </div>
 
     <script>
-        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+    const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+    const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        // Função para calcular datas retroativas
-        function obterDataRetroativa(semanasAtras) {
-            const data = new Date();
-            data.setDate(data.getDate() - (semanasAtras * 7));
-            return data.toISOString();
+    function obterDataRetroativa(semanasAtras) {
+        const data = new Date();
+        data.setDate(data.getDate() - (semanasAtras * 7));
+        return data.toISOString();
+    }
+
+    async function obterUsuarioAutenticado() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            alert("Nenhum usuário logado! Por favor, faça login.");
+            window.location.href = 'login.html';
+            return null;
+        }
+        return user.id;
+    }
+
+    // 1. Inserção Individual Corrigida para 'criado_em'
+    async function inserirPontuacaoUnica() {
+        const uid = await obterUsuarioAutenticado();
+        if (!uid) return;
+
+        const pontos = parseInt(document.getElementById('teste-pontos').value);
+        const semanas = parseInt(document.getElementById('teste-data').value);
+        const btn = document.getElementById('btn-unico');
+        btn.disabled = true; btn.innerText = "INJETANDO...";
+
+        let objetoInsercao = { 
+            perfil_id: uid, 
+            pontuacao: pontos 
+        };
+
+        if (semanas > 0) {
+            objetoInsercao.criado_em = obterDataRetroativa(semanas); // Ajustado aqui
         }
 
-        async function obterUsuarioAutenticado() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (!user) {
-                alert("Nenhum usuário logado! Por favor, faça login na página anterior.");
-                window.location.href = 'login.html';
-                return null;
-            }
-            return user.id;
+        try {
+            const { error } = await supabaseClient
+                .from('ranking')
+                .insert([objetoInsercao]);
+
+            if (error) throw error;
+            alert(`Sucesso! Injetado: ${pontos} pontos.`);
+        } catch (e) {
+            console.error(e);
+            alert("Erro ao injetar dados: " + e.message);
+        } finally {
+            btn.disabled = false; btn.innerText = "Injetar Esta Pontuação";
         }
+    }
 
-        // 1. Inserção Individual
-        async function inserirPontuacaoUnica() {
-            const uid = await obterUsuarioAutenticado();
-            if (!uid) return;
+    // 2. Inserção em Lote Corrigida para 'criado_em'
+    async function gerarCargaLote() {
+        const uid = await obterUsuarioAutenticado();
+        if (!uid) return;
 
-            const pontos = parseInt(document.getElementById('teste-pontos').value);
-            const semanas = parseInt(document.getElementById('teste-data').value);
-            const dataSimulada = obterDataRetroativa(semanas);
+        const btn = document.getElementById('btn-lote');
+        btn.disabled = true; btn.innerText = "GERANDO EM LOTE...";
 
-            const btn = document.getElementById('btn-unico');
-            btn.disabled = true; btn.innerText = "INJETANDO...";
+        const jogadasFicticias = [
+            { pontuacao: 580, semanas: 0 },
+            { pontuacao: 510, semanas: 1 },
+            { pontuacao: 460, semanas: 1 },
+            { pontuacao: 420, semanas: 2 },
+            { pontuacao: 390, semanas: 3 },
+            { pontuacao: 350, semanas: 3 },
+            { pontuacao: 290, semanas: 4 },
+            { pontuacao: 240, semanas: 5 },
+            { pontuacao: 180, semanas: 6 },
+            { pontuacao: 110, semanas: 8 }
+        ];
 
-            try {
-                const { error } = await supabaseClient
-                    .from('ranking')
-                    .insert([{ 
-                        perfil_id: uid, 
-                        pontuacao: pontos,
-                        created_at: dataSimulada // O Supabase aceita que enviemos a data manualmente para testes
-                    }]);
+        try {
+            const dadosParaEnvio = jogadasFicticias.map(j => ({
+                perfil_id: uid,
+                pontuacao: j.pontuacao,
+                criado_em: obterDataRetroativa(j.semanas) // Ajustado aqui
+            }));
 
-                if (error) throw error;
-                alert(`Sucesso! Injetado: ${pontos} pontos com data de ${semanas} semana(s) atrás.`);
-            } catch (e) {
-                console.error(e);
-                alert("Erro ao injetar dados: " + e.message);
-            } finally {
-                btn.disabled = false; btn.innerText = "Injetar Esta Pontuação";
-            }
+            const { error } = await supabaseClient
+                .from('ranking')
+                .insert(dadosParaEnvio);
+
+            if (error) throw error;
+            alert("Sucesso! 10 pontuações fictícias foram geradas.");
+        } catch (e) {
+            console.error(e);
+            alert("Erro na carga em lote: " + e.message);
+        } finally {
+            btn.disabled = false; btn.innerText = "Gerar 10 Jogadas Aleatórias";
         }
-
-        // 2. Inserção em Lote (Cria um cenário completo de ranking)
-        async function gerarCargaLote() {
-            const uid = await obterUsuarioAutenticado();
-            if (!uid) return;
-
-            const btn = document.getElementById('btn-lote');
-            btn.disabled = true; btn.innerText = "GERANDO EM LOTE...";
-
-            // Array com 10 pontuações e idades de semanas diferentes
-            const jogadasFicticias = [
-                { pontuacao: 580, semanas: 0 },
-                { pontuacao: 510, semanas: 1 },
-                { pontuacao: 460, semanas: 1 },
-                { pontuacao: 420, semanas: 2 },
-                { pontuacao: 390, semanas: 3 },
-                { pontuacao: 350, semanas: 3 },
-                { pontuacao: 290, semanas: 4 },
-                { pontuacao: 240, semanas: 5 },
-                { pontuacao: 180, semanas: 6 },
-                { pontuacao: 110, semanas: 8 }
-            ];
-
-            try {
-                // Prepara os dados calculando as datas corretas
-                const dadosParaEnvio = jogadasFicticias.map(j => ({
-                    perfil_id: uid,
-                    pontuacao: j.pontuacao,
-                    created_at: obterDataRetroativa(j.semanas)
-                }));
-
-                const { error } = await supabaseClient
-                    .from('ranking')
-                    .insert(dadosParaEnvio);
-
-                if (error) throw error;
-                alert("Sucesso! 10 pontuações fictícias foram geradas para o seu perfil. Vá ao Ranking conferir os filtros de idade, tempo e permanência!");
-            } catch (e) {
-                console.error(e);
-                alert("Erro na carga em lote: " + e.message);
-            } finally {
-                btn.disabled = false; btn.innerText = "Gerar 10 Jogadas Aleatórias";
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
