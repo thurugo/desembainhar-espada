@@ -82,128 +82,122 @@
     </div>
 
     <script>
-        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+    const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+    const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-        let dadosBrutosRanking = [];
+    let dadosBrutosRanking = [];
 
-        async function puxarDadosDoSupabase() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('ranking')
-                    .select(`
-                        pontuacao,
-                        created_at,
-                        perfis (
-                            nome,
-                            organizacao,
-                            data_nascimento
-                        )
-                    `)
-                    .order('pontuacao', { ascending: false });
+    async function puxarDadosDoSupabase() {
+        try {
+            const { data, error } = await supabaseClient
+                .from('ranking')
+                .select(`
+                    pontuacao,
+                    criado_em,
+                    perfis (
+                        nome,
+                        organizacao,
+                        data_nascimento
+                    )
+                `) // Mudado de created_at para criado_em
+                .order('pontuacao', { ascending: false });
 
-                if (error) throw error;
-                dadosBrutosRanking = data;
-                aplicarFiltros();
+            if (error) throw error;
+            dadosBrutosRanking = data;
+            aplicarFiltros();
 
-            } catch (err) {
-                console.error(err);
-                document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-400 text-xs">ERRO AO CONECTAR COM O BANCO DE DADOS.</td></tr>`;
-            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-400 text-xs">ERRO AO CONECTAR COM O BANCO DE DADOS.</td></tr>`;
         }
+    }
 
-        function calcularIdade(dataNasc) {
-            if (!dataNasc) return 0;
-            const nascimento = new Date(dataNasc);
-            const hoje = new Date();
-            let idade = hoje.getFullYear() - nascimento.getFullYear();
-            const m = hoje.getMonth() - nascimento.getMonth();
-            if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-                idade--;
-            }
-            return idade;
+    function calcularIdade(dataNasc) {
+        if (!dataNasc) return 0;
+        const nascimento = new Date(dataNasc);
+        const hoje = new Date();
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const m = hoje.getMonth() - nascimento.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+            idade--;
         }
+        return idade;
+    }
 
-        function aplicarFiltros() {
-            const tempo = document.getElementById('filtro-tempo').value;
-            const idadeFiltro = document.getElementById('filtro-idade').value;
-            const org = document.getElementById('filtro-org').value;
+    function aplicarFiltros() {
+        const tempo = document.getElementById('filtro-tempo').value;
+        const idadeFiltro = document.getElementById('filtro-idade').value;
+        const org = document.getElementById('filtro-org').value;
 
-            const agora = new Date();
+        const agora = new Date();
+        
+        let dadosFiltrados = dadosBrutosRanking.filter(item => {
+            const perfil = item.perfis || {};
+            const dataPontuacao = new Date(item.criado_em); // Mudado de created_at para criado_em
             
-            let dadosFiltrados = dadosBrutosRanking.filter(item => {
-                const perfil = item.perfis || {};
-                const dataPontuacao = new Date(item.created_at);
-                
-                // 1. Filtro de Tempo
-                if (tempo === 'semanal') {
-                    const umaSemanaAtras = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    if (dataPontuacao < umaSemanaAtras) return false;
-                } else if (tempo === 'mensal') {
-                    const umMesAtras = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
-                    if (dataPontuacao < umMesAtras) return false;
-                }
-
-                // 2. Filtro de Organização
-                if (org !== 'todos' && perfil.organizacao !== org) return false;
-
-                // 3. Filtro de Idade
-                const idadeReal = calcularIdade(perfil.data_nascimento);
-                if (idadeFiltro === 'juniores' && (idadeReal < 9 || idadeReal > 11)) return false;
-                if (idadeFiltro === 'adolescentes' && (idadeReal < 12 || idadeReal > 17)) return false;
-                if (idadeFiltro === 'seniors' && idadeReal < 18) return false;
-
-                return true;
-            });
-
-            renderizarTabela(dadosFiltrados);
-        }
-
-        function renderizarTabela(lista) {
-            const tbody = document.getElementById('lista-ranking');
-            tbody.innerHTML = "";
-
-            // MODIFICAÇÃO: Garante a restrição estrita às 10 maiores pontuações após os filtros
-            const top10 = lista.slice(0, 10);
-
-            if (top10.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-blue-300 uppercase text-xs">Nenhuma pontuação registrada nesta categoria.</td></tr>`;
-                return;
+            if (tempo === 'semanal') {
+                const umaSemanaAtras = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+                if (dataPontuacao < umaSemanaAtras) return false;
+            } else if (tempo === 'mensal') {
+                const umMesAtras = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+                if (dataPontuacao < umMesAtras) return false;
             }
 
-            top10.forEach((item, index) => {
-                const perfil = item.perfis || { nome: "Guerreiro Antigo", organizacao: "ER" };
-                const badgeColor = perfil.organizacao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
-                
-                // MODIFICAÇÃO: Cálculo dinâmico de semanas que o registro está ativo no sistema
-                const dataPontuacao = new Date(item.created_at);
-                const agora = new Date();
-                const diffTempo = Math.abs(agora - dataPontuacao);
-                const semanas = Math.floor(diffTempo / (1000 * 60 * 60 * 24 * 7));
-                
-                // Formatação do texto de semanas
-                let textoSemana = `${semanas} sem`;
-                if (semanas === 0) textoSemana = "Estreia"; // Se foi feito na semana atual
+            if (org !== 'todos' && perfil.organizacao !== org) return false;
 
-                const row = `
-                    <tr class="border-b border-white/5 transition-colors hover:bg-white/5">
-                        <td class="p-3 pl-4 font-black ${index === 0 ? 'text-yellow-400 text-lg' : 'text-blue-300'}">${index + 1}º</td>
-                        <td class="p-3 font-bold text-sm">${perfil.nome}</td>
-                        <td class="p-3">
-                            <span class="px-2 py-0.5 rounded text-[9px] font-black text-white ${badgeColor}">
-                                ${perfil.organizacao || 'ER'}
-                            </span>
-                        </td>
-                        <td class="p-3 text-center font-mono text-xs text-blue-300 font-bold">${textoSemana}</td>
-                        <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontuacao}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+            const idadeReal = calcularIdade(perfil.data_nascimento);
+            if (idadeFiltro === 'juniores' && (idadeReal < 9 || idadeReal > 11)) return false;
+            if (idadeFiltro === 'adolescentes' && (idadeReal < 12 || idadeReal > 17)) return false;
+            if (idadeFiltro === 'seniors' && idadeReal < 18) return false;
+
+            return true;
+        });
+
+        renderizarTabela(dadosFiltrados);
+    }
+
+    function renderizarTabela(lista) {
+        const tbody = document.getElementById('lista-ranking');
+        tbody.innerHTML = "";
+
+        const top10 = lista.slice(0, 10);
+
+        if (top10.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-blue-300 uppercase text-xs">Nenhuma pontuação registrada nesta categoria.</td></tr>`;
+            return;
         }
 
-        window.onload = puxarDadosDoSupabase;
-    </script>
+        top10.forEach((item, index) => {
+            const perfil = item.perfis || { nome: "Guerreiro Antigo", organizacao: "ER" };
+            const badgeColor = perfil.organizacao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
+            
+            const dataPontuacao = new Date(item.criado_em); // Mudado de created_at para criado_em
+            const agora = new Date();
+            const diffTempo = Math.abs(agora - dataPontuacao);
+            const semanas = Math.floor(diffTempo / (1000 * 60 * 60 * 24 * 7));
+            
+            let textoSemana = `${semanas} sem`;
+            if (semanas === 0) textoSemana = "Estreia";
+
+            const row = `
+                <tr class="border-b border-white/5 transition-colors hover:bg-white/5">
+                    <td class="p-3 pl-4 font-black ${index === 0 ? 'text-yellow-400 text-lg' : 'text-blue-300'}">${index + 1}º</td>
+                    <td class="p-3 font-bold text-sm">${perfil.nome}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[9px] font-black text-white ${badgeColor}">
+                            ${perfil.organizacao || 'ER'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center font-mono text-xs text-blue-300 font-bold">${textoSemana}</td>
+                    <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontuacao}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    window.onload = puxarDadosDoSupabase;
+</script>
 </body>
 </html>
