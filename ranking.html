@@ -90,26 +90,34 @@
 
     async function puxarDadosDoSupabase() {
         try {
+            // AJUSTE: Usando 'perfis!jogador_id' para forçar o Supabase a fazer o vínculo correto
             const { data, error } = await supabaseClient
                 .from('ranking')
                 .select(`
                     pontos,
                     criado_em,
-                    perfis (
+                    perfis!jogador_id (
                         nome,
                         organizacao,
                         data_nascimento
                     )
-                `) // Buscando a coluna 'pontos'
-                .order('pontos', { ascending: false }); // Ordenando por 'pontos'
+                `)
+                .order('pontos', { ascending: false });
 
             if (error) throw error;
+            
+            console.log("Dados brutos carregados:", data);
             dadosBrutosRanking = data;
             aplicarFiltros();
 
         } catch (err) {
-            console.error(err);
-            document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-400 text-xs">ERRO AO CONECTAR COM O BANCO DE DADOS.</td></tr>`;
+            console.error("Erro detalhado do Ranking:", err);
+            document.getElementById('lista-ranking').innerHTML = `
+                <tr>
+                    <td colspan="5" class="p-10 text-center text-red-400 text-xs font-bold">
+                        ERRO AO CARREGAR RANKING:<br>${err.message || err}
+                    </td>
+                </tr>`;
         }
     }
 
@@ -132,7 +140,8 @@
         const agora = new Date();
         
         let dadosFiltrados = dadosBrutosRanking.filter(item => {
-            const perfil = item.perfis || {};
+            // CORREÇÃO: Se o usuário de teste não tiver linha na tabela perfis, criamos dados fictícios para o teste não sumir
+            const perfil = item.perfis || { nome: "Jogador de Teste", organizacao: "ER", data_nascimento: "2012-05-15" };
             const dataPontuacao = new Date(item.criado_em);
             
             if (tempo === 'semanal') {
@@ -168,8 +177,10 @@
         }
 
         top10.forEach((item, index) => {
-            const perfil = item.perfis || { nome: "Guerreiro Antigo", organizacao: "ER" };
-            const badgeColor = perfil.organizacao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
+            // CORREÇÃO: Fallback caso o objeto perfis venha nulo do banco
+            const perfil = item.perfis || { nome: "Jogador de Teste", organizacao: "ER" };
+            const orgExibicao = perfil.organizacao || "ER";
+            const badgeColor = orgExibicao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
             
             const dataPontuacao = new Date(item.criado_em);
             const agora = new Date();
@@ -182,16 +193,16 @@
             const row = `
                 <tr class="border-b border-white/5 transition-colors hover:bg-white/5">
                     <td class="p-3 pl-4 font-black ${index === 0 ? 'text-yellow-400 text-lg' : 'text-blue-300'}">${index + 1}º</td>
-                    <td class="p-3 font-bold text-sm">${perfil.nome}</td>
+                    <td class="p-3 font-bold text-sm">${perfil.nome || "Guerreiro"}</td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded text-[9px] font-black text-white ${badgeColor}">
-                            ${perfil.organizacao || 'ER'}
+                            ${orgExibicao}
                         </span>
                     </td>
                     <td class="p-3 text-center font-mono text-xs text-blue-300 font-bold">${textoSemana}</td>
                     <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontos}</td>
                 </tr>
-            `; // Lendo 'item.pontos'
+            `;
             tbody.innerHTML += row;
         });
     }
