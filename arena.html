@@ -245,16 +245,38 @@
         }
 
         async function enviarPontuacao() {
-            const { data: { user } } = await supabaseClient.auth.getUser();
-            if (user) {
-                await supabaseClient.from('ranking').insert([{ perfil_id: user.id, pontuacao: pontosAcumulados }]);
-                window.location.href = 'ranking.html';
-            }
+    const btn = document.getElementById('btn-acao');
+    btn.disabled = true;
+    btn.innerText = "SALVANDO...";
+    
+    try {
+        const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+        
+        if (authError || !user) {
+            alert("Erro de autenticação! Faça login novamente.");
+            window.location.href = 'login.html';
+            return;
         }
 
-        window.onload = () => {
-            document.getElementById('nome-usuario').innerText = localStorage.getItem('usuario_nome') || "Guerreiro";
-        };
+        console.log("Enviando dados para o Supabase... Usuário:", user.id, "Pontos:", pontosAcumulados);
+
+        // Envia os dados para a tabela ranking
+        const { data, error } = await supabaseClient
+            .from('ranking')
+            .insert([{ perfil_id: user.id, pontuacao: pontosAcumulados }]);
+
+        if (error) throw error;
+
+        alert(`Pontuação de ${pontosAcumulados} pontos salva com sucesso!`);
+        window.location.href = 'ranking.html';
+
+    } catch (err) {
+        console.error("Erro detalhado do Supabase:", err);
+        alert(`Falha ao salvar no banco de dados!\n\nMotivo: ${err.message || err}\n\nVerifique se o RLS está desativado para inserção na tabela 'ranking' ou se o nome das colunas está correto.`);
+        btn.disabled = false;
+        btn.innerText = "SALVAR NO RANKING";
+    }
+};
     </script>
 </body>
 </html>
