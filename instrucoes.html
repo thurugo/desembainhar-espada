@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Instruções - Desembainhar Espada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada.png') no-repeat center center;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.96); backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="w-full max-w-xl text-center mb-6 mt-4">
+        <h1 class="text-3xl font-black text-yellow-400 uppercase tracking-tighter italic">Manual do Guerreiro</h1>
+        <p class="text-blue-200 text-xs uppercase tracking-widest mt-1">Regras Oficiais da Gincana</p>
+    </div>
+
+    <div class="glass-panel w-full max-w-xl p-6 rounded-3xl text-left shadow-2xl space-y-6 mb-6">
+        
+        <div>
+            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">⚔️ O Objetivo</h2>
+            <p class="text-blue-100 text-sm leading-relaxed">
+                O "Desembainhar Espada" é uma gincana de agilidade bíblica. Você competirá em **10 rodadas** consecutivas para encontrar os versículos sorteados na sua **Bíblia física** o mais rápido possível.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">🎮 Passo a Passo</h2>
+            <ul class="list-disc pl-5 text-blue-100 text-sm space-y-2">
+                <li><strong>Escolha sua Espada:</strong> Selecione a versão exata da sua Bíblia física (NVI, ACF, ARA, ARC ou NTLH) antes de começar.</li>
+                <li><strong>O Sorteio:</strong> Um endereço bíblico aparecerá na tela e o cronômetro de 60 segundos começará a rodar.</li>
+                <li><strong>A Busca:</strong> Procure o livro, capítulo e versículo na sua Bíblia física.</li>
+                <li><strong>Encontrei:</strong> Assim que achar o texto, clique imediatamente no botão verde <strong>"ENCONTREI!"</strong>. Isso congelará o seu tempo e reservará seus pontos.</li>
+                <li><strong>A Validação:</strong> Leia o versículo em voz alta para a nossa IA escutar e clique em <strong>"FINALIZAR LEITURA"</strong> para validar os pontos.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">⏱️ Sistema de Pontuação</h2>
+            <p class="text-blue-100 text-sm leading-relaxed">
+                Sua pontuação em cada rodada é baseada na sua velocidade. Se você clicar em "ENCONTREI!" faltando **42 segundos** para acabar o tempo, você garante **42 pontos** naquela rodada. O total acumulado nas 10 rodadas definirá sua posição no ranking.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">🛡️ Lei da Honra (Anti-Trapaça)</h2>
+            <p class="text-blue-100 text-sm leading-relaxed">
+                Para evitar que alguém clique em "ENCONTREI!" antes de achar o versículo de verdade, o jogo ativará uma contagem regressiva de **5 segundos**. Você deve começar a ler o versículo dentro desse tempo, ou a rodada será considerada **Inválida** e marcará 0 pontos.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">🏆 Pódio e Categorias</h2>
+            <p class="text-blue-100 text-sm leading-relaxed">
+                O Quadro de Líderes exibe as **10 maiores pontuações** do sistema. Você pode filtrar os resultados por Organização (ER ou MR), Período (Semanal/Mensal) e Categoria de Idade:
+            </p>
+            <ul class="list-none pl-2 mt-2 text-blue-100 text-sm space-y-1">
+                <li>• 🧑‍🚀 <strong>Juniores:</strong> 9 a 11 anos</li>
+                <li>• 🦅 <strong>Adolescentes:</strong> 12 a 17 anos</li>
+                <li>• 👑 <strong>Sêniors:</strong> Acima de 18 anos</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="w-full max-w-xl text-center mb-8">
+        <a href="index.html" class="inline-block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-2xl shadow-xl uppercase text-md transition-all active:scale-95">
+            Voltar ao Início
+        </a>
+    </div>
+
+</body>
+</html>
