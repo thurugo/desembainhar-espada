@@ -25,7 +25,7 @@
 
     <div class="w-full max-w-2xl text-center mb-6 mt-4">
         <h1 class="text-4xl font-black text-yellow-400 uppercase tracking-tighter italic">Quadro de Líderes</h1>
-        <p class="text-blue-200 text-xs uppercase tracking-[0.2em] mt-1">Gincana de Agilidade Bíblica</p>
+        <p class="text-blue-200 text-xs uppercase tracking-[0.2em] mt-1">As 10 Maiores Pontuações</p>
     </div>
 
     <div class="glass-panel w-full max-w-2xl p-4 rounded-2xl mb-4 grid grid-cols-1 sm:grid-cols-3 gap-3 shadow-xl">
@@ -63,12 +63,13 @@
                     <th class="p-3 pl-4">Pos</th>
                     <th class="p-3">Guerreiro(a)</th>
                     <th class="p-3">Org</th>
+                    <th class="p-3 text-center">Permanência</th>
                     <th class="p-3 text-right pr-4">Pontos</th>
                 </tr>
             </thead>
             <tbody id="lista-ranking">
                 <tr>
-                    <td colspan="4" class="p-10 text-center animate-pulse text-blue-200 uppercase text-xs">Carregando classificação geral...</td>
+                    <td colspan="5" class="p-10 text-center animate-pulse text-blue-200 uppercase text-xs">Carregando classificação...</td>
                 </tr>
             </tbody>
         </table>
@@ -108,7 +109,7 @@
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="4" class="p-10 text-center text-red-400 text-xs">ERRO AO CONECTAR COM O BANCO DE DADOS.</td></tr>`;
+                document.getElementById('lista-ranking').innerHTML = `<tr><td colspan="5" class="p-10 text-center text-red-400 text-xs">ERRO AO CONECTAR COM O BANCO DE DADOS.</td></tr>`;
             }
         }
 
@@ -131,7 +132,6 @@
 
             const agora = new Date();
             
-            // Filtra os dados localmente para desempenho instantâneo
             let dadosFiltrados = dadosBrutosRanking.filter(item => {
                 const perfil = item.perfis || {};
                 const dataPontuacao = new Date(item.created_at);
@@ -164,15 +164,28 @@
             const tbody = document.getElementById('lista-ranking');
             tbody.innerHTML = "";
 
-            if (lista.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-blue-300 uppercase text-xs">Nenhuma pontuação registrada nesta categoria.</td></tr>`;
+            // MODIFICAÇÃO: Garante a restrição estrita às 10 maiores pontuações após os filtros
+            const top10 = lista.slice(0, 10);
+
+            if (top10.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-10 text-center text-blue-300 uppercase text-xs">Nenhuma pontuação registrada nesta categoria.</td></tr>`;
                 return;
             }
 
-            lista.forEach((item, index) => {
+            top10.forEach((item, index) => {
                 const perfil = item.perfis || { nome: "Guerreiro Antigo", organizacao: "ER" };
                 const badgeColor = perfil.organizacao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
                 
+                // MODIFICAÇÃO: Cálculo dinâmico de semanas que o registro está ativo no sistema
+                const dataPontuacao = new Date(item.created_at);
+                const agora = new Date();
+                const diffTempo = Math.abs(agora - dataPontuacao);
+                const semanas = Math.floor(diffTempo / (1000 * 60 * 60 * 24 * 7));
+                
+                // Formatação do texto de semanas
+                let textoSemana = `${semanas} sem`;
+                if (semanas === 0) textoSemana = "Estreia"; // Se foi feito na semana atual
+
                 const row = `
                     <tr class="border-b border-white/5 transition-colors hover:bg-white/5">
                         <td class="p-3 pl-4 font-black ${index === 0 ? 'text-yellow-400 text-lg' : 'text-blue-300'}">${index + 1}º</td>
@@ -182,6 +195,7 @@
                                 ${perfil.organizacao || 'ER'}
                             </span>
                         </td>
+                        <td class="p-3 text-center font-mono text-xs text-blue-300 font-bold">${textoSemana}</td>
                         <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontuacao}</td>
                     </tr>
                 `;
