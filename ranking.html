@@ -93,15 +93,15 @@
             const { data, error } = await supabaseClient
                 .from('ranking')
                 .select(`
-                    pontuacao,
+                    pontos,
                     criado_em,
                     perfis (
                         nome,
                         organizacao,
                         data_nascimento
                     )
-                `) // Mudado de created_at para criado_em
-                .order('pontuacao', { ascending: false });
+                `) // Buscando a coluna 'pontos'
+                .order('pontos', { ascending: false }); // Ordenando por 'pontos'
 
             if (error) throw error;
             dadosBrutosRanking = data;
@@ -129,12 +129,11 @@
         const tempo = document.getElementById('filtro-tempo').value;
         const idadeFiltro = document.getElementById('filtro-idade').value;
         const org = document.getElementById('filtro-org').value;
-
         const agora = new Date();
         
         let dadosFiltrados = dadosBrutosRanking.filter(item => {
             const perfil = item.perfis || {};
-            const dataPontuacao = new Date(item.criado_em); // Mudado de created_at para criado_em
+            const dataPontuacao = new Date(item.criado_em);
             
             if (tempo === 'semanal') {
                 const umaSemanaAtras = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -172,7 +171,7 @@
             const perfil = item.perfis || { nome: "Guerreiro Antigo", organizacao: "ER" };
             const badgeColor = perfil.organizacao === 'ER' ? 'bg-blue-600' : 'bg-pink-600';
             
-            const dataPontuacao = new Date(item.criado_em); // Mudado de created_at para criado_em
+            const dataPontuacao = new Date(item.criado_em);
             const agora = new Date();
             const diffTempo = Math.abs(agora - dataPontuacao);
             const semanas = Math.floor(diffTempo / (1000 * 60 * 60 * 24 * 7));
@@ -190,9 +189,9 @@
                         </span>
                     </td>
                     <td class="p-3 text-center font-mono text-xs text-blue-300 font-bold">${textoSemana}</td>
-                    <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontuacao}</td>
+                    <td class="p-3 text-right pr-4 font-mono font-bold text-yellow-400">${item.pontos}</td>
                 </tr>
-            `;
+            `; // Lendo 'item.pontos'
             tbody.innerHTML += row;
         });
     }
