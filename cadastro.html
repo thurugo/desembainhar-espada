@@ -129,95 +129,95 @@
     </div>
 
     <script>
-        // 1. Configuração Global
-const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+    // Configuração do Cliente Supabase
+    const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+    const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-// 2. Função Principal com o Plano B (Re-tentativa)
-async function executarCadastro() {
-    const btn = document.getElementById('btn-registrar');
-    
-    // Coleta de dados
-    const nome = document.getElementById('reg-nome').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-senha').value;
-    const nascimento = document.getElementById('reg-nascimento').value;
-    const orgEl = document.querySelector('input[name="organizacao"]:checked');
-    const organizacao = orgEl ? orgEl.value : 'ER';
+    async function realizarCadastro(event) {
+        // Impede o formulário de recarregar a página HTML
+        event.preventDefault();
 
-    // Validação Básica
-    if (!nome || !email || !password || !nascimento) {
-        alert("Por favor, preencha todos os campos.");
-        return;
-    }
+        // Captura os elementos da tela
+        const btnCadastro = document.getElementById('btn-cadastrar');
+        const email = document.getElementById('cad-email').value.trim();
+        const senha = document.getElementById('cad-senha').value.trim();
+        const nome = document.getElementById('cad-nome').value.trim();
+        const organizacao = document.getElementById('cad-org').value; // ER ou MR
+        const dataNascimento = document.getElementById('cad-nasc').value; // Formato YYYY-MM-DD
 
-    btn.disabled = true;
-    btn.innerText = "Sincronizando...";
+        // Validação básica de campos vazios
+        if (!email || !senha || !nome || !organizacao || !dataNascimento) {
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
 
-    try {
-        // PASSO 1: Registrar no Auth
-        const { data, error } = await supabaseClient.auth.signUp({
-            email: email,
-            password: password,
-            options: { data: { full_name: nome, org: organizacao } }
-        });
+        // TRAVA ANTI-RATE LIMIT: Desativa o botão para evitar múltiplos disparos se a internet oscilar
+        btnCadastro.disabled = true;
+        btnCadastro.innerText = "FORJANDO CONTA...";
 
-        if (error) throw error;
+        try {
+            // 1. Criar o usuário no Supabase Auth
+            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                email: email,
+                password: senha
+            });
 
-        if (data.user) {
-            // PASSO 2: Função interna de re-tentativa (Plano B)
-            const salvarPerfilComSeguranca = async (tentativa = 1) => {
-                const { error: pError } = await supabaseClient
+            // Tratamento de erro específico do Auth (como e-mail já existente ou senha fraca)
+            if (authError) throw authError;
+
+            const usuarioCriado = authData.user;
+
+            if (usuarioCriado) {
+                // 2. Criar o perfil do jogador vinculado ao ID de Autenticação criado pelo banco
+                // Nota: Ajustado para usar 'jogador_id' para manter a consistência com a tabela ranking
+                const { error: perfilError } = await supabaseClient
                     .from('perfis')
-                    .upsert({ 
-                        id: data.user.id, 
-                        nome: nome, 
-                        data_nascimento: nascimento, 
-                        organizacao: organizacao, 
-                        email: email 
-                    }, { onConflict: 'id' });
+                    .insert([
+                        {
+                            jogador_id: usuarioCriado.id, 
+                            nome: nome,
+                            organizacao: organizacao,
+                            data_nascimento: dataNascimento
+                        }
+                    ]);
 
-                if (pError) {
-                    // Se o erro for de Foreign Key, tenta novamente até 3 vezes
-                    if (pError.message.includes("foreign key") && tentativa < 3) {
-                        console.log(`Tentativa ${tentativa} falhou. Sincronizando...`);
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                        return salvarPerfilComSeguranca(tentativa + 1);
-                    }
-                    throw pError;
-                }
-                return true;
-            };
+                if (perfilError) throw perfilError;
 
-            // Executa a gravação do perfil
-            await salvarPerfilComSeguranca();
+                // Salva o nome localmente para exibição rápida na Arena
+                localStorage.setItem('usuario_nome', nome);
 
-            // PASSO 3: Sucesso Total
-            document.getElementById('cadastro-container').innerHTML = `
-                <div class="text-center p-8 border-2 border-yellow-400 rounded-3xl bg-blue-900/40">
-                    <h2 class="text-yellow-400 font-black text-2xl mb-4">CONTA CRIADA!</h2>
-                    <p class="text-white mb-6 leading-relaxed">
-                        Enviamos um link de ativação para:<br>
-                        <strong class="text-yellow-200">${email}</strong>
-                    </p>
-                    <a href="login.html" class="inline-block w-full bg-yellow-500 text-blue-900 py-4 rounded-xl font-black uppercase shadow-lg">Ir para Login</a>
-                </div>
-            `;
+                alert("Cadastro realizado com sucesso! Bem-vindo à gincana.");
+                
+                // Redireciona o usuário direto para a tela de login para validar o acesso
+                window.location.href = 'login.html';
+            } else {
+                throw new Error("Erro inesperado: O usuário não pôde ser validado pelo servidor.");
+            }
+
+        } catch (error) {
+            console.error("Erro detalhado no cadastro:", error);
+            
+            // Trata o erro de limite de requisições de forma amigável na tela
+            if (error.message.includes("rate limit")) {
+                alert("Muitas tentativas seguidas! Por favor, aguarde de 5 a 10 minutos ou mude de rede (Wi-Fi para 4G) e tente novamente.");
+            } else {
+                alert("Erro ao criar conta: " + (error.message || "Verifique as informações fornecidas."));
+            }
+
+            // REATIVA O BOTÃO: Permite que o usuário tente corrigir o formulário caso tenha sido apenas um erro de digitação
+            btnCadastro.disabled = false;
+            btnCadastro.innerText = "Criar Conta / Cadastro";
         }
-    } catch (err) {
-        console.error("Erro técnico:", err);
-        // Se o erro de FK persistir após as tentativas, o usuário já existe no Auth
-        if (err.message.includes("foreign key")) {
-            alert("Sua conta foi criada no sistema! Por favor, confirme o e-mail e tente fazer o login.");
-            window.location.href = 'login.html';
-        } else {
-            alert("Erro no cadastro: " + err.message);
-        }
-        btn.disabled = false;
-        btn.innerText = "FINALIZAR CADASTRO";
     }
-}   
-    </script>
+
+    // Vincula a função ao evento de envio do formulário assim que a página carrega
+    window.onload = () => {
+        const formulario = document.querySelector('form');
+        if (formulario) {
+            formulario.onsubmit = realizarCadastro;
+        }
+    };
+</script>
 </body>
 </html>
