@@ -121,14 +121,16 @@
 
                 if (usuarioCriado) {
                     // 2. Cria a linha de dados na tabela 'perfis'
+                    // CORREÇÃO: Alterado de 'jogador_id' para 'id' para bater com seu banco de dados
                     const { error: perfilError } = await supabaseClient
                         .from('perfis')
                         .insert([
                             {
-                                jogador_id: usuarioCriado.id, 
+                                id: usuarioCriado.id, 
                                 nome: nome,
                                 organizacao: organizacao,
-                                data_nascimento: dataNascimento
+                                data_nascimento: dataNascimento,
+                                email: email
                             }
                         ]);
 
