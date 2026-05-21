@@ -55,6 +55,16 @@
              1px  1px 0 #000,
              0px  4px 10px rgba(0,0,0,0.9);
     }
+
+        /* Força todos os campos de digitação e seletores a terem texto escuro e legível */
+input, select {
+    color: #0f172a !important; /* Cor text-slate-900 forçada */
+}
+
+/* Garante que o placeholder (aquele texto de exemplo "guerreiro@email.com") fique cinza claro */
+input::placeholder {
+    color: #94a3b8 !important;
+}
 </style>
 </head>
 <body class="p-4">
