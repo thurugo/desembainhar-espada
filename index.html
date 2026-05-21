@@ -75,6 +75,15 @@
         </div>
 
     </div>
-
+<script>
+        window.onload = () => {
+            // Se a URL contiver os parâmetros ou fragmentos de confirmação de conta do Supabase
+            if (window.location.hash.includes("access_token=") || window.location.href.includes("type=signup")) {
+                // Captura todo o fragmento de código (?type=signup ou #access_token...) e anexa na rota da login.html
+                const tokenEstrategico = window.location.hash || window.location.search;
+                window.location.href = "login.html" + tokenEstrategico;
+            }
+        };
+    </script>
 </body>
 </html>
