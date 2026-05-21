@@ -4,230 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cadastro - Desembainhar Espada</title>
-    <!-- Bibliotecas Necessárias -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-    body {
-        margin: 0;
-        padding: 4px;
-        min-height: 100vh;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center;
-        color: white; 
-        font-family: sans-serif;
-        position: relative;
-    }
-
-    /* Camada de fundo corrigida: fixa no topo e centralizada na horizontal */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        /* AJUSTE AQUI: Mudado de 'center center' para 'center top' */
-        background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
-        background-size: cover; 
-        z-index: -1;
-    }
-
-    .glass-panel {
-        background: rgba(0, 20, 40, 0.5); 
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-    }
-    .pulse-red { animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
-    option { background: #001428; color: white; }
-
-    /* Efeito de contorno para a página de instruções (pode deixar em todas) */
-    .text-contour {
-        text-shadow: 
-            -1px -1px 0 #000,  
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000,
-             0px  4px 10px rgba(0,0,0,0.9);
-    }
-
-        /* Força todos os campos de digitação e seletores a terem texto escuro e legível */
-input, select {
-    color: #0f172a !important; /* Cor text-slate-900 forçada */
-}
-
-/* Garante que o placeholder (aquele texto de exemplo "guerreiro@email.com") fique cinza claro */
-input::placeholder {
-    color: #94a3b8 !important;
-}
-</style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.5); /* 50% de Transparência */
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        /* Correção de cor que aplicamos: Força o texto digitado a ficar escuro e visível */
+        input, select {
+            color: #0f172a !important;
+            background-color: white !important;
+        }
+        input::placeholder {
+            color: #94a3b8 !important;
+        }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
 </head>
-<body class="p-2 md:p-6">
+<body class="p-4">
 
-    <div id="cadastro-container" class="glass-panel w-full max-w-xl p-6 md:p-10 rounded-3xl shadow-2xl text-white my-4 transition-all duration-500">
+    <div class="glass-panel w-full max-w-md p-6 rounded-3xl shadow-2xl">
         
-        <div class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-black text-yellow-400 uppercase tracking-tighter shadow-sm">
-                Criar Conta
-            </h1>
-            <p class="text-blue-200 text-xs mt-2 italic tracking-widest uppercase">"Eis-me Aqui"</p>
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">Criar Nova Conta</h1>
+            <p class="text-blue-200 text-[10px] uppercase tracking-widest mt-1">Registre seu perfil de Guerreiro(a)</p>
         </div>
 
-        <!-- Estrutura sem a tag <form> para evitar refresh indesejado -->
-        <div class="space-y-5">
+        <form id="form-cadastro" class="space-y-4 text-left">
             
-            <!-- Campo Nome -->
-            <div class="flex flex-col">
-                <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Nome Completo</label>
-                <input type="text" id="reg-nome" placeholder="Digite seu nome completo" 
-                    class="w-full p-4 rounded-xl outline-none transition-all">
+            <div>
+                <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1 tracking-wider">Nome Completo:</label>
+                <input type="text" id="cad-nome" required class="w-full p-3 rounded-xl outline-none text-sm" placeholder="Ex: Rafael de Miranda">
             </div>
 
-            <!-- Grid E-mail e Senha -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="flex flex-col">
-                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">E-mail</label>
-                    <input type="email" id="reg-email" placeholder="seu@email.com" 
-                        class="p-4 rounded-xl outline-none transition-all">
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Senha</label>
-                    <input type="password" id="reg-senha" placeholder="Mínimo 6 dígitos" 
-                        class="p-4 rounded-xl outline-none transition-all">
-                </div>
+            <div>
+                <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1 tracking-wider">E-mail de Acesso:</label>
+                <input type="email" id="cad-email" required class="w-full p-3 rounded-xl outline-none text-sm" placeholder="seu-email@provedor.com">
             </div>
 
-            <!-- Grid Data e Organização -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="flex flex-col">
-                    <label for="reg-nascimento" class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Data de Nascimento</label>
-                    <input type="date" id="reg-nascimento" 
-                        class="w-full p-4 rounded-xl outline-none transition-all">
+            <div>
+                <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1 tracking-wider">Senha Secreta:</label>
+                <input type="password" id="cad-senha" required class="w-full p-3 rounded-xl outline-none text-sm" placeholder="Mínimo 6 caracteres">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1 tracking-wider">Organização:</label>
+                    <select id="cad-org" required class="w-full p-3 rounded-xl outline-none text-sm font-bold">
+                        <option value="ER">ER (Embaixadores)</option>
+                        <option value="MR">MR (Mensageiras)</option>
+                    </select>
                 </div>
-                <div class="flex flex-col">
-                    <label class="text-[10px] font-bold uppercase mb-2 ml-1 text-blue-200 text-center tracking-widest">Organização</label>
-                    <div class="flex justify-around bg-blue-900/40 p-3 rounded-xl border border-white/10">
-                        <label class="flex items-center space-x-2 cursor-pointer group">
-                            <input type="radio" name="organizacao" value="ER" class="w-4 h-4 accent-yellow-400" checked>
-                            <span class="text-sm font-bold group-hover:text-yellow-400 transition-colors">ER</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer group">
-                            <input type="radio" name="organizacao" value="MR" class="w-4 h-4 accent-yellow-400">
-                            <span class="text-sm font-bold group-hover:text-yellow-400 transition-colors">MR</span>
-                        </label>
-                    </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-1 tracking-wider">Nascimento:</label>
+                    <input type="date" id="cad-nasc" required class="w-full p-3 rounded-xl outline-none text-sm">
                 </div>
             </div>
 
-            <!-- Botão de Ação -->
-            <button type="button" id="btn-registrar" onclick="executarCadastro()" 
-                class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-xl transition-all active:scale-95 shadow-lg uppercase mt-4 text-lg">
+            <button type="submit" id="btn-cadastrar" 
+                class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl shadow-xl uppercase text-md transition-all active:scale-95 mt-2 border border-green-500/20">
                 Finalizar Cadastro
             </button>
-        </div>
+        </form>
 
-        <div class="mt-8 pt-6 border-t border-white/10 text-center">
-            <a href="login.html" class="text-xs text-blue-300 hover:text-yellow-400 underline transition-colors uppercase font-bold tracking-tighter">
-                Já possui conta? Clique aqui para entrar
-            </a>
+        <div class="mt-5 text-center">
+            <a href="index.html" class="text-xs text-blue-300 hover:underline">Voltar à Tela Inicial</a>
         </div>
     </div>
 
     <script>
-    // Configuração do Cliente Supabase
-    const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-    const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
-    async function realizarCadastro(event) {
-        // Impede o formulário de recarregar a página HTML
-        event.preventDefault();
+        async function realizarCadastro(event) {
+            event.preventDefault(); // Impede o recarregamento nativo da página
 
-        // Captura os elementos da tela
-        const btnCadastro = document.getElementById('btn-cadastrar');
-        const email = document.getElementById('cad-email').value.trim();
-        const senha = document.getElementById('cad-senha').value.trim();
-        const nome = document.getElementById('cad-nome').value.trim();
-        const organizacao = document.getElementById('cad-org').value; // ER ou MR
-        const dataNascimento = document.getElementById('cad-nasc').value; // Formato YYYY-MM-DD
-
-        // Validação básica de campos vazios
-        if (!email || !senha || !nome || !organizacao || !dataNascimento) {
-            alert("Por favor, preencha todos os campos obrigatórios.");
-            return;
-        }
-
-        // TRAVA ANTI-RATE LIMIT: Desativa o botão para evitar múltiplos disparos se a internet oscilar
-        btnCadastro.disabled = true;
-        btnCadastro.innerText = "FORJANDO CONTA...";
-
-        try {
-            // 1. Criar o usuário no Supabase Auth
-            const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-                email: email,
-                password: senha
-            });
-
-            // Tratamento de erro específico do Auth (como e-mail já existente ou senha fraca)
-            if (authError) throw authError;
-
-            const usuarioCriado = authData.user;
-
-            if (usuarioCriado) {
-                // 2. Criar o perfil do jogador vinculado ao ID de Autenticação criado pelo banco
-                // Nota: Ajustado para usar 'jogador_id' para manter a consistência com a tabela ranking
-                const { error: perfilError } = await supabaseClient
-                    .from('perfis')
-                    .insert([
-                        {
-                            jogador_id: usuarioCriado.id, 
-                            nome: nome,
-                            organizacao: organizacao,
-                            data_nascimento: dataNascimento
-                        }
-                    ]);
-
-                if (perfilError) throw perfilError;
-
-                // Salva o nome localmente para exibição rápida na Arena
-                localStorage.setItem('usuario_nome', nome);
-
-                alert("Cadastro realizado com sucesso! Bem-vindo à gincana.");
-                
-                // Redireciona o usuário direto para a tela de login para validar o acesso
-                window.location.href = 'login.html';
-            } else {
-                throw new Error("Erro inesperado: O usuário não pôde ser validado pelo servidor.");
-            }
-
-        } catch (error) {
-            console.error("Erro detalhado no cadastro:", error);
+            const btnCadastro = document.getElementById('btn-cadastrar');
             
-            // Trata o erro de limite de requisições de forma amigável na tela
-            if (error.message.includes("rate limit")) {
-                alert("Muitas tentativas seguidas! Por favor, aguarde de 5 a 10 minutos ou mude de rede (Wi-Fi para 4G) e tente novamente.");
-            } else {
-                alert("Erro ao criar conta: " + (error.message || "Verifique as informações fornecidas."));
+            // Captura os valores cravados com os IDs exatos do HTML
+            const email = document.getElementById('cad-email').value.trim();
+            const senha = document.getElementById('cad-senha').value.trim();
+            const nome = document.getElementById('cad-nome').value.trim();
+            const organizacao = document.getElementById('cad-org').value;
+            const dataNascimento = document.getElementById('cad-nasc').value;
+
+            // Bloqueio visual para evitar cliques múltiplos (Rate Limit)
+            btnCadastro.disabled = true;
+            btnCadastro.innerText = "FORJANDO CONTA...";
+
+            try {
+                // 1. Cria credenciais de autenticação
+                const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: senha
+                });
+
+                if (authError) throw authError;
+
+                const usuarioCriado = authData.user;
+
+                if (usuarioCriado) {
+                    // 2. Cria a linha de dados na tabela 'perfis'
+                    const { error: perfilError } = await supabaseClient
+                        .from('perfis')
+                        .insert([
+                            {
+                                jogador_id: usuarioCriado.id, 
+                                nome: nome,
+                                organizacao: organizacao,
+                                data_nascimento: dataNascimento
+                            }
+                        ]);
+
+                    if (perfilError) throw perfilError;
+
+                    localStorage.setItem('usuario_nome', nome);
+                    alert("Cadastro realizado com sucesso! Prepare sua espada.");
+                    window.location.href = 'login.html';
+                } else {
+                    throw new Error("Não foi possível gerar a assinatura do usuário.");
+                }
+
+            } catch (error) {
+                console.error("Erro capturado no processo:", error);
+                
+                if (error.message.includes("rate limit")) {
+                    alert("Limite de tentativas excedido! Aguarde 5 minutos ou mude do Wi-Fi para o 4G.");
+                } else {
+                    alert("Erro ao criar conta: " + (error.message || "Verifique os dados informados."));
+                }
+
+                // Libera o botão novamente apenas se der erro, permitindo correções
+                btnCadastro.disabled = false;
+                btnCadastro.innerText = "Finalizar Cadastro";
             }
-
-            // REATIVA O BOTÃO: Permite que o usuário tente corrigir o formulário caso tenha sido apenas um erro de digitação
-            btnCadastro.disabled = false;
-            btnCadastro.innerText = "Criar Conta / Cadastro";
         }
-    }
 
-    // Vincula a função ao evento de envio do formulário assim que a página carrega
-    window.onload = () => {
-        const formulario = document.querySelector('form');
-        if (formulario) {
-            formulario.onsubmit = realizarCadastro;
-        }
-    };
-</script>
+        // Garante o vínculo seguro da função ao formulário após o carregamento
+        window.onload = () => {
+            const formulario = document.getElementById('form-cadastro');
+            if (formulario) {
+                formulario.onsubmit = realizarCadastro;
+            }
+        };
+    </script>
 </body>
 </html>
