@@ -113,6 +113,25 @@ input::placeholder {
         const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
+        // NOVA LÓGICA: Executada assim que a página de login carrega
+window.onload = async () => {
+    try {
+        // Captura a sessão gerada automaticamente pelo link de confirmação do e-mail
+        const { data, error } = await supabaseClient.auth.getSession();
+        
+        if (error) throw error;
+
+        // Se existir uma sessão ativa vinda do redirecionamento do e-mail
+        if (data?.session) {
+            alert("🛡️ E-mail confirmado com sucesso! A sua conta está ativa. Introduza o seu e-mail e palavra-passe para entrar na Arena.");
+            
+            // Opcional: Desloga o utilizador imediatamente para forçá-lo a fazer o login manual com segurança
+            await supabaseClient.auth.signOut();
+        }
+    } catch (err) {
+        console.error("Erro ao verificar confirmação de e-mail:", err.message);
+    }
+};
         async function executarLogin() {
             const btn = document.getElementById('btn-login');
             const email = document.getElementById('login-email').value.trim();
