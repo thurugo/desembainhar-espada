@@ -107,14 +107,14 @@
         // NOVA VARIÁVEL: Controla qual módulo está ativo na tela (padrão é o tradicional)
         let moduloAtivo = 'regular'; 
 
-        async function puxarDadosDoSupabase() {
+       async function puxarDadosDoSupabase() {
     try {
         const { data, error } = await supabaseClient
             .from('ranking')
             .select(`
                 pontos,
                 criado_em,
-                modulo,
+                modulo,          // BUSCA NO LUGAR CERTO AGORA
                 perfis!jogador_id (
                     nome,
                     organizacao,
@@ -182,40 +182,39 @@
         }
 
         function aplicarFiltros() {
-            const tempo = document.getElementById('filtro-tempo').value;
-            const idadeFiltro = document.getElementById('filtro-idade').value;
-            const org = document.getElementById('filtro-org').value;
-            const agora = new Date();
-            
-            let dadosFiltrados = dadosBrutosRanking.filter(item => {
-                // NOVA VALIDAÇÃO: Filtra os dados baseando-se no módulo selecionado na interface
-                // Se o item do banco não tiver módulo preenchido, assumimos 'regular' (para preservar dados antigos)
-                const moduloItem = item.modulo || 'regular';
-                if (moduloItem !== moduloAtivo) return false;
+    const tempo = document.getElementById('filtro-tempo').value;
+    const idadeFiltro = document.getElementById('filtro-idade').value;
+    const org = document.getElementById('filtro-org').value;
+    const agora = new Date();
+    
+    let dadosFiltrados = dadosBrutosRanking.filter(item => {
+        // LEITURA DIRETA DO ITEM DO RANKING:
+        const moduloItem = item.modulo || 'regular';
+        if (moduloItem !== moduloAtivo) return false;
 
-                const perfil = item.perfis || { nome: "Jogador de Teste", organizacao: "ER", data_nascimento: "2012-05-15" };
-                const dataPontuacao = new Date(item.criado_em);
-                
-                if (tempo === 'semanal') {
-                    const umaSemanaAtras = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
-                    if (dataPontuacao < umaSemanaAtras) return false;
-                } else if (tempo === 'mensal') {
-                    const umMesAtras = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
-                    if (dataPontuacao < umMesAtras) return false;
-                }
-
-                if (org !== 'todos' && perfil.organizacao !== org) return false;
-
-                const idadeReal = calcularIdade(perfil.data_nascimento);
-                if (idadeFiltro === 'juniores' && (idadeReal < 9 || idadeReal > 11)) return false;
-                if (idadeFiltro === 'adolescentes' && (idadeReal < 12 || idadeReal > 17)) return false;
-                if (idadeFiltro === 'seniors' && idadeReal < 18) return false;
-
-                return true;
-            });
-
-            renderizarTabela(dadosFiltrados);
+        const perfil = item.perfis || { nome: "Jogador de Teste", organizacao: "ER", data_nascimento: "2012-05-15" };
+        const dataPontuacao = new Date(item.criado_em);
+        
+        if (tempo === 'semanal') {
+            const umaSemanaAtras = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+            if (dataPontuacao < umaSemanaAtras) return false;
+        } else if (tempo === 'mensal') {
+            const umMesAtras = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+            if (dataPontuacao < umMesAtras) return false;
         }
+
+        if (org !== 'todos' && perfil.organizacao !== org) return false;
+
+        const idadeReal = calcularIdade(perfil.data_nascimento);
+        if (idadeFiltro === 'juniores' && (idadeReal < 9 || idadeReal > 11)) return false;
+        if (idadeFiltro === 'adolescentes' && (idadeReal < 12 || idadeReal > 17)) return false;
+        if (idadeFiltro === 'seniors' && idadeReal < 18) return false;
+
+        return true;
+    });
+
+    renderizarTabela(dadosFiltrados);
+}
 
         function renderizarTabela(lista) {
             const tbody = document.getElementById('lista-ranking');
