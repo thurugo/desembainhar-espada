@@ -127,7 +127,8 @@
             }
         };
 
-        async function ejecutarLogin() {
+        // CORREÇÃO CRUCIAL: Nome da função corrigido para "executarLogin" (com X), casando com o HTML do botão!
+        async function executarLogin() {
             const btn = document.getElementById('btn-login');
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-senha').value;
@@ -155,10 +156,10 @@
                         .from('perfis')
                         .select('nome, organizacao')
                         .eq('id', data.user.id)
-                        .single();
+                        .maybeSingle(); // Alterado para maybeSingle para evitar travamento caso perfil não exista
 
                     if (pError) {
-                        console.warn("Perfil não encontrado, usando nome genérico.");
+                        console.warn("Perfil não encontrado, usando nome genérico:", pError.message);
                     }
 
                     // PASSO 3: Salvar dados no navegador para a Arena usar
@@ -173,7 +174,7 @@
 
             } catch (err) {
                 console.error("Erro no login:", err);
-                alert("Erro ao entrar: Verifique se o e-mail e a senha estão corretos ou se o e-mail foi confirmado.");
+                alert(`Erro ao entrar: ${err.message || "Verifique suas credenciais ou confirmação de e-mail."}`);
                 btn.disabled = false;
                 btn.innerText = "ACESSAR JOGO";
             }
