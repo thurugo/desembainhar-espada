@@ -108,46 +108,46 @@
         let moduloAtivo = 'regular'; 
 
         async function puxarDadosDoSupabase() {
-            try {
-                const { data, error } = await supabaseClient
-                    .from('ranking')
-                    .select(`
-                        pontos,
-                        criado_em,
-                        modulo,          // NOVA COLUNA: Puxa o identificador do módulo do banco
-                        perfis!jogador_id (
-                            nome,
-                            organizacao,
-                            data_nascimento
-                        )
-                    `)
-                    .order('pontos', { ascending: false });
+    try {
+        const { data, error } = await supabaseClient
+            .from('ranking')
+            .select(`
+                pontos,
+                criado_em,
+                modulo,
+                perfis!jogador_id (
+                    nome,
+                    organizacao,
+                    data_nascimento
+                )
+            `)
+            .order('pontos', { ascending: false });
 
-                if (error) throw error;
-                
-                dadosBrutosRanking = data || [];
-                
-                const dDiv = document.getElementById('diagnostico-banco');
-                dDiv.innerText = `Registros lidos do banco: ${dadosBrutosRanking.length}`;
-                if(dadosBrutosRanking.length === 0) {
-                    dDiv.className = "inline-block mt-3 text-[10px] bg-red-900/60 border border-red-500/30 px-3 py-1 rounded-full text-red-300 font-mono font-bold animate-pulse";
-                    dDiv.innerText += " (Alerta: RLS ativo bloqueando SELECT!)";
-                } else {
-                    dDiv.className = "inline-block mt-3 text-[10px] bg-green-900/60 border border-green-500/30 px-3 py-1 rounded-full text-green-300 font-mono";
-                }
-
-                aplicarFiltros();
-
-            } catch (err) {
-                console.error("Erro detalhado do Ranking:", err);
-                document.getElementById('lista-ranking').innerHTML = `
-                    <tr>
-                        <td colspan="5" class="p-10 text-center text-red-400 text-xs font-bold">
-                            ERRO AO CONECTAR COM O BANCO DE DADOS:<br>${err.message || err}
-                        </td>
-                    </tr>`;
-            }
+        if (error) throw error;
+        
+        dadosBrutosRanking = data || [];
+        
+        const dDiv = document.getElementById('diagnostico-banco');
+        dDiv.innerText = `Registros lidos do banco: ${dadosBrutosRanking.length}`;
+        if(dadosBrutosRanking.length === 0) {
+            dDiv.className = "inline-block mt-3 text-[10px] bg-red-900/60 border border-red-500/30 px-3 py-1 rounded-full text-red-300 font-mono font-bold animate-pulse";
+            dDiv.innerText += " (Alerta: RLS ativo bloqueando SELECT!)";
+        } else {
+            dDiv.className = "inline-block mt-3 text-[10px] bg-green-900/60 border border-green-500/30 px-3 py-1 rounded-full text-green-300 font-mono";
         }
+
+        aplicarFiltros();
+
+    } catch (err) {
+        console.error("Erro detalhado do Ranking:", err);
+        document.getElementById('lista-ranking').innerHTML = `
+            <tr>
+                <td colspan="5" class="p-10 text-center text-red-400 text-xs font-bold">
+                    ERRO AO CONECTAR COM O BANCO DE DADOS:<br>${err.message || err}
+                </td>
+            </tr>`;
+    }
+}
 
         // NOVA FUNÇÃO: Chamada quando o usuário clica nos botões de alternar módulo
         // Ela muda o módulo ativo, estiliza os botões e atualiza a tabela instantaneamente
