@@ -179,17 +179,17 @@
             aplicarFiltros();
         }
 
-        function calcularIdade(dataNasc) {
-            if (!dataNasc) return 0;
-            const nascimento = new Date(dataNasc);
-            const hoje = new Date();
-            let idade = hoje.getFullYear() - nascimento.getFullYear();
-            const m = hoje.getMonth() - nascimento.getMonth();
-            if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-                idades--;
-            }
-            return idade;
-        }
+       function calcularIdade(dataNasc) {
+    if (!dataNasc) return 0;
+    const nascimento = new Date(dataNasc);
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const m = hoje.getMonth() - nascimento.getMonth();
+    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--; // CORRIGIDO: Removido o 's' intruso
+    }
+    return idade;
+}
 
         function aplicarFiltros() {
     const tempo = document.getElementById('filtro-tempo').value;
