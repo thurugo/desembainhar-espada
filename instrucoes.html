@@ -6,116 +6,90 @@
     <title>Instruções - Desembainhar Espada</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-    body {
-        margin: 0;
-        padding: 4px;
-        min-height: 100vh;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center;
-        color: white; 
-        font-family: sans-serif;
-        position: relative;
-    }
-
-    /* Camada de fundo corrigida: fixa no topo e centralizada na horizontal */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        /* AJUSTE AQUI: Mudado de 'center center' para 'center top' */
-        background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
-        background-size: cover; 
-        z-index: -1;
-    }
-
-    .glass-panel {
-        background: rgba(0, 20, 40, 0.6); 
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 215, 0, 0.5);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
-    }
-    .pulse-red { animation: pulse 1.5s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
-    option { background: #001428; color: white; }
-
-    /* Efeito de contorno para a página de instruções (pode deixar em todas) */
-    .text-contour {
-        text-shadow: 
-            -1px -1px 0 #000,  
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000,
-             0px  4px 10px rgba(0,0,0,0.9);
-    }
-</style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.65);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
 </head>
 <body class="p-4">
 
-    <div class="w-full max-w-xl text-center mb-6 mt-4 bg-black/50 backdrop-blur-md p-5 rounded-3xl border border-yellow-500/20 shadow-lg">
-        <h1 class="text-2xl md:text-3xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">
-            Manual do Guerreiro ou da Guerreira
+    <div class="glass-panel w-full max-w-2xl p-6 rounded-3xl my-4 shadow-2xl">
+        <h1 class="text-3xl font-black text-yellow-400 text-center uppercase tracking-tight italic mb-6 text-contour">
+            📜 Manual do Guerreiro
         </h1>
-        <p class="text-blue-200 text-xs uppercase tracking-widest mt-1.5 drop-shadow-[0_2px_2px_rgba(0,0,0,1)]">
-            Regras Oficiais da Gincana
+
+        <p class="text-gray-300 text-sm text-center mb-6 leading-relaxed">
+            Bem-vindo ao <strong>Esgrima Bíblico Digital</strong>. Aqui a sua agilidade física com a Bíblia sagrada se une ao poder da tecnologia. Escolha o seu modo de combate e prepare a sua espada!
         </p>
-    </div>
 
-    <div class="glass-panel w-full max-w-xl p-6 rounded-3xl text-left shadow-2xl space-y-6 mb-6">
-        
-        <div>
-            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">⚔️ O Objetivo</h2>
-            <p class="text-blue-100 text-sm leading-relaxed">
-                O "Desembainhar Espada" é uma gincana de agilidade bíblica. Você competirá em **10 rodadas** consecutivas para encontrar os versículos sorteados na sua **Bíblia física** o mais rápido possível.
-            </p>
+        <div class="space-y-6">
+            
+            <div class="bg-blue-950/40 border border-blue-500/40 p-4 rounded-2xl">
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-xl">⚔️</span>
+                    <h2 class="text-lg font-black text-blue-400 uppercase tracking-wide">Modo Regular (Tradicional)</h2>
+                </div>
+                <ul class="text-xs text-gray-300 space-y-2 list-disc pl-4 leading-relaxed">
+                    <li>O jogo sorteará um <strong>endereço bíblico aleatório</strong> (Livro, Capítulo e Versículo).</li>
+                    <li>Sua missão é abrir a sua Bíblia física o mais rápido possível e localizar esse versículo.</li>
+                    <li>Assim que encontrar, clique em <strong>"ENCONTREI!"</strong> para congelar o cronômetro.</li>
+                    <li>O painel abrirá 4 opções de textos. Leia o versículo na sua Bíblia e clique na opção que corresponde exatamente ao texto sagrado.</li>
+                    <li>A partida dura exatamente <strong>10 rodadas</strong>. Cada segundo restante no cronômetro conta como ponto!</li>
+                </ul>
+            </div>
+
+            <div class="bg-purple-950/40 border border-purple-500/40 p-4 rounded-2xl">
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="text-xl">🔥</span>
+                    <h2 class="text-lg font-black text-purple-400 uppercase tracking-wide">Modo Avançado (Inverso)</h2>
+                </div>
+                <ul class="text-xs text-gray-300 space-y-2 list-disc pl-4 leading-relaxed">
+                    <li>O jogo sorteará uma <strong>Palavra-Chave Significativa</strong> na tela.</li>
+                    <li>Sua missão é folhear a sua Bíblia física e encontrar <strong>qualquer versículo</strong> na versão escolhida que contenha essa palavra exata.</li>
+                    <li>Ao localizar, clique imediatamente em <strong>"ENCONTREI!"</strong> para parar o tempo.</li>
+                    <li>O sistema ativará o microfone do seu dispositivo para realizar a auditoria automática.</li>
+                    <li>Você deve ditar (ou digitar) o endereço seguindo rigorosamente este padrão de voz:
+                        <div class="bg-black/40 text-yellow-400 p-2.5 rounded-xl font-mono text-center my-2 text-[11px] border border-white/5">
+                            "Livro de <strong>[Nome]</strong> capítulo <strong>[X]</strong> versículo <strong>[Y]</strong>"
+                        </div>
+                        <span class="text-[10px] text-purple-300 block text-center italic">Exemplo: "Livro de Miquéias capítulo 6 versículo 2"</span>
+                    </li>
+                    <li>O sistema lerá instantaneamente o banco de dados e verificará se a palavra sorteada realmente habita no endereço indicado. Se sim, os pontos são seus!</li>
+                    <li>O combate também dura <strong>10 rodadas</strong> e pontua pela velocidade.</li>
+                </ul>
+            </div>
+
+            <div class="bg-slate-900/60 border border-gray-700 p-4 rounded-2xl">
+                <h2 class="text-xs font-black text-yellow-500 uppercase tracking-widest mb-2">💎 Tabela de Recompensa</h2>
+                <p class="text-xs text-gray-300 leading-relaxed">
+                    Cada rodada inicia com <strong>60 segundos</strong>. Se você responder corretamente, o tempo restante é convertido em pontos diretos para o seu placar. Se errar a alternativa ou apontar um endereço inválido na auditoria, receberá <strong>0 pontos</strong> naquela rodada.
+                </p>
+            </div>
+
         </div>
 
-        <div>
-            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">🎮 Passo a Passo</h2>
-            <ul class="list-disc pl-5 text-blue-100 text-sm space-y-2">
-                <li><strong>Escolha sua Versão:</strong> Selecione a tradução exata da sua Bíblia física antes de começar para não confundir a IA.</li>
-                <li><strong>O Sorteio:</strong> Um endereço bíblico aparecerá na tela e o cronômetro de 60 segundos começará a rodar.</li>
-                <li><strong>A Busca:</strong> Procure o livro, capítulo e versículo o mais rápido que puder.</li>
-                <li><strong>Encontrei:</strong> Assim que achar o texto, clique imediatamente no botão verde <strong>"ENCONTREI!"</strong> para congelar seu tempo e reservar seus pontos.</li>
-                <li><strong>A Leitura:</strong> Leia o versículo em voz alta com clareza e clique em <strong>"FINALIZAR LEITURA"</strong> para que o sistema avalie.</li>
-            </ul>
+        <div class="mt-8">
+            <a href="index.html" 
+                class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl text-center shadow-md uppercase tracking-wide text-sm transition-all active:scale-95">
+                Voltar ao Menu Principal
+            </a>
         </div>
-
-        <div>
-            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">⏱️ Sistema de Pontuação</h2>
-            <p class="text-blue-100 text-sm leading-relaxed">
-                Sua pontuação é baseada na sua velocidade física. Se você clicar em "ENCONTREI!" faltando **39 segundos**, essa será a pontuação reservada para a rodada. Porém, esses pontos **só serão somados ao seu total após a validação da leitura**.
-            </p>
-        </div>
-
-        <div>
-            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">🤖 Validação da IA (Tolerância e Erros)</h2>
-            <p class="text-blue-100 text-sm leading-relaxed mb-2">
-                Nossa Inteligência Artificial analisa o que você leu e compara diretamente com a versão bíblica escolhida:
-            </p>
-            <ul class="list-disc pl-5 text-blue-100 text-sm space-y-2">
-                <li><span class="text-green-400 font-bold">✓ Leitura Válida:</span> O sistema não exige perfeição absoluta. Se a **maior parte da sua leitura** estiver fiel ao versículo sorteado, a rodada será considerada válida e seus pontos serão confirmados. Isso protege você contra pequenos gaguejos ou barulhos no ambiente.</li>
-                <li><span class="text-red-400 font-bold">✗ Leitura Inválida:</span> Caso você leia o **versículo errado**, pule muitas palavras ou mude o sentido do texto, a rodada será anulada. O painel mostrará "RODADA INVÁLIDA" e você receberá **0 pontos** naquela rodada.</li>
-            </ul>
-        </div>
-
-        <div>
-            <h2 class="text-yellow-400 font-black uppercase text-sm tracking-wider mb-2">🛡️ Trava Anti-Trapaça</h2>
-            <p class="text-blue-100 text-sm leading-relaxed">
-                Para evitar que jogadores cliquem em "ENCONTREI!" sem ter achado o texto na página, o jogo iniciará uma contagem regressiva de **5 segundos**. Se você não começar a ler o versículo dentro desse tempo, a rodada será cancelada automaticamente por falta de áudio.
-            </p>
-        </div>
-
-    </div>
-
-    <div class="w-full max-w-xl text-center mb-8">
-        <a href="index.html" class="inline-block w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-4 rounded-2xl shadow-xl uppercase text-md transition-all active:scale-95">
-            Voltar ao Início
-        </a>
     </div>
 
 </body>
