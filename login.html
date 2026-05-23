@@ -147,4 +147,37 @@
                     password: password
                 });
 
-                if (error) throw
+                if (error) throw error;
+
+                if (data.user) {
+                    // PASSO 2: Buscar o nome e organização na tabela 'perfis'
+                    const { data: perfil, error: pError } = await supabaseClient
+                        .from('perfis')
+                        .select('nome, organizacao')
+                        .eq('id', data.user.id)
+                        .single();
+
+                    if (pError) {
+                        console.warn("Perfil não encontrado, usando nome genérico.");
+                    }
+
+                    // PASSO 3: Salvar dados no navegador para a Arena usar
+                    localStorage.setItem('usuario_nome', perfil ? perfil.nome : "Guerreiro");
+                    localStorage.setItem('usuario_org', perfil ? perfil.organizacao : "ER");
+                    
+                    alert("⚔️ Login realizado com sucesso! Selecione o módulo de combate.");
+                    
+                    // PASSO 4: Redirecionar para a seleção de módulos
+                    window.location.href = 'modulos.html';
+                }
+
+            } catch (err) {
+                console.error("Erro no login:", err);
+                alert("Erro ao entrar: Verifique se o e-mail e a senha estão corretos ou se o e-mail foi confirmado.");
+                btn.disabled = false;
+                btn.innerText = "ACESSAR JOGO";
+            }
+        }
+    </script>
+</body>
+</html>
