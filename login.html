@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login - Desembainhar Espada</title>
-    <!-- Bibliotecas Necessárias -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -29,7 +28,6 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /* AJUSTE AQUI: Mudado de 'center center' para 'center top' */
         background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
         background-size: cover; 
         z-index: -1;
@@ -46,25 +44,25 @@
     select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
     option { background: #001428; color: white; }
 
-    /* Efeito de contorno para a página de instruções (pode deixar em todas) */
+    /* Efeito de contorno para a página de instruções */
     .text-contour {
         text-shadow: 
-            -1px -1px 0 #000,  
+            -1px -1px 0 #000,   
              1px -1px 0 #000,
             -1px  1px 0 #000,
              1px  1px 0 #000,
              0px  4px 10px rgba(0,0,0,0.9);
     }
 
-        /* Força todos os campos de digitação e seletores a terem texto escuro e legível */
-input, select {
-    color: #0f172a !important; /* Cor text-slate-900 forçada */
-}
+    /* Força todos os campos de digitação e seletores a terem texto escuro e legível */
+    input, select {
+        color: #0f172a !important;
+    }
 
-/* Garante que o placeholder (aquele texto de exemplo "guerreiro@email.com") fique cinza claro */
-input::placeholder {
-    color: #94a3b8 !important;
-}
+    /* Garante que o placeholder fique cinza claro */
+    input::placeholder {
+        color: #94a3b8 !important;
+    }
 </style>
 </head>
 <body class="p-4">
@@ -77,28 +75,24 @@ input::placeholder {
         </div>
 
         <div class="space-y-5">
-            <!-- E-mail -->
             <div class="flex flex-col text-left">
                 <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">E-mail</label>
                 <input type="email" id="login-email" placeholder="seu@email.com" 
                     class="w-full p-4 rounded-xl transition-all">
             </div>
             
-            <!-- Senha -->
             <div class="flex flex-col text-left">
                 <label class="text-[10px] font-bold uppercase mb-1 ml-1 text-blue-200 tracking-widest">Senha</label>
                 <input type="password" id="login-senha" placeholder="Sua senha secreta" 
                     class="w-full p-4 rounded-xl transition-all">
             </div>
 
-            <!-- Botão de Acesso -->
             <button onclick="executarLogin()" id="btn-login"
                 class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-xl transition-all active:scale-95 shadow-lg uppercase mt-2 text-lg">
                 Acessar Jogo
             </button>
         </div>
 
-        <!-- Link para Cadastro -->
         <div class="mt-10 pt-6 border-t border-white/10">
             <p class="text-blue-200 text-xs mb-2">Ainda não tem conta?</p>
             <a href="cadastro.html" class="text-sm text-yellow-400 hover:text-yellow-300 underline uppercase font-black tracking-tight">
@@ -114,25 +108,26 @@ input::placeholder {
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
         // NOVA LÓGICA: Executada assim que a página de login carrega
-window.onload = async () => {
-    try {
-        // Captura a sessão gerada automaticamente pelo link de confirmação do e-mail
-        const { data, error } = await supabaseClient.auth.getSession();
-        
-        if (error) throw error;
+        window.onload = async () => {
+            try {
+                // Captura a sessão gerada automaticamente pelo link de confirmação do e-mail
+                const { data, error } = await supabaseClient.auth.getSession();
+                
+                if (error) throw error;
 
-        // Se existir uma sessão ativa vinda do redirecionamento do e-mail
-        if (data?.session) {
-            alert("🛡️ E-mail confirmado com sucesso! A sua conta está ativa. Introduza o seu e-mail e palavra-passe para entrar na Arena.");
-            
-            // Opcional: Desloga o utilizador imediatamente para forçá-lo a fazer o login manual com segurança
-            await supabaseClient.auth.signOut();
-        }
-    } catch (err) {
-        console.error("Erro ao verificar confirmação de e-mail:", err.message);
-    }
-};
-        async function executarLogin() {
+                // Se existir uma sessão ativa vinda do redirecionamento do e-mail
+                if (data?.session) {
+                    alert("🛡️ E-mail confirmado com sucesso! A sua conta está ativa. Introduza o seu e-mail e palavra-passe para entrar na Arena.");
+                    
+                    // Desloga o utilizador imediatamente para forçá-lo a fazer o login manual com segurança
+                    await supabaseClient.auth.signOut();
+                }
+            } catch (err) {
+                console.error("Erro ao verificar confirmação de e-mail:", err.message);
+            }
+        };
+
+        async function ejecutarLogin() {
             const btn = document.getElementById('btn-login');
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-senha').value;
@@ -152,35 +147,4 @@ window.onload = async () => {
                     password: password
                 });
 
-                if (error) throw error;
-
-                if (data.user) {
-                    // PASSO 2: Buscar o nome e organização na tabela 'perfis'
-                    const { data: perfil, error: pError } = await supabaseClient
-                        .from('perfis')
-                        .select('nome, organizacao')
-                        .eq('id', data.user.id)
-                        .single();
-
-                    if (pError) {
-                        console.warn("Perfil não encontrado, usando nome genérico.");
-                    }
-
-                    // PASSO 3: Salvar dados no navegador para a Arena usar
-                    localStorage.setItem('usuario_nome', perfil ? perfil.nome : "Guerreiro");
-                    localStorage.setItem('usuario_org', perfil ? perfil.organizacao : "ER");
-                    
-                    // PASSO 4: Redirecionar para a Arena
-                    window.location.href = 'arena.html';
-                }
-
-            } catch (err) {
-                console.error("Erro no login:", err);
-                alert("Erro ao entrar: Verifique se o e-mail e a senha estão corretos ou se o e-mail foi confirmado.");
-                btn.disabled = false;
-                btn.innerText = "ACESSAR JOGO";
-            }
-        }
-    </script>
-</body>
-</html>
+                if (error) throw
