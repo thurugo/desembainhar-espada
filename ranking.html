@@ -117,14 +117,14 @@
         // NOVA VARIÁVEL: Controla qual módulo está ativo na tela (padrão é o tradicional)
         let moduloAtivo = 'regular'; 
 
-       async function puxarDadosDoSupabase() {
+      async function puxarDadosDoSupabase() {
     try {
         const { data, error } = await supabaseClient
             .from('ranking')
             .select(`
                 pontos,
                 criado_em,
-                modulo,          // BUSCA NO LUGAR CERTO AGORA
+                modulo,
                 perfis!jogador_id (
                     nome,
                     organizacao,
