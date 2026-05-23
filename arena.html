@@ -295,49 +295,55 @@
         }
 
         async function enviarPontuacao() {
+    // Captura o botão de ação principal da Arena
     const btn = document.getElementById('btn-acao');
     btn.disabled = true;
     btn.innerText = "SALVANDO...";
     
     try {
-        // 1. Busca o usuário autenticado na sessão atual
+        // 1. Auditoria de Segurança: Busca o usuário autenticado direto no Supabase Auth
         const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
         
-        // Bloqueio preventivo: Se não achar o usuário ou a sessão caiu, manda pro login
+        // Bloqueio preventivo caso a sessão tenha caído durante as 10 rodadas
         if (authError || !user) {
-            alert("Sessão de jogo expirada ou inválida. Por favor, faça login novamente para salvar seus pontos.");
+            alert("Sessão de jogo expirada ou inválida. Por favor, faça login novamente para não perder seus pontos.");
             window.location.href = 'login.html';
             return;
         }
 
-        // 2. Faz a inserção na tabela 'ranking'
-        // Nota: Enviamos o user.id para a coluna 'jogador_id' que o Supabase espera
+        // 2. Envio Estruturado para a tabela 'ranking'
+        // Inclui a coluna 'modulo' para podermos filtrar na página ranking.html
         const { error } = await supabaseClient
             .from('ranking')
-            .insert([{ 
-                jogador_id: user.id, 
-                pontos: pontosAcumulados 
-            }]);
+            .insert([
+                { 
+                    jogador_id: user.id, 
+                    pontos: pontosAcumulados,
+                    modulo: 'regular' // Identifica que esta pontuação pertence ao módulo Tradicional
+                }
+            ]);
 
-        // Se o Supabase devolver erro de chave estrangeira (Foreign Key)
+        // 3. Tratamento de Erros Críticos do Banco de Dados
         if (error) {
-            console.error("Erro interno do Supabase:", error);
+            console.error("Erro interno retornado pelo Supabase:", error);
             
+            // Se cair no erro de chave estrangeira que consertamos manualmente
             if (error.message.includes("foreign key constraint")) {
-                throw new Error("Seu perfil de jogador não foi localizado no sistema. Peça ao administrador para confirmar seu cadastro no painel.");
+                throw new Error("Seu perfil de jogador não foi localizado na tabela de 'perfis'. Peça ao administrador para validar seu cadastro no painel.");
             }
             throw error;
         }
 
-        // Sucesso absoluto
-        alert(`Excelente! Sua pontuação de ${pontosAcumulados} pontos foi salva no Ranking!`);
+        // 4. Sucesso Absoluto e Redirecionamento
+        alert(`Excelente! Sua pontuação de ${pontosAcumulados} pontos foi salva com sucesso no módulo Tradicional!`);
         window.location.href = 'ranking.html';
 
     } catch (err) {
-        console.error("Erro completo ao salvar pontos:", err);
+        console.error("Erro completo interceptado no processo de gravação:", err);
         alert(`Não foi possível salvar os pontos.\nMotivo: ${err.message || err}`);
         
-        // Devolve o botão ao estado normal para ele poder tentar reenviar sem perder os pontos da tela
+        // REATIVAÇÃO DE SEGURANÇA: Se der erro na rede ou no banco, o jogador NÃO perde os pontos da tela
+        // Ele pode clicar de novo assim que você ajustar o perfil dele no Supabase
         btn.disabled = false;
         btn.innerText = "SALVAR NO RANKING";
     }
