@@ -295,38 +295,53 @@
         }
 
         async function enviarPontuacao() {
-            const btn = document.getElementById('btn-acao');
-            btn.disabled = true;
-            btn.innerText = "SALVANDO...";
-            
-            try {
-                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-                
-                if (authError || !user) {
-                    alert("Sessão expirada. Faça login novamente.");
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                const { error } = await supabaseClient
-                    .from('ranking')
-                    .insert([{ 
-                        jogador_id: user.id, 
-                        pontos: pontosAcumulados 
-                    }]);
-
-                if (error) throw error;
-
-                alert(`Excelente! Sua pontuação de ${pontosAcumulados} pontos foi salva!`);
-                window.location.href = 'ranking.html';
-
-            } catch (err) {
-                console.error(err);
-                alert(`Erro ao salvar: ${err.message || err}`);
-                btn.disabled = false;
-                btn.innerText = "SALVAR NO RANKING";
-            }
+    const btn = document.getElementById('btn-acao');
+    btn.disabled = true;
+    btn.innerText = "SALVANDO...";
+    
+    try {
+        // 1. Busca o usuário autenticado na sessão atual
+        const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+        
+        // Bloqueio preventivo: Se não achar o usuário ou a sessão caiu, manda pro login
+        if (authError || !user) {
+            alert("Sessão de jogo expirada ou inválida. Por favor, faça login novamente para salvar seus pontos.");
+            window.location.href = 'login.html';
+            return;
         }
+
+        // 2. Faz a inserção na tabela 'ranking'
+        // Nota: Enviamos o user.id para a coluna 'jogador_id' que o Supabase espera
+        const { error } = await supabaseClient
+            .from('ranking')
+            .insert([{ 
+                jogador_id: user.id, 
+                pontos: pontosAcumulados 
+            }]);
+
+        // Se o Supabase devolver erro de chave estrangeira (Foreign Key)
+        if (error) {
+            console.error("Erro interno do Supabase:", error);
+            
+            if (error.message.includes("foreign key constraint")) {
+                throw new Error("Seu perfil de jogador não foi localizado no sistema. Peça ao administrador para confirmar seu cadastro no painel.");
+            }
+            throw error;
+        }
+
+        // Sucesso absoluto
+        alert(`Excelente! Sua pontuação de ${pontosAcumulados} pontos foi salva no Ranking!`);
+        window.location.href = 'ranking.html';
+
+    } catch (err) {
+        console.error("Erro completo ao salvar pontos:", err);
+        alert(`Não foi possível salvar os pontos.\nMotivo: ${err.message || err}`);
+        
+        // Devolve o botão ao estado normal para ele poder tentar reenviar sem perder os pontos da tela
+        btn.disabled = false;
+        btn.innerText = "SALVAR NO RANKING";
+    }
+}
 
         window.onload = () => {
             document.getElementById('nome-usuario').innerText = localStorage.getItem('usuario_nome') || "Guerreiro";
