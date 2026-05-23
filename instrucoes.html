@@ -8,7 +8,7 @@
     <style>
         body {
             margin: 0; padding: 4px; min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; font-family: sans-serif; position: relative;
         }
         body::before {
@@ -17,9 +17,9 @@
             background-size: cover; z-index: -1;
         }
         .glass-panel {
-            background: rgba(0, 20, 40, 0.65);
+            background: rgba(0, 20, 40, 0.5); /* 50% de Transparência */
             backdrop-filter: blur(15px);
-            border: 2px solid rgba(59, 130, 246, 0.4);
+            border: 2px solid rgba(255, 215, 0, 0.5);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
         }
         .text-contour {
@@ -29,68 +29,87 @@
 </head>
 <body class="p-4">
 
-    <div class="glass-panel w-full max-w-2xl p-6 rounded-3xl my-4 shadow-2xl">
-        <h1 class="text-3xl font-black text-yellow-400 text-center uppercase tracking-tight italic mb-6 text-contour">
-            📜 Manual do Guerreiro e da Guerreira
-        </h1>
-
-        <p class="text-gray-300 text-sm text-center mb-6 leading-relaxed">
-            Bem-vindo ao <strong>Esgrima Bíblico Digital</strong>. Aqui a sua agilidade física com a Bíblia sagrada se une ao poder da tecnologia. Escolha o seu modo de combate e prepare a sua espada!
-        </p>
-
-        <div class="space-y-6">
-            
-            <div class="bg-blue-950/40 border border-blue-500/40 p-4 rounded-2xl">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="text-xl">⚔️</span>
-                    <h2 class="text-lg font-black text-blue-400 uppercase tracking-wide">Modo Regular (Tradicional)</h2>
-                </div>
-                <ul class="text-xs text-gray-300 space-y-2 list-disc pl-4 leading-relaxed">
-                    <li>O jogo sorteará um <strong>endereço bíblico aleatório</strong> (Livro, Capítulo e Versículo).</li>
-                    <li>Sua missão é abrir a sua Bíblia física o mais rápido possível e localizar esse versículo.</li>
-                    <li>Assim que encontrar, clique em <strong>"ENCONTREI!"</strong> para congelar o cronômetro.</li>
-                    <li>O painel abrirá 4 opções de textos. Leia o versículo na sua Bíblia e clique na opção que corresponde exatamente ao texto sagrado.</li>
-                    <li>A partida dura exatamente <strong>10 rodadas</strong>. Cada segundo restante no cronômetro conta como ponto!</li>
-                </ul>
-            </div>
-
-            <div class="bg-purple-950/40 border border-purple-500/40 p-4 rounded-2xl">
-                <div class="flex items-center space-x-2 mb-2">
-                    <span class="text-xl">🔥</span>
-                    <h2 class="text-lg font-black text-purple-400 uppercase tracking-wide">Modo Avançado (Inverso)</h2>
-                </div>
-                <ul class="text-xs text-gray-300 space-y-2 list-disc pl-4 leading-relaxed">
-                    <li>O jogo sorteará uma <strong>Palavra-Chave Significativa</strong> na tela.</li>
-                    <li>Sua missão é folhear a sua Bíblia física e encontrar <strong>qualquer versículo</strong> na versão escolhida que contenha essa palavra exata.</li>
-                    <li>Ao localizar, clique imediatamente em <strong>"ENCONTREI!"</strong> para parar o tempo.</li>
-                    <li>O sistema ativará o microfone do seu dispositivo para realizar a auditoria automática.</li>
-                    <li>Você deve ditar (ou digitar) o endereço seguindo rigorosamente este padrão de voz:
-                        <div class="bg-black/40 text-yellow-400 p-2.5 rounded-xl font-mono text-center my-2 text-[11px] border border-white/5">
-                            "Livro de <strong>[Nome]</strong> capítulo <strong>[X]</strong> versículo <strong>[Y]</strong>"
-                        </div>
-                        <span class="text-[10px] text-purple-300 block text-center italic">Exemplo: "Livro de Miquéias capítulo 6 versículo 2"</span>
-                    </li>
-                    <li>O sistema lerá instantaneamente o banco de dados e verificará se a palavra sorteada realmente habita no endereço indicado. Se sim, os pontos são seus!</li>
-                    <li>O combate também dura <strong>10 rodadas</strong> e pontua pela velocidade.</li>
-                </ul>
-            </div>
-
-            <div class="bg-slate-900/60 border border-gray-700 p-4 rounded-2xl">
-                <h2 class="text-xs font-black text-yellow-500 uppercase tracking-widest mb-2">💎 Tabela de Recompensa</h2>
-                <p class="text-xs text-gray-300 leading-relaxed">
-                    Cada rodada inicia com <strong>60 segundos</strong>. Se você responder corretamente, o tempo restante é convertido em pontos diretos para o seu placar. Se errar a alternativa ou apontar um endereço inválido na auditoria, receberá <strong>0 pontos</strong> naquela rodada.
-                </p>
-            </div>
-
+    <div class="glass-panel w-full max-w-xl p-6 rounded-3xl shadow-2xl">
+        
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">Como Funciona o Jogo</h1>
+            <p class="text-blue-200 text-[10px] uppercase tracking-widest mt-1">Aprenda as regras antes de desembainhar sua espada</p>
         </div>
 
-        <div class="mt-8">
+        <div class="flex justify-center space-x-2 mb-6">
+            <button id="tab-regular" onclick="alternarManual('regular')" 
+                class="bg-yellow-500 text-blue-950 font-black px-4 py-2.5 rounded-xl text-xs uppercase shadow-md transition-all flex-1">
+                ⚔️ Modo Regular
+            </button>
+            <button id="tab-avancado" onclick="alternarManual('avancado')" 
+                class="bg-blue-950/40 text-blue-300 font-bold px-4 py-2.5 rounded-xl text-xs border border-blue-500/20 uppercase transition-all flex-1">
+                🔥 Modo Avançado
+            </button>
+        </div>
+
+        <main class="min-h-[220px]">
+            <div id="conteudo-regular" class="space-y-4 text-xs text-gray-200 leading-relaxed text-left">
+                <p>O jogo sorteará um <strong class="text-yellow-400">endereço bíblico aleatório</strong> (Livro, Capítulo e Versículo) na tela.</p>
+                <p>Sua missão é abrir a sua Bíblia física o mais rápido possível, localizar o versículo sorteado e iniciar a leitura em voz alta.</p>
+                <p>Assim que começar a ler, o sistema ouvirá sua voz pelo microfone. Se você ler o texto correto conforme a versão da Bíblia selecionada, a rodada será validada com sucesso.</p>
+                <p>A partida dura exatamente <strong class="text-yellow-400">10 rodadas</strong>. Cada segundo restante no cronômetro de 60 segundos conta como ponto para o seu placar final!</p>
+            </div>
+
+            <div id="conteudo-avancado" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
+                <p>O jogo sorteará uma <strong class="text-purple-400">Palavra-Chave Significativa</strong> na tela.</p>
+                <p>Sua missão é folhear a sua Bíblia física e encontrar <strong>qualquer versículo</strong> que contenha essa palavra exata na versão escolhida.</p>
+                <p>Ao localizar, clique imediatamente em <strong>"ENCONTREI!"</strong> para parar a contagem do cronômetro.</p>
+                <p>O sistema ativará o microfone para realizar a auditoria automática. Você deve ditar (ou digitar) o endereço seguindo rigorosamente este padrão de voz:</p>
+                
+                <div class="bg-black/40 text-yellow-400 p-3 rounded-xl font-mono text-center text-[11px] border border-white/5 normal-case tracking-normal">
+                    "Livro de <strong>[Nome]</strong> capítulo <strong>[X]</strong> versículo <strong>[Y]</strong>"
+                </div>
+                <span class="text-[10px] text-purple-300 block text-center italic -mt-2">Exemplo falado: "Livro de Miquéias capítulo 6 versículo 2"</span>
+                
+                <p>O sistema lerá o banco de dados e verificará se a palavra sorteada habita no endereço indicado. Se a rodada for válida, os segundos restantes viram pontos!</p>
+            </div>
+        </main>
+
+        <div class="mt-4 pt-4 border-t border-white/10 text-left bg-black/20 p-3 rounded-xl border border-white/5">
+            <h3 class="text-[10px] uppercase text-red-400 font-black tracking-wider mb-1">⚠️ Regras de Desclassificação:</h3>
+            <p class="text-[11px] text-gray-400 leading-tight">
+                Se o tempo de 60 segundos zerar, se você errar a leitura no modo clássico, ou apontar um endereço onde a palavra não existe no modo avançado, receberá <strong>0 pontos</strong> na rodada ativa.
+            </p>
+        </div>
+
+        <div class="mt-6">
             <a href="index.html" 
-                class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl text-center shadow-md uppercase tracking-wide text-sm transition-all active:scale-95">
-                Voltar ao Menu Principal
+                class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl text-center shadow-lg uppercase text-sm transition-all active:scale-95">
+                Voltar à Tela Inicial
             </a>
         </div>
     </div>
 
+    <script>
+        function alternarManual(modulo) {
+            const tabRegular = document.getElementById('tab-regular');
+            const tabAvancado = document.getElementById('tab-avancado');
+            const conteudoRegular = document.getElementById('conteudo-regular');
+            const conteudoAvancado = document.getElementById('conteudo-avancado');
+
+            if (modulo === 'regular') {
+                // Ativa a aba Regular
+                tabRegular.className = "bg-yellow-500 text-blue-950 font-black px-4 py-2.5 rounded-xl text-xs uppercase shadow-md transition-all flex-1";
+                tabAvancado.className = "bg-blue-950/40 text-blue-300 font-bold px-4 py-2.5 rounded-xl text-xs border border-blue-500/20 uppercase transition-all flex-1";
+                
+                // Exibe o conteúdo correspondente
+                conteudoRegular.classList.remove('hidden');
+                conteudoAvancado.classList.add('hidden');
+            } else {
+                // Ativa a aba Avançado
+                tabRegular.className = "bg-blue-950/40 text-blue-300 font-bold px-4 py-2.5 rounded-xl text-xs border border-blue-500/20 uppercase transition-all flex-1";
+                tabAvancado.className = "bg-purple-600 text-white font-black px-4 py-2.5 rounded-xl text-xs uppercase shadow-md transition-all flex-1";
+                
+                // Exibe o conteúdo correspondente
+                conteudoRegular.classList.add('hidden');
+                conteudoAvancado.classList.remove('hidden');
+            }
+        }
+    </script>
 </body>
 </html>
