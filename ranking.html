@@ -104,6 +104,8 @@
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
         let dadosBrutosRanking = [];
+        // NOVA VARIÁVEL: Controla qual módulo está ativo na tela (padrão é o tradicional)
+        let moduloAtivo = 'regular'; 
 
         async function puxarDadosDoSupabase() {
             try {
@@ -112,6 +114,7 @@
                     .select(`
                         pontos,
                         criado_em,
+                        modulo,          // NOVA COLUNA: Puxa o identificador do módulo do banco
                         perfis!jogador_id (
                             nome,
                             organizacao,
@@ -146,6 +149,26 @@
             }
         }
 
+        // NOVA FUNÇÃO: Chamada quando o usuário clica nos botões de alternar módulo
+        // Ela muda o módulo ativo, estiliza os botões e atualiza a tabela instantaneamente
+        function alternarModulo(modulo) {
+            moduloAtivo = modulo;
+            
+            const btnReg = document.getElementById('btn-filtro-regular');
+            const btnAvanc = document.getElementById('btn-filtro-avancado');
+            
+            if (modulo === 'regular') {
+                btnReg.className = "bg-yellow-500 text-blue-950 font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all";
+                btnAvanc.className = "bg-blue-950/40 text-blue-300 font-bold px-4 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all";
+            } else {
+                btnReg.className = "bg-blue-950/40 text-blue-300 font-bold px-4 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all";
+                btnAvanc.className = "bg-purple-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all";
+            }
+            
+            // Re-executa a filtragem local com o novo módulo selecionado
+            aplicarFiltros();
+        }
+
         function calcularIdade(dataNasc) {
             if (!dataNasc) return 0;
             const nascimento = new Date(dataNasc);
@@ -153,7 +176,7 @@
             let idade = hoje.getFullYear() - nascimento.getFullYear();
             const m = hoje.getMonth() - nascimento.getMonth();
             if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-                idade--;
+                idades--;
             }
             return idade;
         }
@@ -165,6 +188,11 @@
             const agora = new Date();
             
             let dadosFiltrados = dadosBrutosRanking.filter(item => {
+                // NOVA VALIDAÇÃO: Filtra os dados baseando-se no módulo selecionado na interface
+                // Se o item do banco não tiver módulo preenchido, assumimos 'regular' (para preservar dados antigos)
+                const moduloItem = item.modulo || 'regular';
+                if (moduloItem !== moduloAtivo) return false;
+
                 const perfil = item.perfis || { nome: "Jogador de Teste", organizacao: "ER", data_nascimento: "2012-05-15" };
                 const dataPontuacao = new Date(item.criado_em);
                 
@@ -231,6 +259,6 @@
         }
 
         window.onload = puxarDadosDoSupabase;
-    </script>
+</script>
 </body>
 </html>
