@@ -219,55 +219,61 @@
     }
 
     try {
-        // Dicionário Inteligente de Sinônimos
-        const sinonimosLivros = [
-            { falado: "primeira joao", correto: "1 joao" }, { falado: "1a joao", correto: "1 joao" }, { falado: "1ª joao", correto: "1 joao" },
-            { falado: "segunda joao", correto: "2 joao" }, { falado: "2a joao", correto: "2 joao" }, { falado: "2ª joao", correto: "2 joao" },
-            { falado: "primeira pedro", correto: "1 pedro" }, { falado: "1a pedro", correto: "1 pedro" }, { falado: "1ª pedro", correto: "1 pedro" },
-            { falado: "segunda pedro", correto: "2 pedro" }, { falado: "2a pedro", correto: "2 pedro" }, { falado: "2ª pedro", correto: "2 pedro" },
-            { falado: "primeira corintios", correto: "1 corintios" }, { falado: "segunda corintios", correto: "2 corintios" },
-            { falado: "primeiro reis", correto: "1 reis" }, { falado: "segundo reis", correto: "2 reis" },
-            { falado: "primeiro cronicas", correto: "1 cronicas" }, { falado: "segundo cronicas", correto: "2 cronicas" }
+        // 1. Limpeza inicial de acentos e pontuações do áudio capturado
+        let textoPreparado = entrada.normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-zA-Z0-9\s]/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+        // Dicionário de ajuste para numeração de livros (adaptado para a nova regra de fala)
+        const sinonimos = [
+            { falado: "primeira", correto: "1" }, { falado: "primeiro", correto: "1" }, { falado: "1a", correto: "1" }, { falado: "1ª", correto: "1" },
+            { falado: "segunda", correto: "2" }, { falado: "segundo", correto: "2" }, { falado: "2a", correto: "2" }, { falado: "2ª", correto: "2" },
+            { falado: "terceira", correto: "3" }, { falado: "terceiro", correto: "3" }, { falado: "3a", correto: "3" }, { falado: "3ª", correto: "3" }
         ];
-
-        let entradaNormalizada = entrada.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-        sinonimosLivros.forEach(item => {
-            if (entradaNormalizada.includes(item.falado)) {
-                entradaNormalizada = entradaNormalizada.replace(item.falado, item.correto);
+        sinonimos.forEach(item => {
+            if (textoPreparado.includes(item.falado)) {
+                textoPreparado = textoPreparado.replace(item.falado, item.correto);
             }
         });
 
-        // Limpa pontuações mantendo apenas letras e números básicos
-        const normalizar = (t) => t.replace(/[^a-zA-Z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
-        const entradaLimpa = normalizar(entradaNormalizada);
-
-        // Captura todos os números isolados na string
-        const numeros = entradaLimpa.match(/\d+/g);
-
-        let livroEncontrado = null;
-        let capituloEncontrado = null;
-        let versiculoEncontrado = null;
-
-        // NOVA ESTRUTURA DE CAPTURA SEGURA:
-        if (numeros && numeros.length >= 2) {
-            // O último número sempre será o versículo, o penúltimo será o capítulo
-            versiculoEncontrado = parseInt(numeros[numeros.length - 1]);
-            capituloEncontrado = parseInt(numeros[numeros.length - 2]);
-
-            // Descobre onde o número do capítulo começa para cortar a string e isolar o livro de forma limpa
-            const indiceCapitulo = entradaLimpa.lastIndexOf(numeros[numeros.length - 2]);
-            let nomeLivroBuscado = entradaLimpa.substring(0, indiceCapitulo).trim();
-
-            // Varre o arquivo JSON procurando o livro correspondente
-            livroEncontrado = bibliaData.find(livro => {
-                const nomeLivroBruto = livro.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").trim();
-                return nomeLivroBruto === nomeLivroBuscado || nomeLivroBruto.includes(nomeLivroBuscado) || nomeLivroBuscado.includes(nomeLivroBruto);
-            });
+        // 2. VERIFICAÇÃO DAS ÂNCORAS: "capitulo" e "versiculo"
+        if (!textoPreparado.includes("capitulo") || !textoPreparado.includes("versiculo")) {
+            exibirResultado(false, "Erro de Padrão", 0, 0, "", "Você precisa falar o formato correto! Exemplo: 'Livro de Miquéias capítulo 6 versículo 2'.");
+            return;
         }
 
-        // Validação dos dados extraídos dentro do array da Bíblia
-        if (livroEncontrado && capituloEncontrado && versiculoEncontrado) {
+        // 3. RECORTES CIRÚRGICOS USANDO AS PALAVRAS-CHAVE
+        // Isola o Livro: Tira o "livro de " do início (se houver) e pega tudo até a palavra "capitulo"
+        let parteLivro = textoPreparado.split("capitulo")[0].replace("livro de", "").trim();
+        
+        // Isola o Capítulo: Pega o que está entre "capitulo" e "versiculo" e extrai apenas o número
+        let parteCapitulo = textoPreparado.split("capitulo")[1].split("versiculo")[0].trim();
+        let numCapitulo = parteCapitulo.match(/\d+/);
+        
+        // Isola o Versículo: Pega o que está depois de "versiculo" e extrai apenas o número
+        let parteVersiculo = textoPreparado.split("versiculo")[1].trim();
+        let numVersiculo = parteVersiculo.match(/\d+/);
+
+        // Validação se os cortes geraram números válidos
+        if (!numCapitulo || !numVersiculo || !parteLivro) {
+            exibirResultado(false, "Formato Incompleto", 0, 0, "", "Não consegui identificar claramente os números do capítulo ou versículo.");
+            return;
+        }
+
+        let capituloEncontrado = parseInt(numCapitulo[0]);
+        let versiculoEncontrado = parseInt(numVersiculo[0]);
+        let livroEncontrado = null;
+
+        // 4. BUSCA PRECISA DO LIVRO NO JSON
+        livroEncontrado = bibliaData.find(livro => {
+            const nomeLivroBanco = livro.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").trim();
+            return nomeLivroBanco === parteLivro || nomeLivroBanco.includes(parteLivro) || parteLivro.includes(nomeLivroBanco);
+        });
+
+        // 5. VALIDAÇÃO DENTRO DA BÍBLIA
+        if (livroEncontrado) {
             const capArray = livroEncontrado.chapters[capituloEncontrado - 1];
             if (capArray) {
                 const textoVersiculoAlvo = capArray[versiculoEncontrado - 1];
@@ -286,13 +292,12 @@
             }
         }
 
-        // Se falhar na localização do endereço
-        exibirResultado(false, "Desconhecido", 0, 0, "", "Não foi possível compreender o endereço bíblico ou o versículo não existe.");
+        // Se o livro ou endereço digitado estiver fora da realidade do JSON
+        exibirResultado(false, livroEncontrado ? livroEncontrado.name : "Desconhecido", capituloEncontrado, versiculoEncontrado, "", "Livro não localizado ou versículo inexistente na Bíblia.");
 
     } catch (error) {
-        // PREVENÇÃO DE CONGELAMENTO: Se o código falhar, joga o erro na tela amigavelmente em vez de travar
-        console.error("Erro interno no motor de busca:", error);
-        exibirResultado(false, "Erro de Leitura", 0, 0, "", "O sistema falhou ao interpretar a voz. Tente digitar o endereço manualmente.");
+        console.error("Erro no interpretador:", error);
+        exibirResultado(false, "Erro de Análise", 0, 0, "", "Ocorreu um erro ao quebrar as palavras da sua fala. Tente novamente de forma pausada.");
     }
 }
 
