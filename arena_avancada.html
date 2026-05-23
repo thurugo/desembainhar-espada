@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arena Avançada - Desembainhar Espada</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.5); /* 50% de Transparência */
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(147, 51, 234, 0.5); /* Borda Roxa para o Modo Avançado */
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        .pulse-purple { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        select, input { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(147, 51, 234, 0.3); color: white; }
+        option { background: #001428; color: white; }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="w-full max-w-2xl flex justify-between items-center mb-4 mt-2 px-2">
+        <div class="flex flex-col">
+            <div class="flex items-center space-x-2">
+                <span id="nome-usuario" class="text-purple-400 font-black text-lg uppercase italic text-contour">Guerreiro</span>
+                <span class="bg-purple-600 text-white text-[9px] font-black px-2 py-0.5 rounded uppercase">Avançado</span>
+            </div>
+            <span class="text-blue-200 text-[10px] uppercase tracking-widest">Rodada: <span id="rodada-atual">0</span>/10</span>
+        </div>
+        <div class="text-right">
+            <span class="block text-[10px] uppercase text-purple-300">Pontos Acumulados</span>
+            <span id="pontos-totais" class="text-2xl font-black text-white">0</span>
+        </div>
+    </div>
+
+    <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
+        
+        <div id="seletor-container" class="mb-6">
+            <label class="block text-[10px] uppercase text-purple-400 font-bold mb-2 tracking-widest">Versão da Espada:</label>
+            <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none mb-4 text-sm font-bold">
+                <option value="NVI.json">NVI - Nova Versão Internacional</option>
+                <option value="ACF.json">ACF - Almeida Corrigida e Fiel</option>
+                <option value="ARA.json">ARA - Almeida Revista e Atualizada</option>
+                <option value="ARC.json">ARC - Almeida Revista e Corrigida</option>
+                <option value="NTLH.json">NTLH - Nova Trad. na Linguagem de Hoje</option>
+            </select>
+        </div>
+
+        <div id="timer-display" class="text-6xl font-black text-purple-500 mb-2">60</div>
+
+        <div id="display-sorteio" class="mb-4">
+            <span class="block text-[10px] uppercase text-gray-400 tracking-widest mb-1">Encontre um versículo com a palavra:</span>
+            <h2 id="palavra-chave" class="text-4xl md:text-6xl font-black text-yellow-400 mb-4 uppercase tracking-tighter min-h-[90px] flex items-center justify-center text-contour">---</h2>
+            
+            <div id="resultado-rodada" class="hidden py-4 px-6 rounded-2xl mb-4 text-sm border-2 text-left"></div>
+        </div>
+
+        <div id="endereco-input-area" class="hidden mb-6 space-y-3">
+            <div class="inline-block text-[10px] bg-purple-600 px-3 py-1 rounded-full font-bold uppercase pulse-purple mb-1">🎙️ Dite ou Digite o Endereço Encontrado:</div>
+            
+            <input type="text" id="input-endereco-manual" 
+                class="w-full p-4 rounded-xl text-center font-bold uppercase text-slate-900 bg-white placeholder-slate-400 outline-none text-md" 
+                placeholder="Ex: Genesis 1:1 ou Joao 3:16">
+            
+            <p id="texto-capturado-voz" class="text-purple-200 italic text-xs text-center mt-1">Aguardando áudio do endereço...</p>
+        </div>
+
+        <button id="btn-acao" onclick="gerenciarRodada()" 
+            class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95">
+            Começar Modo Avançado
+        </button>
+    </div>
+
+    <script>
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = 60, timerInterval;
+        let pontosReserva = 0, palavraSorteada = "", versaoEscolhida = "";
+        let recognition, vozAtiva = false;
+
+        // Inicializa API de Reconhecimento de Voz do Navegador
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'pt-BR';
+            recognition.interimResults = false;
+            recognition.continuous = false;
+        }
+
+        async function gerenciarRodada() {
+            const btn = document.getElementById('btn-acao');
+            if (btn.innerText === "COMEÇAR MODO AVANÇADO") {
+                const versao = document.getElementById('versao-biblia').value;
+                btn.disabled = true; btn.innerText = "FORJANDO PALAVRAS...";
+                try {
+                    const response = await fetch(`./biblias/${versao}`);
+                    bibliaData = await response.json();
+                    document.getElementById('seletor-container').classList.add('hidden');
+                    iniciarSorteioPalavra();
+                } catch (e) { 
+                    alert("Erro ao carregar arquivos da Bíblia."); 
+                    btn.disabled = false; btn.innerText = "COMEÇAR MODO AVANÇADO"; 
+                }
+            } else if (btn.innerText === "PRÓXIMA RODADA") {
+                iniciarSorteioPalavra();
+            } else if (btn.innerText === "ENCONTREI!") {
+                cliqueEncontrei();
+            } else if (btn.innerText === "ENVIAR ENDEREÇO") {
+                validarEnderecoBuscado();
+            }
+        }
+
+        // MOTOR DE SORTEIO: Escolhe uma palavra significativa de um versículo aleatório
+        function iniciarSorteioPalavra() {
+            rodada++;
+            document.getElementById('rodada-atual').innerText = rodada;
+            document.getElementById('resultado-rodada').classList.add('hidden');
+            document.getElementById('endereco-input-area').classList.add('hidden');
+            document.getElementById('input-endereco-manual').value = "";
+            document.getElementById('texto-capturado-voz').innerText = "Aguardando áudio do endereço...";
+            document.getElementById('timer-display').classList.remove('hidden');
+
+            let palavraValida = false;
+            const stopWords = ["de", "do", "da", "em", "um", "uma", "os", "as", "com", "para", "por", "que", "na", "no", "se", "com", "ao", "aos"];
+
+            while (!palavraValida) {
+                const livro = bibliaData[Math.floor(Math.random() * bibliaData.length)];
+                const capIdx = Math.floor(Math.random() * livro.chapters.length);
+                const verIdx = Math.floor(Math.random() * livro.chapters[capIdx].length);
+                const versiculoTexto = livro.chapters[capIdx][verIdx];
+
+                // Limpa o texto e quebra em palavras individuais
+                const palavras = versiculoTexto.toLowerCase()
+                    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+                    .split(/\s+/);
+
+                // Filtra palavras pequenas ou artigos comuns (Stop Words)
+                const palavrasFiltradas = palavras.filter(p => p.length > 4 && !stopWords.includes(p));
+
+                if (palavrasFiltradas.length > 0) {
+                    palavraSorteada = palavrasFiltradas[Math.floor(Math.random() * palavrasFiltradas.length)].toUpperCase();
+                    palavraValida = true;
+                }
+            }
+
+            document.getElementById('palavra-chave').innerText = palavraSorteada;
+            tempoRestante = 60;
+            iniciarTimer();
+
+            const btn = document.getElementById('btn-acao');
+            btn.disabled = false; btn.innerText = "ENCONTREI!";
+            btn.className = "w-full bg-green-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+        }
+
+        function iniciarTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timer-display').innerText = tempoRestante;
+            timerInterval = setInterval(() => {
+                tempoRestante--;
+                document.getElementById('timer-display').innerText = tempoRestante;
+                if (tempoRestante <= 0) {
+                    clearInterval(timerInterval);
+                    processarFimTempo();
+                }
+            }, 1000);
+        }
+
+        function cliqueEncontrei() {
+            clearInterval(timerInterval);
+            pontosReserva = tempoRestante; // Guarda a pontuação baseada no tempo
+            document.getElementById('timer-display').classList.add('hidden');
+            document.getElementById('endereco-input-area').classList.remove('hidden');
+
+            const btn = document.getElementById('btn-acao');
+            btn.innerText = "ENVIAR ENDEREÇO";
+            btn.className = "w-full bg-purple-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+
+            // Ativa o microfone automaticamente caso tenha suporte
+            if (recognition) {
+                try {
+                    recognition.start();
+                    recognition.onresult = (event) => {
+                        const transcricao = event.results[0][0].transcript;
+                        document.getElementById('texto-capturado-voz').innerText = `Ouvido: "${transcricao}"`;
+                        document.getElementById('input-endereco-manual').value = transcricao;
+                    };
+                } catch(e) { console.log("Microfone já ativo ou indisponível."); }
+            }
+        }
+
+       // MOTOR DE CORRELAÇÃO INTELIGENTE ATUALIZADO (Com dicionário de livros numéricos)
+function validarEnderecoBuscado() {
+    if (recognition) try { recognition.stop(); } catch(e){}
+
+    let entrada = document.getElementById('input-endereco-manual').value.trim().toLowerCase();
+    if (!entrada) {
+        alert("Por favor, digite ou fale o endereço do versículo encontrado!");
+        return;
+    }
+
+    // DICIONÁRIO DE CORREÇÃO: Traduz as formas faladas comuns para o padrão do JSON
+    const sinonimosLivros = [
+        { falado: "primeira joao", correto: "1 joao" },
+        { falado: "1a joao", correto: "1 joao" },
+        { falado: "1ª joao", correto: "1 joao" },
+        { falado: "segunda joao", correto: "2 joao" },
+        { falado: "2a joao", correto: "2 joao" },
+        { falado: "2ª joao", correto: "2 joao" },
+        { falado: "terceira joao", correto: "3 joao" },
+        { falado: "3a joao", correto: "3 joao" },
+        { falado: "3ª joao", correto: "3 joao" },
+        { falado: "primeira pedro", correto: "1 pedro" },
+        { falado: "1a pedro", correto: "1 pedro" },
+        { falado: "1ª pedro", correto: "1 pedro" },
+        { falado: "segunda pedro", correto: "2 pedro" },
+        { falado: "2a pedro", correto: "2 pedro" },
+        { falado: "2ª pedro", correto: "2 pedro" },
+        { falado: "primeira corintios", correto: "1 corintios" },
+        { falado: "1a corintios", correto: "1 corintios" },
+        { falado: "1ª corintios", correto: "1 corintios" },
+        { falado: "segunda corintios", correto: "2 corintios" },
+        { falado: "2a corintios", correto: "2 corintios" },
+        { falado: "2ª corintios", correto: "2 corintios" },
+        { falado: "primeiro reis", correto: "1 reis" },
+        { falado: "segundo reis", correto: "2 reis" },
+        { falado: "primeiro cronicas", correto: "1 cronicas" },
+        { falado: "segundo cronicas", correto: "2 cronicas" },
+        { falado: "primeira tessalonicenses", correto: "1 tessalonicenses" },
+        { falado: "segunda tessalonicenses", correto: "2 tessalonicenses" },
+        { falado: "primeira timoteo", correto: "1 timoteo" },
+        { falado: "segunda timoteo", correto: "2 timoteo" }
+    ];
+
+    // Aplica a limpeza de acentos na entrada original do jogador
+    let entradaNormalizada = entrada.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    // Substitui o termo falado pelo termo correto baseado no dicionário
+    sinonimosLivros.forEach(item => {
+        if (entradaNormalizada.includes(item.falado)) {
+            entradaNormalizada = entradaNormalizada.replace(item.falado, item.correto);
+        }
+    });
+
+    // Limpeza final de caracteres especiais para a busca
+    const normalizar = (t) => t.replace(/[^a-zA-Z0-9\s]/g, "").trim();
+    const entradaLimpa = normalizar(entradaNormalizada);
+
+    let livroEncontrado = null;
+    let capituloEncontrado = null;
+    let versiculoEncontrado = null;
+
+    // Tenta extrair os números do final da string (Capítulo e Versículo)
+    const numeros = entradaLimpa.match(/\d+/g);
+
+    if (numeros && numeros.length >= 2) {
+        versiculoEncontrado = parseInt(numeros[numeros.length - 1]);
+        capituloEncontrado = parseInt(numeros[numeros.length - 2]);
+        
+        // Remove os números do final (capítulo e versículo) para isolar o nome do livro
+        // Se o livro começar com número (ex: "1 joao"), o regex preserva o primeiro número!
+        let nomeLivroBuscado = entradaLimpa;
+        
+        // Remove o número do versículo (último)
+        nomeLivroBuscado = nomeLivroBuscado.substring(0, nomeLivroBuscado.lastIndexOf(numeros[numeros.length - 1])).trim();
+        // Remove o número do capítulo (penúltimo)
+        nomeLivroBuscado = nomeLivroBuscado.substring(0, nomeLivroBuscado.lastIndexOf(numeros[numeros.length - 2])).trim();
+
+        // Varre a Bíblia JSON procurando o livro correspondente por igualdade exata ou aproximação precisa
+        livroEncontrado = bibliaData.find(livro => {
+            const nomeLivroBruto = livro.name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").trim();
+            
+            // Verifica se o nome do livro no banco é exatamente igual ou contém o termo tratado
+            return nomeLivroBruto === nomeLivroBuscado || nomeLivroBruto.includes(nomeLivroBuscado);
+        });
+    }
+
+    // Se localizou o endereço informado
+    if (livroEncontrado && capituloEncontrado && versiculoEncontrado) {
+        const capArray = livroEncontrado.chapters[capituloEncontrado - 1];
+        if (capArray) {
+            const textoVersiculoAlvo = capArray[versiculoEncontrado - 1];
+            
+            if (textoVersiculoAlvo) {
+                const textoAlvoNormalizado = textoVersiculoAlvo.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9\s]/g, "").trim();
+                const palavraProcuradaNormalizada = palavraSorteada.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+                // Validação final da palavra-chave
+                if (textoAlvoNormalizado.includes(palavraProcuradaNormalizada)) {
+                    exibirResultado(true, livroEncontrado.name, capituloEncontrado, versiculoEncontrado, textoVersiculoAlvo);
+                    return;
+                } else {
+                    exibirResultado(false, livroEncontrado.name, capituloEncontrado, versiculoEncontrado, textoVersiculoAlvo, "A palavra não existe neste versículo.");
+                    return;
+                }
+            }
+        }
+    }
+
+    // Se cair aqui, não pôde interpretar
+    exibirResultado(false, "Desconhecido", 0, 0, "", "Endereço inválido ou livro não localizado no sistema.");
+}
+
+        function processarFimTempo() {
+            exibirResultado(false, "Tempo Esgotado", 0, 0, "", "O cronômetro de 60 segundos zerou.");
+        }
+
+        function exibirResultado(sucesso, livro, cap, ver, texto, motivoErro = "") {
+            const msgDiv = document.getElementById('resultado-rodada');
+            msgDiv.classList.remove('hidden');
+            document.getElementById('endereco-input-area').classList.add('hidden');
+
+            let htmlFinal = "";
+
+            if (sucesso) {
+                pontosAcumulados += pontosReserva;
+                document.getElementById('pontos-totais').innerText = pontosAcumulados;
+
+                msgDiv.className = "py-4 px-5 rounded-2xl border-2 border-green-500 text-left bg-green-950/40 backdrop-blur-sm mb-4 animate-fade-in";
+                htmlFinal = `<div class="text-center text-green-400 font-black text-xl uppercase italic mb-3">✓ Rodada Válida! +${pontosReserva} Pontos</div>`;
+                
+                // Envolve a palavra encontrada em destaque visual dourado/negrito
+                const regex = new RegExp(`(${palavraSorteada})`, 'gi');
+                const textoDestacado = texto.replace(regex, `<strong class="text-yellow-400 text-md font-black underline">$1</strong>`);
+
+                htmlFinal += `
+                    <div class="text-xs space-y-1 font-sans normal-case tracking-normal">
+                        <span class="block text-green-400 font-black uppercase text-[10px] tracking-wider">📖 Versículo Auditado (${livro} ${cap}:${ver}):</span>
+                        <p class="text-white italic bg-black/30 p-2.5 rounded-xl mt-1 border border-white/5">${textoDestacado}</p>
+                    </div>`;
+            } else {
+                msgDiv.className = "py-4 px-5 rounded-2xl border-2 border-red-500 text-left bg-red-95/40 backdrop-blur-sm mb-4 animate-fade-in";
+                htmlFinal = `<div class="text-center text-red-500 font-black text-xl uppercase italic mb-3">✗ Rodada Inválida! (0 Pontos)</div>`;
+                
+                if (texto) {
+                    htmlFinal += `
+                    <div class="text-xs space-y-1 font-sans normal-case tracking-normal">
+                        <span class="block text-red-400 font-black uppercase text-[10px] tracking-wider">📖 Texto Lido (${livro} ${cap}:${ver}):</span>
+                        <p class="text-gray-300 italic bg-black/30 p-2.5 rounded-xl mt-1 border border-white/5">${texto}</p>
+                        <span class="block text-red-500 text-[10px] font-bold mt-1">⚠️ Motivo: ${motivoErro}</span>
+                    </div>`;
+                } else {
+                    htmlFinal += `<p class="text-center text-xs text-red-300 font-bold">⚠️ ${motivoErro || 'Não foi possível ler o endereço fornecido.'}</p>`;
+                }
+            }
+
+            msgDiv.innerHTML = htmlFinal;
+            finalizarFluxoRodada(sucesso);
+        }
+
+        function finalizarFluxoRodada(sucesso) {
+            const btn = document.getElementById('btn-acao');
+            btn.className = "w-full bg-purple-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+
+            if (rodada < 10) {
+                btn.innerText = "PRÓXIMA RODADA";
+                btn.onclick = gerenciarRodada;
+            } else {
+                btn.innerText = "SALVAR NO RANKING";
+                btn.className = "w-full bg-yellow-500 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+                btn.onclick = enviarPontuacaoAvancada;
+            }
+        }
+
+        async function enviarPontuacaoAvancada() {
+            const btn = document.getElementById('btn-acao');
+            btn.disabled = true;
+            btn.innerText = "SALVANDO...";
+            
+            try {
+                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+                
+                if (authError || !user) {
+                    alert("Sessão de jogo expirada. Por favor, realize o login novamente.");
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // GRAVAÇÃO NO BANCO: Aponta explicitamente para modulo: 'avancado'
+                const { error } = await supabaseClient
+                    .from('ranking')
+                    .insert([{ 
+                        jogador_id: user.id, 
+                        pontos: pontosAcumulados,
+                        modulo: 'avancado' 
+                    }]);
+
+                if (error) {
+                    if (error.message.includes("foreign key constraint")) {
+                        throw new Error("Seu perfil não está mapeado no banco. Fale com um administrador.");
+                    }
+                    throw error;
+                }
+
+                alert(`Incrível! Sua pontuação de ${pontosAcumulados} pontos foi salva no Ranking Avançado!`);
+                window.location.href = 'ranking.html';
+
+            } catch (err) {
+                console.error(err);
+                alert(`Erro ao salvar: ${err.message || err}`);
+                btn.disabled = false;
+                btn.innerText = "SALVAR NO RANKING";
+            }
+        }
+
+        window.onload = () => {
+            document.getElementById('nome-usuario').innerText = localStorage.getItem('usuario_nome') || "Guerreiro";
+        };
+    </script>
+</body>
+</html>
