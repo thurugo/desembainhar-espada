@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arena - Conhecimentos Gerais da Bíblia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 15, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(147, 51, 234, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+        .option-card {
+            transition: all 0.2s ease;
+        }
+        .option-card.selected {
+            background-color: rgba(147, 51, 234, 0.4);
+            border-color: #a855f7;
+            transform: scale(1.01);
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="w-full max-w-2xl glass-panel rounded-3xl p-6 text-center shadow-2xl">
+        
+        <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+            <div>
+                <span id="info-progresso" class="text-xs bg-purple-600/30 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                    Pergunta 1 de 10
+                </span>
+                <span id="info-nivel" class="ml-2 text-[10px] bg-gray-700 text-gray-300 px-2 py-0.5 rounded uppercase font-extrabold">
+                    Fácil
+                </span>
+            </div>
+            <div class="text-right">
+                <span class="block text-[9px] uppercase text-gray-400 font-bold">Pontuação Atual</span>
+                <span id="label-score" class="text-xl font-black text-yellow-400 tracking-tight">0 pts</span>
+            </div>
+        </div>
+
+        <div class="w-full bg-black/40 h-3 rounded-full overflow-hidden mb-6 border border-white/5">
+            <div id="barra-tempo" class="bg-gradient-to-r from-green-400 to-emerald-500 h-full w-full transition-all duration-1000 linear"></div>
+        </div>
+
+        <div id="box-jogo">
+            <h2 id="texto-pergunta" class="text-lg font-bold text-gray-100 mb-6 min-h-[60px] flex items-center justify-center px-2">
+                Carregando perguntas bíblicas...
+            </h2>
+
+            <div class="grid grid-cols-1 gap-3 mb-6 text-left">
+                <button onclick="selecionarOpcao('A')" id="btn-opt-A" class="option-card p-4 rounded-xl bg-black/30 border border-white/10 hover:bg-white/5 flex items-center gap-3">
+                    <span class="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center font-black text-sm text-purple-300">A</span>
+                    <span id="txt-opt-A" class="text-sm text-gray-300 flex-1">Opção A</span>
+                </button>
+                <button onclick="selecionarOpcao('B')" id="btn-opt-B" class="option-card p-4 rounded-xl bg-black/30 border border-white/10 hover:bg-white/5 flex items-center gap-3">
+                    <span class="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center font-black text-sm text-purple-300">B</span>
+                    <span id="txt-opt-B" class="text-sm text-gray-300 flex-1">Opção B</span>
+                </button>
+                <button onclick="selecionarOpcao('C')" id="btn-opt-C" class="option-card p-4 rounded-xl bg-black/30 border border-white/10 hover:bg-white/5 flex items-center gap-3">
+                    <span class="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center font-black text-sm text-purple-300">C</span>
+                    <span id="txt-opt-C" class="text-sm text-gray-300 flex-1">Opção C</span>
+                </button>
+                <button onclick="selecionarOpcao('D')" id="btn-opt-D" class="option-card p-4 rounded-xl bg-black/30 border border-white/10 hover:bg-white/5 flex items-center gap-3">
+                    <span class="w-7 h-7 bg-white/10 rounded-lg flex items-center justify-center font-black text-sm text-purple-300">D</span>
+                    <span id="txt-opt-D" class="text-sm text-gray-300 flex-1">Opção D</span>
+                </button>
+            </div>
+
+            <button onclick="confirmarResposta()" id="btn-acao" disabled class="w-full bg-gray-600 text-gray-400 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed transition-all">
+                Selecione uma resposta
+            </button>
+        </div>
+
+        <div id="box-resultado" class="hidden py-6">
+            <span class="text-4xl block mb-2">🎉</span>
+            <h2 class="text-2xl font-black text-yellow-400 uppercase italic">Desafio Concluído!</h2>
+            <p class="text-sm text-gray-400 mt-1 mb-6">Sua pontuação foi calculada com base no seu tempo de resposta.</p>
+            
+            <div class="bg-black/40 p-6 rounded-2xl border border-white/5 mb-6 inline-block min-w-[200px]">
+                <span class="text-[10px] uppercase font-bold text-gray-400 tracking-widest block">Pontuação Final</span>
+                <span id="label-resultado-score" class="text-4xl font-black text-purple-400">0</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="location.reload()" class="bg-purple-600 hover:bg-purple-500 text-white font-black px-6 py-3.5 rounded-xl uppercase tracking-wider text-xs">
+                    Jogar Novamente
+                </button>
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-gray-300 font-black px-6 py-3.5 rounded-xl uppercase tracking-wider text-xs flex items-center justify-center">
+                    Menu Principal
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        const TEMPO_LIMITE = 30;
+        let bancoPerguntasCompleto = [];
+        let rodadaPerguntas = [];
+        
+        let indiceAtual = 0;
+        let pontuacaoTotal = 0;
+        let tempoRestante = TEMPO_LIMITE;
+        let cronometro = null;
+        let opcaoSelecionada = null;
+        let jogadorID = null;
+
+        window.onload = async () => {
+            await verificarAutenticacao();
+            await carregarBancoPerguntas();
+        };
+
+        async function verificarAutenticacao() {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) {
+                alert("Acesso negado. Por favor, faça login.");
+                window.location.href = 'login.html';
+                return;
+            }
+            jogadorID = user.id;
+        }
+
+        async function carregarBancoPerguntas() {
+            try {
+                // Alterado para buscar o nome correto do arquivo JSON na raiz do repositório
+                const response = await fetch('perguntas_biblicas.json');
+                const data = await response.json();
+                bancoPerguntasCompleto = data.questoes;
+                
+                montarRodada();
+                exibirPergunta();
+            } catch (err) {
+                console.error("Erro ao carregar o JSON de perguntas:", err);
+                document.getElementById('texto-pergunta').innerText = "Erro ao carregar as perguntas do servidor.";
+            }
+        }
+
+        function montarRodada() {
+            const faceis = bancoPerguntasCompleto.filter(q => q.nivel.toLowerCase() === 'facil');
+            const medias = bancoPerguntasCompleto.filter(q => q.nivel.toLowerCase() === 'medio');
+            const dificeis = bancoPerguntasCompleto.filter(q => q.nivel.toLowerCase() === 'dificil');
+
+            const sorteadasFaceis = embaralharArray(faceis).slice(0, 5);
+            const sorteadasMedias = embaralharArray(medias).slice(0, 4);
+            const sorteadasDificeis = embaralharArray(dificeis).slice(0, 1);
+
+            rodadaPerguntas = [...sorteadasFaceis, ...sorteadasMedias, ...sorteadasDificeis];
+        }
+
+        function embaralharArray(arr) {
+            return arr.sort(() => Math.random() - 0.5);
+        }
+
+        function exibirPergunta() {
+            clearInterval(cronometro);
+            opcaoSelecionada = null;
+            tempoRestante = TEMPO_LIMITE;
+
+            document.getElementById('btn-acao').disabled = true;
+            document.getElementById('btn-acao').className = "w-full bg-gray-600 text-gray-400 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed transition-all";
+            document.getElementById('btn-acao').innerText = "Selecione uma resposta";
+
+            resetarEstiloOpcoes();
+
+            const questao = rodadaPerguntas[indiceAtual];
+
+            document.getElementById('info-progresso').innerText = `Pergunta ${indiceAtual + 1} de 10`;
+            document.getElementById('texto-pergunta').innerText = questao.pergunta;
+            
+            const elNivel = document.getElementById('info-nivel');
+            elNivel.innerText = questao.nivel;
+            if(questao.nivel.toLowerCase() === 'facil') elNivel.className = "ml-2 text-[10px] bg-green-600 text-white px-2 py-0.5 rounded uppercase font-extrabold";
+            if(questao.nivel.toLowerCase() === 'medio') elNivel.className = "ml-2 text-[10px] bg-amber-600 text-white px-2 py-0.5 rounded uppercase font-extrabold";
+            if(questao.nivel.toLowerCase() === 'dificil') elNivel.className = "ml-2 text-[10px] bg-red-600 text-white px-2 py-0.5 rounded uppercase font-extrabold";
+
+            document.getElementById('txt-opt-A').innerText = questao.opcoes.A;
+            document.getElementById('txt-opt-B').innerText = questao.opcoes.B;
+            document.getElementById('txt-opt-C').innerText = questao.opcoes.C;
+            document.getElementById('txt-opt-D').innerText = questao.opcoes.D;
+
+            atualizarBarraTempo();
+            cronometro = setInterval(contagemRegressiva, 1000);
+        }
+
+        function contagemRegressiva() {
+            tempoRestante--;
+            atualizarBarraTempo();
+
+            if (tempoRestante <= 0) {
+                clearInterval(cronometro);
+                avancarProxima();
+            }
+        }
+
+        function atualizarBarraTempo() {
+            const barra = document.getElementById('barra-tempo');
+            const pct = (tempoRestante / TEMPO_LIMITE) * 100;
+            barra.style.width = `${pct}%`;
+
+            if (pct > 50) {
+                barra.className = "bg-gradient-to-r from-green-400 to-emerald-500 h-full w-full transition-all duration-1000 linear";
+            } else if (pct > 20) {
+                barra.className = "bg-gradient-to-r from-amber-400 to-orange-500 h-full w-full transition-all duration-1000 linear";
+            } else {
+                barra.className = "bg-gradient-to-r from-red-500 to-rose-600 h-full w-full transition-all duration-1000 linear";
+            }
+        }
+
+        function selecionarOpcao(letra) {
+            opcaoSelecionada = letra;
+            resetarEstiloOpcoes();
+
+            document.getElementById(`btn-opt-${letra}`).classList.add('selected');
+
+            const btnAcao = document.getElementById('btn-acao');
+            btnAcao.disabled = false;
+            btnAcao.className = "w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl uppercase tracking-wider text-sm shadow-lg active:scale-[0.99] cursor-pointer transition-all";
+            btnAcao.innerText = `Confirmar Alternativa ${letra} ⚔️`;
+        }
+
+        function resetarEstiloOpcoes() {
+            ['A', 'B', 'C', 'D'].forEach(l => {
+                document.getElementById(`btn-opt-${l}`).classList.remove('selected');
+            });
+        }
+
+        function confirmarResposta() {
+            clearInterval(cronometro);
+            const questao = rodadaPerguntas[indiceAtual];
+
+            if (opcaoSelecionada === questao.correta.toUpperCase()) {
+                pontuacaoTotal += tempoRestante;
+                document.getElementById('label-score').innerText = `${pontuacaoTotal} pts`;
+            }
+
+            avancarProxima();
+        }
+
+        function avancarProxima() {
+            indiceAtual++;
+            if (indiceAtual < 10) {
+                exibirPergunta();
+            } else {
+                finalizarPartida();
+            }
+        }
+
+        async function finalizarPartida() {
+            document.getElementById('box-jogo').classList.add('hidden');
+            document.getElementById('box-resultado').classList.remove('hidden');
+            document.getElementById('label-resultado-score').innerText = pontuacaoTotal.toLocaleString('pt-BR');
+
+            try {
+                const { error } = await supabaseClient
+                    .from('gerais_biblia')
+                    .insert([
+                        { id_usuario: jogadorID, pontuacao: pontuacaoTotal }
+                    ]);
+
+                if (error) throw error;
+            } catch (err) {
+                console.error("Erro ao salvar pontos no Supabase:", err.message);
+                alert("Sua pontuação foi calculada, mas houve um problema ao enviar para o ranking.");
+            }
+        }
+    </script>
+</body>
+</html>
