@@ -26,7 +26,7 @@
         select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
         option { background: #001428; color: white; }
         .text-contour {
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px 1px 0 #000;
         }
     </style>
 </head>
@@ -122,43 +122,20 @@
 
     async function puxarDadosDoSupabase() {
         try {
-            let data = [];
-            let error = null;
-
-            if (moduloAtivo === 'gerais_biblia') {
-                const response = await supabaseClient
-                    .from('gerais_biblia')
-                    .select(`
-                        pontos:pontuacao,
-                        criado_em:created_at,
-                        perfis (
-                            nome,
-                            organizacao,
-                            data_nascimento
-                        )
-                    `)
-                    .order('pontuacao', { ascending: false });
-                
-                data = response.data;
-                error = response.error;
-            } else {
-                const response = await supabaseClient
-                    .from('ranking')
-                    .select(`
-                        pontos,
-                        criado_em,
-                        modulo,
-                        perfis!jogador_id (
-                            nome,
-                            organizacao,
-                            data_nascimento
-                        )
-                    `)
-                    .order('pontos', { ascending: false });
-
-                data = response.data;
-                error = response.error;
-            }
+            // CORREÇÃO: Busca SEMPRE da tabela unificada 'ranking'
+            const { data, error } = await supabaseClient
+                .from('ranking')
+                .select(`
+                    pontos,
+                    criado_em,
+                    modulo,
+                    perfis!jogador_id (
+                        nome,
+                        organizacao,
+                        data_nascimento
+                    )
+                `)
+                .order('pontos', { ascending: false });
 
             if (error) throw error;
             
@@ -206,7 +183,8 @@
             btnGerais.className = "bg-purple-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all flex-1 text-center";
         }
         
-        puxarDadosDoSupabase();
+        // Apenas aplica os filtros locais na lista unificada de registros já lidos
+        aplicarFiltros();
     }
 
     function calcularIdade(dataNasc) {
@@ -216,7 +194,7 @@
         let idade = hoje.getFullYear() - nascimento.getFullYear();
         const m = hoje.getMonth() - nascimento.getMonth();
         if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
-            box_idade = idade--;
+            idade--;
         }
         return idade;
     }
@@ -228,10 +206,9 @@
         const agora = new Date();
         
         let dadosFiltrados = dadosBrutosRanking.filter(item => {
-            if (moduloAtivo !== 'gerais_biblia') {
-                const moduloItem = item.modulo || 'regular';
-                if (moduloItem !== moduloAtivo) return false;
-            }
+            // CORREÇÃO: Mapeia dinamicamente e valida a coluna modulo de acordo com o botão clicado
+            const moduloItem = item.modulo || 'regular';
+            if (moduloItem !== moduloAtivo) return false;
 
             const perfil = item.perfis || { nome: "Jogador de Teste", organizacao: "ER", data_nascimento: "2012-05-15" };
             const dataPontuacao = new Date(item.criado_em);
