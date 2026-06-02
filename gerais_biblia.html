@@ -264,23 +264,28 @@
         }
 
         async function finalizarPartida() {
-            document.getElementById('box-jogo').classList.add('hidden');
-            document.getElementById('box-resultado').classList.remove('hidden');
-            document.getElementById('label-resultado-score').innerText = pontuacaoTotal.toLocaleString('pt-BR');
+    document.getElementById('box-jogo').classList.add('hidden');
+    document.getElementById('box-resultado').classList.remove('hidden');
+    document.getElementById('label-resultado-score').innerText = pontuacaoTotal.toLocaleString('pt-BR');
 
-            try {
-                const { error } = await supabaseClient
-                    .from('gerais_biblia')
-                    .insert([
-                        { id_usuario: jogadorID, pontuacao: pontuacaoTotal }
-                    ]);
+    try {
+        // Correção para injetar na tabela única de ranking com os nomes de colunas padrão
+        const { error } = await supabaseClient
+            .from('ranking')
+            .insert([
+                { 
+                    jogador_id: jogadorID, 
+                    pontos: pontuacaoTotal, 
+                    modulo: 'gerais_biblia' 
+                }
+            ]);
 
-                if (error) throw error;
-            } catch (err) {
-                console.error("Erro ao salvar pontos no Supabase:", err.message);
-                alert("Sua pontuação foi calculada, mas houve um problema ao enviar para o ranking.");
-            }
-        }
+        if (error) throw error;
+    } catch (err) {
+        console.error("Erro ao salvar pontos no Supabase:", err.message);
+        alert("Sua pontuação foi calculada, mas houve um problema ao enviar para o ranking.");
+    }
+}
     </script>
 </body>
 </html>
