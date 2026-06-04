@@ -24,7 +24,7 @@
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
         }
         .text-contour {
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px 1px 0 #000;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
         }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
@@ -62,9 +62,12 @@
         </div>
     </div>
 
-    <div class="w-full max-w-5xl text-center mb-4">
-        <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white text-xs font-black px-6 py-3.5 rounded-xl uppercase tracking-wider shadow-md active:scale-95 transition-all">
-            Voltar ao Menu Principal
+    <div class="flex space-x-4 mb-8 w-full max-w-5xl justify-center">
+        <a href="modulos.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-3 px-6 rounded-xl uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1 max-w-xs">
+            Voltar aos Módulos
+        </a>
+        <a href="index.html" class="bg-black/40 hover:bg-black/60 text-white font-bold py-3 px-6 rounded-xl border border-white/10 uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1 max-w-xs">
+            Tela Inicial
         </a>
     </div>
 
@@ -103,7 +106,7 @@
                 await renderizarMuralMedalhas();
 
             } catch (err) {
-                console.error(err);
+                console.error("Erro ao carregar o perfil:", err);
             }
         }
 
@@ -112,10 +115,13 @@
             container.innerHTML = "";
 
             try {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (!user) return;
+                
                 const { data: medalhasGanhas, error } = await supabaseClient
                     .from('medalhas_historico')
                     .select('*')
-                    .eq('jogador_id', perfilJogador.id);
+                    .eq('jogador_id', user.id);
 
                 if (error) throw error;
 
@@ -159,7 +165,7 @@
                     `;
                 });
             } catch (err) {
-                console.error(err);
+                console.error("Erro detalhado do Mural:", err);
                 container.innerHTML = `<p class="col-span-full text-center text-xs text-red-400 font-bold">Erro ao carregar o mural.</p>`;
             }
         }
