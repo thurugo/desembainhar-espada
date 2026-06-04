@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Escolha do Módulo - Desembainhar Espada</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             margin: 0; padding: 4px; min-height: 100vh;
@@ -28,6 +29,13 @@
 <body class="p-4">
 
     <div class="glass-panel w-full max-w-md p-6 rounded-3xl text-center shadow-2xl">
+        
+        <div class="mb-4 text-right">
+            <a href="avatar.html" class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-600 to-amber-500 hover:from-yellow-500 hover:to-amber-400 text-blue-950 font-black text-[10px] uppercase tracking-wider px-4 py-2 rounded-xl shadow-md transition-all active:scale-95">
+                🎖️ Meu Perfil & Medalhas
+            </a>
+        </div>
+
         <div class="mb-6">
             <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">Selecione o Módulo</h1>
             <p class="text-blue-200 text-[10px] uppercase tracking-widest mt-1">Escolha seu desafio na Arena</p>
@@ -57,11 +65,17 @@
     </div>
 
     <script>
+        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
+        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
+        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+        window.onload = async () => {
+            // Executa silenciosamente a auditoria de pódios assim que o menu abre
+            await auditarEDistribuirMedalhas();
+        };
+
         function jogar(event, modulo) {
-            // Previne o comportamento padrão do link de recarregar a página antes de rodar o JS
             event.preventDefault();
-            
-            // Salva a escolha temporariamente para a arena saber o que carregar
             localStorage.setItem('modulo_atual', modulo);
             
             if (modulo === 'regular') {
@@ -71,6 +85,97 @@
             } else if (modulo === 'gerais_biblia') {
                 window.location.href = 'gerais_biblia.html';
             }
+        }
+
+        // --- MOTOR SEMI-AUTOMÁTICO DE PREMIAÇÕES ---
+        async function auditarEDistribuirMedalhas() {
+            try {
+                const hoje = new Date();
+                const diaSemana = hoje.getDay(); 
+                const milissegundosPorDia = 24 * 60 * 60 * 1000;
+                
+                // Identifica o fechamento do domingo correspondente
+                const diasParaODomingo = diaSemana === 0 ? 0 : diaSemana;
+                const dataDomingoAlvo = new Date(hoje.getTime() - (diasParaODomingo * milissegundosPorDia));
+                const formatoDataISO = dataDomingoAlvo.toISOString().split('T')[0];
+
+                const mesAtual = hoje.getMonth() + 1; 
+                const diaDoMes = hoje.getDate();
+                const anoAtual = hoje.getFullYear();
+
+                const modulos = ['regular', 'avancado', 'gerais_biblia'];
+
+                for (const mod of modulos) {
+                    const { data, error } = await supabaseClient
+                        .from('ranking')
+                        .select('pontos, jogador_id, modulo, perfis:jogador_id(nome, organizacao, data_nascimento)')
+                        .eq('modulo', mod);
+
+                    const dadosTabela = data || [];
+                    if (error || dadosTabela.length === 0) continue;
+
+                    // Injeta metadados de idades localmente
+                    dadosTabela.forEach(item => {
+                        const perfil = item.perfis;
+                        if (perfil) {
+                            const nasc = new Date(perfil.data_nascimento);
+                            let idade = anoAtual - nasc.getFullYear();
+                            item.categoriaIdade = idade >= 9 && idade <= 11 ? 'juniores' : (idade >= 12 && idade <= 17 ? 'adolescentes' : 'seniors');
+                        }
+                    });
+
+                    // Distribui ouro (1º), prata (2º) e bronze (3º) por pódio
+                    const processarPodio = async (listaRegistros, escopoNome, tipoPeriodo) => {
+                        const podioOrdenado = [...listaRegistros].sort((a,b) => b.pontos - a.pontos);
+                        if(podioOrdenado[0]) await gravarMedalha(podioOrdenado[0].jogador_id, 'gold', escopoNome, mod, formatoDataISO, tipoPeriodo);
+                        if(podioOrdenado[1]) await gravarMedalha(podioOrdenado[1].jogador_id, 'silver', escopoNome, mod, formatoDataISO, tipoPeriodo);
+                        if(podioOrdenado[2]) await gravarMedalha(podioOrdenado[2].jogador_id, 'bronze', escopoNome, mod, formatoDataISO, tipoPeriodo);
+                    };
+
+                    // 1. FECHAMENTO SEMANAL (Todo Domingo)
+                    if (diaSemana === 0) {
+                        await processarPodio(dadosTabela, 'livro_livre', 'semanal');
+
+                        ['juniores', 'adolescentes', 'seniors'].forEach(cat => {
+                            processarPodio(dadosTabela.filter(i => i.categoriaIdade === cat), 'geral_idade', 'semanal');
+                        });
+                        ['ER', 'MR'].forEach(org => {
+                            processarPodio(dadosTabela.filter(i => i.perfis?.organizacao === org), 'geral_organizacao', 'semanal');
+                            ['juniores', 'adolescentes', 'seniors'].forEach(cat => {
+                                processarPodio(dadosTabela.filter(i => i.perfis?.organizacao === org && i.categoriaIdade === cat), 'idade', 'semanal');
+                            });
+                        });
+                    }
+
+                    // 2. FECHAMENTO MENSAL (Dia 01)
+                    if (diaDoMes === 1) {
+                        await processarPodio(dadosTabela, 'livro_livre', 'mensal');
+                    }
+
+                    // 3. FECHAMENTO SEMESTRAL (01/07 e 01/01)
+                    if (diaDoMes === 1 && (mesAtual === 7 || mesAtual === 1)) {
+                        await processarPodio(dadosTabela, 'livro_livre', 'semestral');
+                    }
+
+                    // 4. FECHAMENTO ANUAL (01/01)
+                    if (diaDoMes === 1 && mesAtual === 1) {
+                        await processarPodio(dadosTabela, 'livro_livre', 'anual');
+                    }
+                }
+            } catch (e) { console.error("Erro na auditoria:", e); }
+        }
+
+        async function gravarMedalha(jogadorId, tipo, escopo, modulo, dataDomingo, periodoTipo) {
+            try {
+                await supabaseClient.from('medalhas_historico').insert([{
+                    jogador_id: jogadorId,
+                    tipo_medalha: tipo,
+                    escopo: escopo,
+                    modulo: modulo,
+                    data_domingo: dataDomingo,
+                    periodo_tipo: periodoTipo
+                }]);
+            } catch(err) { /* O índice único do banco barra inserções repetidas no mesmo dia */ }
         }
     </script>
 </body>
