@@ -31,6 +31,15 @@
             border-color: #a855f7;
             transform: scale(1.01);
         }
+        /* Classes dinâmicas para revelar acerto ou erro nos cards ao confirmar */
+        .option-card.correct-reveal {
+            background-color: rgba(16, 185, 129, 0.4) !important;
+            border-color: #10b981 !important;
+        }
+        .option-card.wrong-reveal {
+            background-color: rgba(239, 68, 68, 0.4) !important;
+            border-color: #ef4444 !important;
+        }
     </style>
 </head>
 <body class="p-4">
@@ -80,9 +89,12 @@
                 </button>
             </div>
 
-            <button onclick="confirmarResposta()" id="btn-acao" disabled class="w-full bg-gray-600 text-gray-400 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed transition-all">
+            <button onclick="confirmarResposta()" id="btn-acao" disabled class="w-full bg-gray-600 text-gray-400 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed transition-all mb-4">
                 Selecione uma resposta
             </button>
+
+            <div id="banner-feedback" class="h-12 w-full rounded-xl flex items-center justify-center font-bold uppercase text-xs tracking-wide transition-all scale-95 opacity-0">
+                </div>
         </div>
 
         <div id="box-resultado" class="hidden py-6">
@@ -122,6 +134,7 @@
         let cronometro = null;
         let opcaoSelecionada = null;
         let jogadorID = null;
+        let bloqueiaCliques = false; // Impede duplo clique durante a tela de acerto/erro
 
         window.onload = async () => {
             await verificarAutenticacao();
@@ -140,7 +153,6 @@
 
         async function carregarBancoPerguntas() {
             try {
-                // Alterado para buscar o nome correto do arquivo JSON na raiz do repositório
                 const response = await fetch('perguntas_biblicas.json');
                 const data = await response.json();
                 bancoPerguntasCompleto = data.questoes;
@@ -173,9 +185,15 @@
             clearInterval(cronometro);
             opcaoSelecionada = null;
             tempoRestante = TEMPO_LIMITE;
+            bloqueiaCliques = false;
+
+            // Reseta Banner de Feedback
+            const banner = document.getElementById('banner-feedback');
+            banner.className = "h-12 w-full rounded-xl flex items-center justify-center font-bold uppercase text-xs tracking-wide transition-all scale-95 opacity-0";
+            banner.innerText = "";
 
             document.getElementById('btn-acao').disabled = true;
-            document.getElementById('btn-acao').className = "w-full bg-gray-600 text-gray-400 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed transition-all";
+            document.getElementById('btn-acao').className = "w-full bg-gray-600 text-gray-400 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed transition-all mb-4";
             document.getElementById('btn-acao').innerText = "Selecione uma resposta";
 
             resetarEstiloOpcoes();
@@ -201,12 +219,13 @@
         }
 
         function contagemRegressiva() {
+            if (bloqueiaCliques) return;
             tempoRestante--;
             atualizarBarraTempo();
 
             if (tempoRestante <= 0) {
                 clearInterval(cronometro);
-                avancarProxima();
+                revelarFeedback(false, "Tempo Esgotado! ⏱️");
             }
         }
 
@@ -225,6 +244,7 @@
         }
 
         function selecionarOpcao(letra) {
+            if (bloqueiaCliques) return;
             opcaoSelecionada = letra;
             resetarEstiloOpcoes();
 
@@ -232,26 +252,61 @@
 
             const btnAcao = document.getElementById('btn-acao');
             btnAcao.disabled = false;
-            btnAcao.className = "w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl uppercase tracking-wider text-sm shadow-lg active:scale-[0.99] cursor-pointer transition-all";
+            btnAcao.className = "w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-xl uppercase tracking-wider text-sm shadow-lg active:scale-[0.99] cursor-pointer transition-all mb-4";
             btnAcao.innerText = `Confirmar Alternativa ${letra} ⚔️`;
         }
 
         function resetarEstiloOpcoes() {
             ['A', 'B', 'C', 'D'].forEach(l => {
-                document.getElementById(`btn-opt-${l}`).classList.remove('selected');
+                const card = document.getElementById(`btn-opt-${l}`);
+                card.className = "option-card p-4 rounded-xl bg-black/30 border border-white/10 hover:bg-white/5 flex items-center gap-3";
             });
         }
 
         function confirmarResposta() {
+            if (bloqueiaCliques) return;
+            bloqueiaCliques = true; // Tranca a tela contra cliques fantasmas
             clearInterval(cronometro);
+            
             const questao = rodadaPerguntas[indiceAtual];
+            const letraCorreta = questao.correta.toUpperCase();
 
-            if (opcaoSelecionada === questao.correta.toUpperCase()) {
+            if (opcaoSelecionada === letraCorreta) {
                 pontuacaoTotal += tempoRestante;
                 document.getElementById('label-score').innerText = `${pontuacaoTotal} pts`;
+                revelarFeedback(true, `Correto! +${tempoRestante} pontos obtidos 🎉`);
+            } else {
+                revelarFeedback(false, `Incorreto! A resposta certa era a Alternativa ${letraCorreta} ❌`);
+            }
+        }
+
+        function revelarFeedback(acertou, mensagem) {
+            const banner = document.getElementById('banner-feedback');
+            const questao = rodadaPerguntas[indiceAtual];
+            const letraCorreta = questao.correta.toUpperCase();
+
+            // Pinta os cards de resposta (Verde o correto, Vermelho o errado selecionado)
+            document.getElementById(`btn-opt-${letraCorreta}`).classList.add('correct-reveal');
+            if(!acertou && opcaoSelecionada) {
+                document.getElementById(`btn-opt-${opcaoSelecionada}`).classList.add('wrong-reveal');
             }
 
-            avancarProxima();
+            // Desativa botão principal durante a revelação
+            const btnAcao = document.getElementById('btn-acao');
+            btnAcao.disabled = true;
+            btnAcao.className = "w-full bg-gray-800 text-gray-600 font-black py-4 rounded-xl uppercase tracking-wider text-sm cursor-not-allowed mb-4";
+            btnAcao.innerText = "Carregando próxima pergunta...";
+
+            // Configura e anima o banner inferior
+            banner.innerText = mensagem;
+            if(acertou) {
+                banner.classList.add('bg-green-500/20', 'text-green-400', 'border', 'border-green-500/30', 'scale-100', 'opacity-100');
+            } else {
+                banner.classList.add('bg-red-500/20', 'text-red-400', 'border', 'border-red-500/30', 'scale-100', 'opacity-100');
+            }
+
+            // Aguarda 2 segundos para dar tempo do jovem ler e absorver o resultado, e avança
+            setTimeout(avancarProxima, 2000);
         }
 
         function avancarProxima() {
@@ -264,28 +319,27 @@
         }
 
         async function finalizarPartida() {
-    document.getElementById('box-jogo').classList.add('hidden');
-    document.getElementById('box-resultado').classList.remove('hidden');
-    document.getElementById('label-resultado-score').innerText = pontuacaoTotal.toLocaleString('pt-BR');
+            document.getElementById('box-jogo').classList.add('hidden');
+            document.getElementById('box-resultado').classList.remove('hidden');
+            document.getElementById('label-resultado-score').innerText = pontuacaoTotal.toLocaleString('pt-BR');
 
-    try {
-        // Correção para injetar na tabela única de ranking com os nomes de colunas padrão
-        const { error } = await supabaseClient
-            .from('ranking')
-            .insert([
-                { 
-                    jogador_id: jogadorID, 
-                    pontos: pontuacaoTotal, 
-                    modulo: 'gerais_biblia' 
-                }
-            ]);
+            try {
+                const { error } = await supabaseClient
+                    .from('ranking')
+                    .insert([
+                        { 
+                            jogador_id: jogadorID, 
+                            pontos: pontuacaoTotal, 
+                            modulo: 'gerais_biblia' 
+                        }
+                    ]);
 
-        if (error) throw error;
-    } catch (err) {
-        console.error("Erro ao salvar pontos no Supabase:", err.message);
-        alert("Sua pontuação foi calculada, mas houve um problema ao enviar para o ranking.");
-    }
-}
+                if (error) throw error;
+            } catch (err) {
+                console.error("Erro ao salvar pontos no Supabase:", err.message);
+                alert("Sua pontuação foi calculada, mas houve um problema ao enviar para o ranking.");
+            }
+        }
     </script>
 </body>
 </html>
