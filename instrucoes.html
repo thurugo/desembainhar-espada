@@ -25,7 +25,7 @@
         select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
         option { background: #001428; color: white; }
         .text-contour {
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px 1px 0 #000;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
         }
     </style>
 </head>
@@ -39,11 +39,12 @@
         </div>
 
         <div class="mb-6">
-            <label for="seletor-modulo" class="block text-[10px] uppercase text-yellow-500 font-bold mb-1">Escolha o Módulo de Jogo:</label>
+            <label for="seletor-modulo" class="block text-[10px] uppercase text-yellow-500 font-bold mb-1">Escolha o Tema do Manual:</label>
             <select id="seletor-modulo" onchange="alternarManual(this.value)" class="w-full p-3 rounded-xl text-xs outline-none font-bold tracking-wide">
                 <option value="regular">⚔️ MÓDULO REGULAR (ENDEREÇOS)</option>
                 <option value="avancado">🔥 MÓDULO AVANÇADO (PALAVRA-CHAVE)</option>
                 <option value="gerais">📚 CONHECIMENTOS GERAIS DA BÍBLIA</option>
+                <option value="medalhas">🏅 SISTEMA DE PREMIAÇÕES (MEDALHAS)</option>
             </select>
         </div>
 
@@ -59,7 +60,7 @@
                 <p>O jogo sorteará uma <strong class="text-purple-400">Palavra-Chave Significativa</strong> na tela.</p>
                 <p>Sua missão é folhear a sua Bíblia física e encontrar <strong>qualquer versículo</strong> que contenha essa palavra exata na versão escolhida.</p>
                 <p>Ao localizar, clique imediatamente em <strong>"ENCONTREI!"</strong> para parar a contagem do cronômetro.</p>
-                <p>O sistema ativará o microfone para realizar a auditoria automática. Você deve ditar (or digitar) o endereço seguindo rigorosamente este padrão de voz:</p>
+                <p>O sistema ativará o microfone para realizar a auditoria automática. Você deve ditar (ou digitar) o endereço seguindo rigorosamente este padrão de voz:</p>
                 
                 <div class="bg-black/40 text-yellow-400 p-3 rounded-xl font-mono text-center text-[11px] border border-white/5 normal-case tracking-normal">
                     "Livro de <strong>[Nome]</strong> capítulo <strong>[X]</strong> versículo <strong>[Y]</strong>"
@@ -80,6 +81,31 @@
                 <p>Você terá exatamente <strong class="text-yellow-400">30 segundos</strong> para ler e clicar na resposta desejada. Para evitar cliques acidentais, a alternativa só será computada quando você clicar no botão de confirmação mestre.</p>
                 <p>Se a resposta estiver correta, todo o tempo restante no relógio acumula direto para a sua pontuação final da rodada!</p>
             </div>
+
+            <div id="conteudo-medalhas" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
+                <p>A Arena monitora constantemente o desempenho dos guerreiros e distribui insígnias históricas automáticas baseadas em quatro grandes ciclos de tempo:</p>
+                
+                <div class="grid grid-cols-2 gap-2 text-[11px] bg-black/30 p-3 rounded-xl border border-white/5 font-medium">
+                    <div>🗓️ <strong class="text-yellow-400">Semanal:</strong> Todo domingo.</div>
+                    <div>📅 <strong class="text-purple-400">Mensal:</strong> Todo dia 1º.</div>
+                    <div>🔥 <strong class="text-emerald-400">Semestral:</strong> 01/01 e 01/07.</div>
+                    <div>👑 <strong class="text-amber-500">Anual:</strong> Todo dia 01/01.</div>
+                </div>
+
+                <p>A apuração é calculada **separadamente para cada módulo de jogo** (Regular, Avançado e Gerais). Em cada período, os três melhores conquistam o pódio:</p>
+                <ul class="list-disc pl-5 space-y-0.5 text-gray-300">
+                    <li>🥇 <strong class="text-yellow-400">Medalha de Ouro:</strong> Destinada ao <strong class="font-bold text-white">1º Lugar</strong> da categoria.</li>
+                    <li>🥈 <strong class="text-slate-300">Medalha de Prata:</strong> Destinada ao <strong class="font-bold text-white">2º Lugar</strong> da categoria.</li>
+                    <li>🥉 <strong class="text-amber-600">Medalha de Bronze:</strong> Destinada ao <strong class="font-bold text-white">3º Lugar</strong> da categoria.</li>
+                </ul>
+
+                <p>Você pode disputar e acumular medalhas através de diferentes escopos de filtros:</p>
+                <ul class="list-none space-y-2 text-gray-300">
+                    <li>🔷 <strong>Categoria Local:</strong> Disputa restrita por Organização e Idade exata (Ex: Juniores do ER).</li>
+                    <li>🔷 <strong>Geral Idade / Geral Org:</strong> Disputa cruzada total (Ex: Maior ponto entre todas as idades do ER).</li>
+                    <li>🔶 <strong class="text-amber-400">Pódio Absoluto Livre (Insignias Supreme):</strong> O topo absoluto do módulo, independente de idade ou bandeira. Quem alcançar este pódio recebe as lendárias medalhas <strong class="text-contour tracking-wide italic text-yellow-400">Gold-Supreme, Silver-Supreme ou Bronze-Supreme</strong>.</li>
+                </ul>
+            </div>
         </main>
 
         <div class="mt-4 pt-4 border-t border-white/10 text-left bg-black/20 p-3 rounded-xl border border-white/5">
@@ -99,19 +125,17 @@
 
     <script>
         function alternarManual(modulo) {
-            // Mapeia todas as caixas de conteúdo existentes
             const conteudos = {
                 regular: document.getElementById('conteudo-regular'),
                 avancado: document.getElementById('conteudo-avancado'),
-                gerais: document.getElementById('conteudo-gerais')
+                gerais: document.getElementById('conteudo-gerais'),
+                medalhas: document.getElementById('conteudo-medalhas') // Mapeado o novo bloco
             };
 
-            // Oculta todos os blocos de texto primeiro
             Object.values(conteudos).forEach(el => {
                 if (el) el.classList.add('hidden');
             });
 
-            // Exibe especificamente o selecionado pelo elemento <select>
             if (conteudos[modulo]) {
                 conteudos[modulo].classList.remove('hidden');
             }
