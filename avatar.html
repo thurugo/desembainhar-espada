@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quartel General - Meu Avatar</title>
+    <title>Quartel General - Minhas Conquistas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -23,26 +23,9 @@
             border: 2px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
         }
-        /* ENGINE CANVAS DO AVATAR (Boneco em Camadas Sobrepostas) */
-        .avatar-canvas {
-            position: relative;
-            width: 260px;
-            height: 340px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px solid rgba(56, 189, 248, 0.3);
-            overflow: hidden;
-        }
-        .avatar-layer {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            object-fit: contain;
-            pointer-events: none; /* Evita cliques nas imagens superiores */
-        }
         .text-contour {
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px 1px 0 #000;
         }
-        /* Custom Scrollbar para a Loja */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(147, 51, 234, 0.5); border-radius: 10px; }
@@ -52,61 +35,30 @@
 
     <div class="w-full max-w-5xl flex flex-col lg:flex-row gap-6 my-4">
         
-        <div class="glass-panel flex-1 p-6 rounded-3xl flex flex-col items-center text-center justify-between">
-            <div>
+        <div class="glass-panel flex-1 p-6 rounded-3xl flex flex-col items-center text-center justify-center min-h-[300px]">
+            <div class="mb-4">
                 <div class="bg-blue-600/30 text-blue-300 border border-blue-500/30 text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-widest inline-block mb-2">
-                    Visualizador do Guerreiro
+                    Guerreiro de Elite
                 </div>
                 <h1 id="player-name" class="text-2xl font-black text-yellow-400 uppercase italic text-contour">Carregando...</h1>
                 <p id="player-org" class="text-xs text-gray-400 uppercase font-bold tracking-wider mb-4">-</p>
             </div>
 
-            <div class="avatar-canvas rounded-2xl shadow-inner my-4 flex items-center justify-center">
-                <img id="layer-corpo" src="imagens/avatar/base_menino_branco.png" class="avatar-layer" alt="Corpo">
-                <img id="layer-cabelo" src="imagens/avatar/cabelo_preto.png" class="avatar-layer" alt="Cabelo">
-                <img id="layer-pes" src="imagens/avatar/pes_nenhum.png" class="avatar-layer" alt="Pés">
-                <img id="layer-pernas" src="imagens/avatar/pernas_nenhum.png" class="avatar-layer" alt="Pernas">
-                <img id="layer-peito" src="imagens/avatar/peito_nenhum.png" class="avatar-layer" alt="Peito">
-                <img id="layer-cabeca" src="imagens/avatar/cabeca_nenhum.png" class="avatar-layer" alt="Cabeça">
-            </div>
-
-            <div class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl flex justify-between items-center mt-2">
-                <div class="text-left">
-                    <span class="block text-[10px] uppercase text-gray-400 font-bold tracking-widest">Saldo para Compras</span>
-                    <span id="label-saldo" class="text-2xl font-black text-yellow-400">0 <span class="text-xs text-gray-400 font-normal">pts</span></span>
-                </div>
-                <div class="text-right">
-                    <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold px-3 py-1 rounded-lg uppercase block">
-                        💰 Ouro da Arena
-                    </span>
-                </div>
+            <div class="w-full bg-black/30 border border-dashed border-white/10 p-6 rounded-2xl text-center">
+                <span class="text-3xl block mb-2">⚒️</span>
+                <span class="text-xs text-yellow-500 font-bold block uppercase tracking-wider">Forja de Avatares</span>
+                <span class="text-[10px] text-gray-400 block mt-1">Os modelos gráficos 3D/2D estão sendo preparados. Colecione suas medalhas enquanto isso!</span>
             </div>
         </div>
 
-        <div class="flex-[1.5] flex flex-col gap-6">
-            
-            <div class="glass-panel p-6 rounded-3xl flex flex-col flex-1">
-                <div class="flex items-center justify-between mb-4 border-b border-white/10 pb-3">
-                    <h2 class="text-lg font-black uppercase text-purple-400 tracking-tight italic">🛡️ Forja de Armaduras</h2>
-                    <div id="abas-loja" class="flex gap-1 bg-black/30 p-1 rounded-xl text-[10px] font-bold uppercase">
-                        <button onclick="mudarAbaLoja('cabeca')" id="tab-cabeca" class="bg-purple-600 px-2.5 py-1.5 rounded-lg text-white">Cabeça</button>
-                        <button onclick="mudarAbaLoja('peito')" id="tab-peito" class="px-2.5 py-1.5 rounded-lg text-gray-400">Peito</button>
-                        <button onclick="mudarAbaLoja('pernas')" id="tab-pernas" class="px-2.5 py-1.5 rounded-lg text-gray-400">Pernas</button>
-                        <button onclick="mudarAbaLoja('pes')" id="tab-pes" class="px-2.5 py-1.5 rounded-lg text-gray-400">Pés</button>
-                        <button onclick="mudarAbaLoja('biotipo')" id="tab-biotipo" class="px-2.5 py-1.5 rounded-lg text-gray-400 text-amber-400">🧬 Corpo</button>
-                    </div>
-                </div>
-
-                <div id="prateleira-itens" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-height-[280px] overflow-y-auto custom-scroll pr-1">
+        <div class="flex-[1.5] flex flex-col">
+            <div class="glass-panel p-6 rounded-3xl flex-1 flex flex-col">
+                <h2 class="text-lg font-black uppercase text-amber-400 tracking-wider mb-1 italic text-left border-b border-white/10 pb-2">🏅 Mural Histórico de Medalhas de Honra</h2>
+                <p class="text-[11px] text-gray-400 mb-4 text-left">Pódios conquistados nas apurações Semanais, Mensais, Semestrais e Anuais.</p>
+                
+                <div id="grade-medalhas" class="grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto custom-scroll pr-1 max-h-[460px]">
                     </div>
             </div>
-
-            <div class="glass-panel p-6 rounded-3xl">
-                <h2 class="text-sm font-black uppercase text-amber-400 tracking-widest mb-3">🏅 Mural de Medalhas de Honra</h2>
-                <div id="grade-medalhas" class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-h-[160px] overflow-y-auto custom-scroll pr-1">
-                    </div>
-            </div>
-
         </div>
     </div>
 
@@ -122,38 +74,6 @@
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
         let perfilJogador = null;
-        let abaAtiva = "cabeca";
-
-        // Tabela Base de Preços das Peças de Armadura
-        const catalogoPrecos = { aco: 1000, bronze: 2000, prata: 3500, ouro: 5000 };
-
-        // Definição Completa dos Itens Disponíveis para Venda/Uso
-        const itensLoja = {
-            cabeca: [
-                { id: "cabeca_aco", nome: "Capacete de Aço", tipo: "aco" },
-                { id: "cabeca_bronze", nome: "Capacete de Bronze", tipo: "bronze" },
-                { id: "cabeca_prata", nome: "Capacete de Prata", tipo: "prata" },
-                { id: "cabeca_ouro", nome: "Capacete de Ouro", tipo: "ouro" }
-            ],
-            peito: [
-                { id: "peito_aco", nome: "Couraça de Aço", tipo: "aco" },
-                { id: "peito_bronze", nome: "Couraça de Bronze", tipo: "bronze" },
-                { id: "peito_prata", nome: "Couraça de Prata", tipo: "prata" },
-                { id: "peito_ouro", nome: "Couraça de Ouro", tipo: "ouro" }
-            ],
-            pernas: [
-                { id: "pernas_aco", nome: "Grevas de Aço", tipo: "aco" },
-                { id: "pernas_bronze", nome: "Grevas de Bronze", tipo: "bronze" },
-                { id: "pernas_prata", nome: "Grevas de Prata", tipo: "prata" },
-                { id: "pernas_ouro", nome: "Grevas de Ouro", tipo: "ouro" }
-            ],
-            pes: [
-                { id: "pes_aco", nome: "Sabatões de Aço", tipo: "aco" },
-                { id: "pes_bronze", nome: "Sabatões de Bronze", tipo: "bronze" },
-                { id: "pes_prata", nome: "Sabatões de Prata", tipo: "prata" },
-                { id: "pes_ouro", nome: "Sabatões de Ouro", tipo: "ouro" }
-            ]
-        };
 
         window.onload = async () => {
             await carregarDadosPerfil();
@@ -163,7 +83,7 @@
             try {
                 const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
                 if (authError || !user) {
-                    alert("Acesso restrito. Por favor realize o login.");
+                    alert("Por favor realize o login.");
                     window.location.href = 'login.html';
                     return;
                 }
@@ -175,186 +95,73 @@
                     .single();
 
                 if (pError) throw pError;
-
                 perfilJogador = perfil;
 
-                // Trata fallbacks de campos JSONB novos
-                if (!perfilJogador.itens_comprados) perfilJogador.itens_comprados = [];
-                if (!perfilJogador.itens_equipados) perfilJogador.itens_equipados = { cabeca: "nenhum", peito: "nenhum", pernas: "nenhum", pes: "nenhum" };
-                if (!perfilJogador.medalhas) perfilJogador.medalhas = [];
+                document.getElementById('player-name').innerText = perfilJogador.nome;
+                document.getElementById('player-org').innerText = perfilJogador.organizacao === "ER" ? "Embaixadores do Rei" : "Mensageiras do Rei";
 
-                atualizarPainelUI();
+                await renderizarMuralMedalhas();
 
             } catch (err) {
                 console.error(err);
-                alert("Erro ao ler dados de gamificação: " + err.message);
             }
         }
 
-        function atualizarPainelUI() {
-            // Atualiza Textos Básicos
-            document.getElementById('player-name').innerText = perfilJogador.nome;
-            document.getElementById('player-org').innerText = perfilJogador.organizacao === "ER" ? "Embaixadores do Rei" : "Mensageiras do Rei";
-            document.getElementById('label-saldo').innerText = perfilJogador.pontos_saldo.toLocaleString('pt-BR') + " pts";
-
-            // Atualiza Arte Visual do Boneco (Imagens Locais PNG)
-            document.getElementById('layer-corpo').src = `imagens/avatar/base_${perfilJogador.avatar_genero}_${perfilJogador.avatar_pele}.png`;
-            document.getElementById('layer-cabelo').src = `imagens/avatar/cabelo_${perfilJogador.avatar_cabelo}.png`;
-            document.getElementById('layer-cabeca').src = `imagens/avatar/cabeca_${perfilJogador.itens_equipados.cabeca}.png`;
-            document.getElementById('layer-peito').src = `imagens/avatar/peito_${perfilJogador.itens_equipados.peito}.png`;
-            document.getElementById('layer-pernas').src = `imagens/avatar/pernas_${perfilJogador.itens_equipados.pernas}.png`;
-            document.getElementById('layer-pes').src = `imagens/avatar/pes_${perfilJogador.itens_equipados.pes}.png`;
-
-            // Renderiza Subtelas
-            renderizarPrateleiraLoja();
-            renderizarMuralMedalhas();
-        }
-
-        function mudarAbaLoja(aba) {
-            abaAtiva = aba;
-            const botoes = document.querySelectorAll('#abas-loja button');
-            botoes.forEach(b => {
-                b.className = "px-2.5 py-1.5 rounded-lg text-gray-400";
-                if(b.id === `tab-${aba}`) {
-                    b.className = aba === 'biotipo' ? "bg-amber-500 text-slate-950 font-black px-2.5 py-1.5 rounded-lg" : "bg-purple-600 text-white font-black px-2.5 py-1.5 rounded-lg";
-                }
-            });
-            renderizarPrateleiraLoja();
-        }
-
-        function renderizarPrateleiraLoja() {
-            const container = document.getElementById('prateleira-itens');
-            container.innerHTML = "";
-
-            // ABA ESPECIAL: Alteração Básica de Características (Grátis)
-            if (abaAtiva === "biotipo") {
-                container.innerHTML = `
-                    <div class="bg-black/30 p-3 rounded-xl border border-white/5 flex flex-col gap-2">
-                        <span class="text-[10px] text-gray-400 uppercase font-bold">Gênero</span>
-                        <select onchange="atualizarBiotipo('avatar_genero', this.value)" class="p-2 rounded-lg bg-slate-900 text-white font-bold text-xs">
-                            <option value="menino" ${perfilJogador.avatar_genero === 'menino' ? 'selected' : ''}>Menino</option>
-                            <option value="menina" ${perfilJogador.avatar_genero === 'menina' ? 'selected' : ''}>Menina</option>
-                        </select>
-                    </div>
-                    <div class="bg-black/30 p-3 rounded-xl border border-white/5 flex flex-col gap-2">
-                        <span class="text-[10px] text-gray-400 uppercase font-bold">Tom de Pele</span>
-                        <select onchange="atualizarBiotipo('avatar_pele', this.value)" class="p-2 rounded-lg bg-slate-900 text-white font-bold text-xs">
-                            <option value="branco" ${perfilJogador.avatar_pele === 'branco' ? 'selected' : ''}>Branco</option>
-                            <option value="amarelo" ${perfilJogador.avatar_pele === 'amarelo' ? 'selected' : ''}>Amarelo</option>
-                            <option value="moreno" ${perfilJogador.avatar_pele === 'moreno' ? 'selected' : ''}>Moreno</option>
-                            <option value="negro" ${perfilJogador.avatar_pele === 'negro' ? 'selected' : ''}>Negro</option>
-                        </select>
-                    </div>
-                    <div class="bg-black/30 p-3 rounded-xl border border-white/5 flex flex-col gap-2 sm:col-span-2">
-                        <span class="text-[10px] text-gray-400 uppercase font-bold">Cor do Cabelo</span>
-                        <select onchange="atualizarBiotipo('avatar_cabelo', this.value)" class="p-2 rounded-lg bg-slate-900 text-white font-bold text-xs">
-                            <option value="preto" ${perfilJogador.avatar_cabelo === 'preto' ? 'selected' : ''}>Preto</option>
-                            <option value="castanho" ${perfilJogador.avatar_cabelo === 'castanho' ? 'selected' : ''}>Castanho</option>
-                            <option value="ruivo" ${perfilJogador.avatar_cabelo === 'ruivo' ? 'selected' : ''}>Ruivo</option>
-                            <option value="loiro" ${perfilJogador.avatar_cabelo === 'loiro' ? 'selected' : ''}>Loiro</option>
-                        </select>
-                    </div>
-                `;
-                return;
-            }
-
-            // LISTAGEM DE ARTEFATOS (Aço, Bronze, Prata, Ouro)
-            const lista = itensLoja[abaAtiva];
-            lista.forEach(item => {
-                const preco = catalogoPrecos[item.tipo];
-                const jaComprou = perfilJogador.itens_comprados.includes(item.id);
-                const estaEquipado = perfilJogador.itens_equipados[abaAtiva] === item.tipo;
-
-                let corFronteira = "border-slate-700 bg-slate-900/40";
-                if (item.tipo === 'bronze') corFronteira = "border-amber-700 bg-amber-950/20";
-                if (item.tipo === 'prata') corFronteira = "border-slate-400/40 bg-slate-800/20";
-                if (item.tipo === 'ouro') corFronteira = "border-yellow-500/40 bg-yellow-950/20";
-
-                let htmlBotao = "";
-                if (estaEquipado) {
-                    htmlBotao = `<button onclick="desequiparPeca('${abaAtiva}')" class="bg-red-600 hover:bg-red-500 text-white text-[10px] font-black px-3 py-2 rounded-xl uppercase">Remover</button>`;
-                } else if (jaComprou) {
-                    htmlBotao = `<button onclick="equiparPeca('${abaAtiva}', '${item.tipo}')" class="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black px-3 py-2 rounded-xl uppercase">Vestir</button>`;
-                } else {
-                    htmlBotao = `<button onclick="comprarPeca('${item.id}', ${preco})" class="bg-yellow-500 hover:bg-yellow-400 text-blue-950 text-[10px] font-black px-3 py-2 rounded-xl uppercase">🛒 Comprar</button>`;
-                }
-
-                container.innerHTML += `
-                    <div class="border p-3.5 rounded-2xl flex justify-between items-center ${corFronteira}">
-                        <div class="text-left">
-                            <span class="block text-xs font-black text-white">${item.nome}</span>
-                            <span class="block text-[10px] ${jaComprou ? 'text-green-400 font-bold' : 'text-yellow-400 font-medium'}">
-                                ${jaComprou ? 'Adquirido' : `💰 ${preco.toLocaleString('pt-BR')} pts`}
-                            </span>
-                        </div>
-                        <div>${htmlBotao}</div>
-                    </div>
-                `;
-            });
-        }
-
-        async function atualizarBiotipo(campo, valor) {
-            perfilJogador[campo] = valor;
-            atualizarPainelUI();
-            await supabaseClient.from('perfis').update({ [campo]: valor }).eq('id', perfilJogador.id);
-        }
-
-        async function comprarPeca(itemId, preco) {
-            if (perfilJogador.pontos_saldo < preco) {
-                alert("Moedas da Arena insuficientes! Continue duelando para acumular pontos.");
-                return;
-            }
-
-            if (!confirm(`Deseja forjar este item por ${preco} pontos?`)) return;
-
-            perfilJogador.pontos_saldo -= preco;
-            perfilJogador.itens_comprados.push(itemId);
-
-            atualizarPainelUI();
-
-            await supabaseClient.from('perfis').update({
-                pontos_saldo: perfilJogador.pontos_saldo,
-                itens_comprados: perfilJogador.itens_comprados
-            }).eq('id', perfilJogador.id);
-        }
-
-        async function equiparPeca(categoria, tipoMaterial) {
-            perfilJogador.itens_equipados[categoria] = tipoMaterial;
-            atualizarPainelUI();
-            await supabaseClient.from('perfis').update({ itens_equipados: perfilJogador.itens_equipados }).eq('id', perfilJogador.id);
-        }
-
-        async function desequiparPeca(categoria) {
-            perfilJogador.itens_equipados[categoria] = "nenhum";
-            atualizarPainelUI();
-            await supabaseClient.from('perfis').update({ itens_equipados: perfilJogador.itens_equipados }).eq('id', perfilJogador.id);
-        }
-
-        function renderizarMuralMedalhas() {
+        async function renderizarMuralMedalhas() {
             const container = document.getElementById('grade-medalhas');
             container.innerHTML = "";
 
-            if (perfilJogador.medalhas.length === 0) {
-                container.innerHTML = `<p class="col-span-full text-center text-xs text-gray-500 py-6 italic">Nenhuma medalha de ranking obtida neste período.</p>`;
-                return;
+            try {
+                const { data: medalhasGanhas, error } = await supabaseClient
+                    .from('medalhas_historico')
+                    .select('*')
+                    .eq('jogador_id', perfilJogador.id);
+
+                if (error) throw error;
+
+                if (!medalhasGanhas || medalhasGanhas.length === 0) {
+                    container.innerHTML = `<p class="col-span-full text-center text-xs text-gray-500 py-12 italic">Nenhuma medalha de pódio obtida até o momento. Continue batalhando nas Arenas!</p>`;
+                    return;
+                }
+
+                const nomesModulos = { regular: "Tradicional", avancado: "Avançado", gerais_biblia: "Gerais da Bíblia" };
+                const nomesEscopos = {
+                    idade: "Líder Categoria Local",
+                    geral_idade: "Líder Geral de Idades",
+                    organizacao: "Líder da Organização",
+                    geral_organizacao: "Líder Geral da Organização",
+                    livro_livre: "Pódio Absoluto Livre"
+                };
+
+                medalhasGanhas.forEach(med => {
+                    const nomeDoModulo = nomesModulos[med.modulo] || "Arena";
+                    const nomeDoEscopo = nomesEscopos[med.escopo] || "Conquista";
+                    
+                    let urlImagemMedalha = `imagens/medalhas_${med.tipo_medalha}.png`;
+                    if (med.escopo === 'livro_livre') {
+                        urlImagemMedalha = `imagens/medalhas_${med.tipo_medalha}-supreme.png`;
+                    }
+
+                    let legendaPeriodo = `Ciclo: ${med.data_domingo}`;
+                    if(med.periodo_tipo !== 'semanal') {
+                        legendaPeriodo = `${med.periodo_tipo.toUpperCase()} - Ref: ${med.data_domingo.substring(0,7)}`;
+                    }
+
+                    container.innerHTML += `
+                        <div class="bg-black/40 border border-white/5 p-3 rounded-2xl flex flex-col items-center text-center justify-between min-h-[150px] shadow-lg">
+                            <img src="${urlImagemMedalha}" class="w-12 h-12 object-contain mb-2 drop-shadow-[0_4px_6px_rgba(0,0,0,0.6)]" alt="Medalha">
+                            <div>
+                                <span class="block text-[10px] font-black tracking-wide uppercase text-yellow-400 leading-tight">${nomeDoEscopo}</span>
+                                <span class="block text-[9px] text-gray-400 mt-1 font-medium">${nomeDoModulo}</span>
+                                <span class="block text-[8px] text-purple-400 font-mono mt-1">${legendaPeriodo}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = `<p class="col-span-full text-center text-xs text-red-400 font-bold">Erro ao carregar o mural.</p>`;
             }
-
-            // Converte chaves de texto salvas no JSON em badges visuais
-            perfilJogador.medalhas.forEach(med => {
-                let estiloMedalha = "bg-amber-900/30 border-amber-600 text-amber-400"; // Bronze padrão
-                if (med.includes('_prata')) estiloMedalha = "bg-slate-800/40 border-slate-400 text-slate-300";
-                if (med.includes('_ouro')) estiloMedalha = "bg-yellow-950/40 border-yellow-500 text-yellow-400";
-
-                // Limpa o texto da medalha para ficar amigável na tela
-                let tituloLimpo = med.replace(/_/g, " ").toUpperCase();
-
-                container.innerHTML += `
-                    <div class="border p-2.5 rounded-xl text-center flex flex-col items-center justify-center gap-1 ${estiloMedalha}">
-                        <span class="text-xl">🏅</span>
-                        <span class="text-[9px] font-black tracking-tight leading-tight block">${tituloLimpo}</span>
-                    </div>
-                `;
-            });
         }
     </script>
 </body>
