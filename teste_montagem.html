@@ -18,15 +18,25 @@
             border: 2px solid rgba(234, 179, 8, 0.4);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
         }
+        /* Estilo dos cards da lista */
         .item-card {
+            transition: all 0.2s ease;
+        }
+        /* Estilo específico do elemento clicável e móvel da direita */
+        .movable-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.2s ease;
             cursor: pointer;
         }
-        .item-card.selected {
+        .movable-box:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .movable-box.selected {
             border-color: #facc15 !important;
             background-color: rgba(250, 204, 21, 0.2) !important;
+            box-shadow: 0 0 12px rgba(250, 204, 21, 0.3);
             transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
         }
         .text-contour {
             text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
@@ -95,9 +105,7 @@
         ];
 
         window.onload = async () => {
-            const btn = document.getElementById('btn-acao');
             try {
-                // Modifique o caminho abaixo caso seu repositório use outra pasta para os JSONs
                 const response = await fetch('./biblias/NVI.json');
                 bibliaData = await response.json();
                 
@@ -130,7 +138,6 @@
             cardSelecionadoIdx = null;
             bloqueiaCliques = false;
 
-            // Define um modo específico fixo para cada rodada do teste
             montarEstruturaPecas(rodada);
             atualizarBarraTempo();
 
@@ -155,20 +162,20 @@
             arrayJogador = [];
 
             if (numeroRodada === 1) {
-                // RODADA 1: MODO CRONOLÓGICO
                 document.getElementById('instrucao-modo').innerText = "🔄 Rodada 1: Cronologia dos Livros";
-                document.getElementById('subtitulo-modo').innerText = "Ordene a sequência móvel baseada na ordem sequencial correta dos livros da Bíblia.";
+                document.getElementById('subtitulo-modo').innerText = "Clique em um livro e depois no outro para inverter suas posições até estarem na ordem correta.";
                 
                 const idxInicio = Math.floor(Math.random() * (bibliaData.length - 5));
                 for(let i = 0; i < 5; i++) {
                     const livro = bibliaData[idxInicio + i];
-                    arrayGabarito.push({ id: i, fixo: livro.name, mover: livro.name });
+                    arrayGabarito.push({ fixo: `Posição ${i+1}`, mover: livro.name });
+                    arrayJogador.push({ fixo: `Posição ${i+1}`, mover: livro.name });
                 }
+                arrayJogador.sort(() => Math.random() - 0.5);
             } 
             else if (numeroRodada === 2) {
-                // RODADA 2: MODO CAPÍTULOS
                 document.getElementById('instrucao-modo').innerText = "📊 Rodada 2: Total de Capítulos";
-                document.getElementById('subtitulo-modo').innerText = "Combine a contagem correta de capítulos para os respectivos livros sorteados.";
+                document.getElementById('subtitulo-modo').innerText = "Os livros da esquerda estão fixos! Alterne as caixas amarelas da direita para casar os capítulos.";
                 
                 let indicesSorteados = [];
                 while(indicesSorteados.length < 5) {
@@ -178,30 +185,30 @@
 
                 indicesSorteados.forEach((idx, i) => {
                     const livro = bibliaData[idx];
-                    const numCaps = `${livro.chapters.length} Capítulos`;
-                    arrayGabarito.push({ id: i, fixo: livro.name, mover: numCaps });
+                    const numCaps = `${livro.chapters.length} Caps`;
+                    arrayGabarito.push({ fixo: livro.name, mover: numCaps });
+                    arrayJogador.push({ fixo: livro.name, mover: numCaps });
                 });
+
+                let colunasMoverEmbaralhadas = arrayJogador.map(i => i.mover).sort(() => Math.random() - 0.5);
+                arrayJogador.forEach((item, idx) => { item.mover = colunasMoverEmbaralhadas[idx]; });
             } 
             else {
-                // RODADA 3: MODO SEÇÕES
                 document.getElementById('instrucao-modo').innerText = "📚 Rodada 3: Grandes Divisões";
-                document.getElementById('subtitulo-modo').innerText = "Encaixe as classificações teológicas corretas sobre as caixas dos livros sorteados.";
+                document.getElementById('subtitulo-modo').innerText = "Os livros da esquerda estão fixos! Troque as classificações da direita até achar a divisão correta.";
                 
                 let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5);
                 divSorteadas.forEach((div, i) => {
                     let totalLivrosNaDiv = (div.fim - div.inicio) + 1;
                     let idxSorteado = div.inicio + Math.floor(Math.random() * totalLivrosNaDiv);
                     const livro = bibliaData[idxSorteado];
-                    arrayGabarito.push({ id: i, fixo: livro.name, mover: div.nome });
+                    arrayGabarito.push({ fixo: livro.name, mover: div.nome });
+                    arrayJogador.push({ fixo: livro.name, mover: div.nome });
                 });
-            }
 
-            // Embaralha a coluna móvel para o teste
-            arrayJogador = arrayGabarito.map(item => ({ ...item }));
-            let colunasMoverEmbaralhadas = arrayJogador.map(i => i.mover).sort(() => Math.random() - 0.5);
-            arrayJogador.forEach((item, idx) => {
-                item.mover = colunasMoverEmbaralhadas[idx];
-            });
+                let colunasMoverEmbaralhadas = arrayJogador.map(i => i.mover).sort(() => Math.random() - 0.5);
+                arrayJogador.forEach((item, idx) => { item.mover = colunasMoverEmbaralhadas[idx]; });
+            }
 
             renderizarGradePecas();
         }
@@ -211,13 +218,29 @@
             container.innerHTML = "";
 
             arrayJogador.forEach((item, idx) => {
-                const classeSelecao = cardSelecionadoIdx === idx ? 'selected' : '';
-                container.innerHTML += `
-                    <div onclick="clicarPeca(${idx})" class="item-card ${classeSelecao} p-4 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between text-sm">
-                        <div class="font-bold text-gray-400 w-1/2 border-r border-white/5 pr-2 select-none">${item.fixo}</div>
-                        <div class="font-black text-yellow-400 pl-4 w-1/2 text-right uppercase tracking-wide select-none">${item.mover}</div>
-                    </div>
-                `;
+                // Modo 1: O card inteiro se comporta como o botão clicável (Estilo coluna única)
+                if (rodada === 1) {
+                    const classeSelecao = cardSelecionadoIdx === idx ? 'selected' : '';
+                    container.innerHTML += `
+                        <div onclick="clicarPeca(${idx})" class="movable-box ${classeSelecao} p-4 rounded-xl border flex items-center justify-center text-center text-sm font-black text-yellow-400 uppercase tracking-wide select-none min-h-[52px]">
+                            ${item.mover}
+                        </div>
+                    `;
+                } else {
+                    // Modos 2 e 3: Apenas o bloco da direita (caixa amarela) recebe a marcação e o gatilho de clique
+                    const classeSelecaoBox = cardSelecionadoIdx === idx ? 'selected' : '';
+                    container.innerHTML += `
+                        <div class="item-card p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-sm select-none">
+                            <!-- Lado Esquerdo: Enunciado Fixo do Livro (Cinza) -->
+                            <div class="font-bold text-gray-400 w-1/2 pl-2 border-r border-white/5 truncate">${item.fixo}</div>
+                            
+                            <!-- Lado Direito: Caixa Móvel Interativa (Gatilho de clique) -->
+                            <div onclick="clicarPeca(${idx})" class="movable-box ${classeSelecaoBox} p-2 rounded-lg border w-5/12 text-center font-black text-yellow-400 uppercase tracking-wide truncate">
+                                ${item.mover}
+                            </div>
+                        </div>
+                    `;
+                }
             });
         }
 
@@ -228,9 +251,17 @@
                 cardSelecionadoIdx = index;
                 renderizarGradePecas();
             } else {
-                let temp = arrayJogador[cardSelecionadoIdx].mover;
-                arrayJogador[cardSelecionadoIdx].mover = arrayJogador[index].mover;
-                arrayJogador[index].mover = temp;
+                if (rodada === 1) {
+                    // Modo 1: Inverte os objetos inteiros na lista
+                    let tempItem = arrayJogador[cardSelecionadoIdx];
+                    arrayJogador[cardSelecionadoIdx] = arrayJogador[index];
+                    arrayJogador[index] = tempItem;
+                } else {
+                    // Modos 2 e 3: Inverte exclusivamente o valor textual da direita (mover)
+                    let tempMover = arrayJogador[cardSelecionadoIdx].mover;
+                    arrayJogador[cardSelecionadoIdx].mover = arrayJogador[index].mover;
+                    arrayJogador[index].mover = tempMover;
+                }
 
                 cardSelecionadoIdx = null;
                 renderizarGradePecas();
@@ -252,11 +283,20 @@
 
             let acertouTudo = true;
             if (!porEstouroTempo) {
-                for (let i = 0; i < arrayJogador.length; i++) {
-                    const correspondenteGabarito = arrayGabarito.find(g => g.fixo === arrayJogador[i].fixo);
-                    if (arrayJogador[i].mover !== correspondenteGabarito.mover) {
-                        acertouTudo = false;
-                        break;
+                if (rodada === 1) {
+                    for (let i = 0; i < arrayJogador.length; i++) {
+                        if (arrayJogador[i].mover !== arrayGabarito[i].mover) {
+                            acertouTudo = false;
+                            break;
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < arrayJogador.length; i++) {
+                        const correspondenteGabarito = arrayGabarito.find(g => g.fixo === arrayJogador[i].fixo);
+                        if (arrayJogador[i].mover !== correspondenteGabarito.mover) {
+                            acertouTudo = false;
+                            break;
+                        }
                     }
                 }
             } else {
@@ -270,7 +310,7 @@
                 pontosAcumulados += tempoRestante;
                 document.getElementById('pontos-totais').innerText = pontosAcumulados;
                 feedbackDiv.className = "py-4 px-5 rounded-2xl border-2 border-green-500 text-center bg-green-950/40 backdrop-blur-sm mb-4";
-                feedbackDiv.innerText = `✓ CORRETO! Gabarito bateu com o JSON. Ganhou +${tempoRestante} Pontos. 🎉`;
+                feedbackDiv.innerText = `✓ CORRETO! Alinhamento perfeito com o JSON. Ganhou +${tempoRestante} Pontos. 🎉`;
             } else {
                 feedbackDiv.className = "py-4 px-5 rounded-2xl border-2 border-red-500 text-center bg-red-950/40 backdrop-blur-sm mb-4";
                 feedbackDiv.innerText = porEstouroTempo ? "⏱️ FIM DO TEMPO! Rodada zerada." : "✗ INCORRETO! A montagem divergiu do gabarito oficial (0 Pontos).";
