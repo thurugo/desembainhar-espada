@@ -48,7 +48,6 @@
 </head>
 <body class="p-4">
 
-    <!-- CABEÇALHO SUPERIOR -->
     <div class="w-full max-w-2xl flex justify-between items-center mb-4 mt-2 px-2">
         <div class="flex flex-col">
             <span id="nome-usuario" class="text-yellow-400 font-black text-lg uppercase italic text-contour">Guerreiro</span>
@@ -60,10 +59,8 @@
         </div>
     </div>
 
-    <!-- PAINEL CENTRAL DA ARENA -->
     <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
         
-        <!-- SELETOR DE VERSÃO (OCULTADO AO COMEÇAR) -->
         <div id="seletor-container" class="mb-6">
             <label class="block text-[10px] uppercase text-yellow-500 font-bold mb-2 tracking-widest">Versão da Espada:</label>
             <select id="versao-biblia" class="w-full p-4 rounded-xl outline-none bg-blue-950/80 border border-yellow-500/30 text-white">
@@ -75,27 +72,21 @@
             </select>
         </div>
 
-        <!-- RELÓGIO CRONÔMETRO -->
         <div id="timer-container" class="hidden w-full bg-black/40 h-3 rounded-full overflow-hidden mb-2 border border-white/5">
             <div id="barra-tempo" class="bg-gradient-to-r from-green-400 to-emerald-500 h-full w-full transition-all duration-1000 linear"></div>
         </div>
         <div id="timer-text" class="hidden text-3xl font-black text-yellow-500 mb-4">30s</div>
 
-        <!-- GABARITO / FEEDBACK DA RODADA -->
         <div id="resultado-rodada" class="hidden py-4 px-5 rounded-2xl border-2 text-center mb-4 font-bold text-sm bg-black/40"></div>
 
-        <!-- ÁREA CENTRAL DE MOVIMENTAÇÃO -->
         <div id="box-jogo" class="hidden mb-6">
             <h2 id="instrucao-modo" class="text-base font-black text-yellow-400 uppercase tracking-wide mb-2 italic">---</h2>
             <p id="subtitulo-modo" class="text-xs text-gray-400 mb-4">---</p>
             
-            <!-- GRADE DINÂMICA DE CARDS -->
             <div id="container-pecas" class="flex flex-col gap-2 max-w-md mx-auto text-left">
-                <!-- Injetado dinamicamente via JS -->
-            </div>
+                </div>
         </div>
 
-        <!-- BOTÃO DE AÇÃO MESTRE -->
         <button id="btn-acao" onclick="gerenciarRodada()" 
             class="w-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95">
             Começar Gincana
@@ -130,7 +121,6 @@
         };
 
         async function gerenciarRodada() {
-            if (bloqueiaCliques && document.getElementById('btn-acao').innerText === "CONFIRMAR MONTAGEM") return;
             const btn = document.getElementById('btn-acao');
 
             if (btn.innerText === "COMEÇAR GINCANA") {
@@ -149,6 +139,7 @@
                     btn.disabled = false; btn.innerText = "COMEÇAR GINCANA";
                 }
             } else if (btn.innerText === "CONFIRMAR MONTAGEM") {
+                if (bloqueiaCliques) return;
                 validarMontagem();
             } else if (btn.innerText === "PRÓXIMA RODADA") {
                 iniciarSorteioMontagem();
@@ -163,7 +154,7 @@
             document.getElementById('resultado-rodada').classList.add('hidden');
             tempoRestante = TEMPO_LIMITE;
             cardSelecionadoIdx = null;
-            bloqueiaCliques = false;
+            bloqueiaCliques = false; // Libera os cliques para a nova rodada
 
             modoAtual = Math.floor(Math.random() * 3) + 1;
             montarEstruturaPecas();
@@ -208,7 +199,7 @@
                 let indicesSorteados = [];
                 while(indicesSorteados.length < 5) {
                     let r = Math.floor(Math.random() * bibliaData.length);
-                    if(!indicesSorteados.includes(r)) indicesSorteados.push(r); // CORRIGIDO: indicesSorteadas -> indicesSorteados
+                    if(!indicesSorteados.includes(r)) indicesSorteados.push(r);
                 }
 
                 indicesSorteados.forEach((idx, i) => {
@@ -225,7 +216,7 @@
                 document.getElementById('instrucao-modo').innerText = "📚 Modo: Grandes Divisões";
                 document.getElementById('subtitulo-modo').innerText = "Os livros da esquerda estão fixos! Troque as classificações da direita até achar a divisão correta.";
                 
-                let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5); // CORRIGIDO: Variável local limpa
+                let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5);
                 divSorteadas.forEach((div, i) => {
                     let totalLivrosNaDiv = (div.fim - div.inicio) + 1;
                     let idxSorteado = div.inicio + Math.floor(Math.random() * totalLivrosNaDiv);
@@ -300,7 +291,7 @@
 
         function validarMontagem(porEstouroTempo = false) {
             clearInterval(timerInterval);
-            bloqueiaCliques = true;
+            bloqueiaCliques = true; // Tranca movimentações após o envio
 
             let acertouTudo = true;
             if (!porEstouroTempo) {
