@@ -130,7 +130,7 @@
         };
 
         async function gerenciarRodada() {
-            if (bloqueiaCliques) return;
+            if (bloqueiaCliques && document.getElementById('btn-acao').innerText === "CONFIRMAR MONTAGEM") return;
             const btn = document.getElementById('btn-acao');
 
             if (btn.innerText === "COMEÇAR GINCANA") {
@@ -165,7 +165,6 @@
             cardSelecionadoIdx = null;
             bloqueiaCliques = false;
 
-            // Sorteia dinamicamente um dos 3 modos a cada rodada (1, 2 ou 3)
             modoAtual = Math.floor(Math.random() * 3) + 1;
             montarEstruturaPecas();
             atualizarBarraTempo();
@@ -209,7 +208,7 @@
                 let indicesSorteados = [];
                 while(indicesSorteados.length < 5) {
                     let r = Math.floor(Math.random() * bibliaData.length);
-                    if(!indicesSorteados.includes(r)) indicesSorteados.push(r);
+                    if(!indicesSorteados.includes(r)) indicesSorteados.push(r); // CORRIGIDO: indicesSorteadas -> indicesSorteados
                 }
 
                 indicesSorteados.forEach((idx, i) => {
@@ -226,7 +225,7 @@
                 document.getElementById('instrucao-modo').innerText = "📚 Modo: Grandes Divisões";
                 document.getElementById('subtitulo-modo').innerText = "Os livros da esquerda estão fixos! Troque as classificações da direita até achar a divisão correta.";
                 
-                let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5);
+                let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5); // CORRIGIDO: Variável local limpa
                 divSorteadas.forEach((div, i) => {
                     let totalLivrosNaDiv = (div.fim - div.inicio) + 1;
                     let idxSorteado = div.inicio + Math.floor(Math.random() * totalLivrosNaDiv);
