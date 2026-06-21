@@ -26,8 +26,12 @@
         select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
         option { background: #001428; color: white; }
         .text-contour {
-            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px 1px 0 #000;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
         }
+        /* Estilização da barra de rolagem horizontal para mobile */
+        .custom-scroll::-webkit-scrollbar { height: 5px; }
+        .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(234, 179, 8, 0.4); border-radius: 10px; }
     </style>
 </head>
 <body class="p-4">
@@ -70,41 +74,48 @@
     </div>
 
     <div class="glass-panel w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl mb-6">
-        <div class="flex flex-wrap justify-center gap-2 mb-4 mt-4 max-w-md mx-auto px-4">
+        
+        <div class="grid grid-cols-2 gap-2 mb-4 mt-4 max-w-xl mx-auto px-4">
             <button id="btn-filtro-regular" onclick="alternarModulo('regular')" 
-                class="bg-yellow-500 text-blue-950 font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all flex-1 text-center">
+                class="bg-yellow-500 text-blue-950 font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate">
                 ⚔️ Tradicional
             </button>
             <button id="btn-filtro-avancado" onclick="alternarModulo('avancado')" 
-                class="bg-blue-950/40 text-blue-300 font-bold px-4 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all flex-1 text-center">
+                class="bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
                 🔥 Avançado
             </button>
             <button id="btn-rank-gerais" onclick="alternarModulo('gerais_biblia')" 
-                class="bg-blue-950/40 text-blue-300 font-bold px-4 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all flex-1 text-center">
+                class="bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
                 📚 Gerais da Bíblia
+            </button> 
+            <button id="btn-rank-montagem" onclick="alternarModulo('montagem_biblica')" 
+                class="bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
+                🧩 Montagem Bíblica
             </button>    
         </div>
         
-        <table class="w-full text-left border-collapse">
-            <thead class="bg-yellow-500 text-blue-900 uppercase font-black text-xs">
-                <tr>
-                    <th class="p-3 pl-4">Pos</th>
-                    <th class="p-3">Guerreiro(a)</th>
-                    <th class="p-3">Org</th>
-                    <th class="p-3 text-center">Permanência</th>
-                    <th class="p-3 text-right pr-4">Pontos</th>
-                </tr>
-            </thead>
-            <tbody id="lista-ranking">
-                <tr>
-                    <td colspan="5" class="p-10 text-center animate-pulse text-blue-200 uppercase text-xs">Carregando classificação...</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="w-full overflow-x-auto custom-scroll">
+            <table class="w-full text-left border-collapse min-w-[500px]">
+                <thead class="bg-yellow-500 text-blue-900 uppercase font-black text-xs">
+                    <tr>
+                        <th class="p-3 pl-4">Pos</th>
+                        <th class="p-3">Guerreiro(a)</th>
+                        <th class="p-3">Org</th>
+                        <th class="p-3 text-center">Permanência</th>
+                        <th class="p-3 text-right pr-4">Pontos</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-ranking">
+                    <tr>
+                        <td colspan="5" class="p-10 text-center animate-pulse text-blue-200 uppercase text-xs">Carregando classificação...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="flex space-x-4 mb-8 w-full max-w-2xl justify-center">
-        <a href="login.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-3 px-6 rounded-xl uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1">
+        <a href="modulos.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-3 px-6 rounded-xl uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1">
             Voltar à Arena
         </a>
         <a href="index.html" class="bg-black/40 hover:bg-black/60 text-white font-bold py-3 px-6 rounded-xl border border-white/10 uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1">
@@ -122,7 +133,6 @@
 
     async function puxarDadosDoSupabase() {
         try {
-            // CORREÇÃO: Busca SEMPRE da tabela unificada 'ranking'
             const { data, error } = await supabaseClient
                 .from('ranking')
                 .select(`
@@ -169,21 +179,24 @@
         const btnReg = document.getElementById('btn-filtro-regular');
         const btnAvanc = document.getElementById('btn-filtro-avancado');
         const btnGerais = document.getElementById('btn-rank-gerais');
+        const btnMontagem = document.getElementById('btn-rank-montagem');
         
-        const classeInativo = "bg-blue-950/40 text-blue-300 font-bold px-4 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all flex-1 text-center";
+        const classeInativo = "bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate";
         if(btnReg) btnReg.className = classeInativo;
         if(btnAvanc) btnAvanc.className = classeInativo;
         if(btnGerais) btnGerais.className = classeInativo;
+        if(btnMontagem) btnMontagem.className = classeInativo;
         
         if (modulo === 'regular' && btnReg) {
-            btnReg.className = "bg-yellow-500 text-blue-950 font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all flex-1 text-center";
+            btnReg.className = "bg-yellow-500 text-blue-950 font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         } else if (modulo === 'avancado' && btnAvanc) {
-            btnAvanc.className = "bg-purple-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all flex-1 text-center";
+            btnAvanc.className = "bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         } else if (modulo === 'gerais_biblia' && btnGerais) {
-            btnGerais.className = "bg-purple-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase shadow-md transition-all flex-1 text-center";
+            btnGerais.className = "bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
+        } else if (modulo === 'montagem_biblica' && btnMontagem) {
+            btnMontagem.className = "bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         }
         
-        // Apenas aplica os filtros locais na lista unificada de registros já lidos
         aplicarFiltros();
     }
 
@@ -206,7 +219,6 @@
         const agora = new Date();
         
         let dadosFiltrados = dadosBrutosRanking.filter(item => {
-            // CORREÇÃO: Mapeia dinamicamente e valida a coluna modulo de acordo com o botão clicado
             const moduloItem = item.modulo || 'regular';
             if (moduloItem !== moduloAtivo) return false;
 
@@ -261,7 +273,7 @@
             const row = `
                 <tr class="border-b border-white/5 transition-colors hover:bg-white/5">
                     <td class="p-3 pl-4 font-black ${index === 0 ? 'text-yellow-400 text-lg' : 'text-blue-300'}">${index + 1}º</td>
-                    <td class="p-3 font-bold text-sm">${perfil.nome || "Jogador de Teste"}</td>
+                    <td class="p-3 font-bold text-sm truncate max-w-[150px]">${perfil.nome || "Jogador de Teste"}</td>
                     <td class="p-3">
                         <span class="px-2 py-0.5 rounded text-[9px] font-black text-white ${badgeColor}">
                             ${orgExibicao}
