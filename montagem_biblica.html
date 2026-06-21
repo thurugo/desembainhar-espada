@@ -98,6 +98,13 @@
         const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
         const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
 
+        // VARIÁVEIS DE ESTADO (MÁQUINA ABSOLUTA E BLINDADA CONTRA NAVEGADORES)
+        const ESTADO_INICIAR = 0;
+        const ESTADO_CONFIRMAR = 1;
+        const ESTADO_PROXIMA = 2;
+        const ESTADO_SALVAR = 3;
+        let estadoJogo = ESTADO_INICIAR;
+
         const TEMPO_LIMITE = 30;
         let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = TEMPO_LIMITE, timerInterval;
         let modoAtual = 0, arrayGabarito = [], arrayJogador = [], cardSelecionadoIdx = null;
@@ -122,12 +129,8 @@
 
         async function gerenciarRodada() {
             const btn = document.getElementById('btn-acao');
-            // NORMALIZAÇÃO UNIVERSAL DE TEXTO (Evita erros de navegador)
-            const txtBotao = btn.innerText.trim().toUpperCase();
 
-            if (bloqueiaCliques && txtBotao === "CONFIRMAR MONTAGEM") return;
-
-            if (txtBotao === "COMEÇAR GINCANA") {
+            if (estadoJogo === ESTADO_INICIAR) {
                 const versao = document.getElementById('versao-biblia').value;
                 btn.disabled = true; btn.innerText = "FORJANDO...";
                 try {
@@ -142,11 +145,14 @@
                     alert("Erro ao carregar arquivos da Bíblia.");
                     btn.disabled = false; btn.innerText = "COMEÇAR GINCANA";
                 }
-            } else if (txtBotao === "CONFIRMAR MONTAGEM") {
+            } 
+            else if (estadoJogo === ESTADO_CONFIRMAR) {
                 validarMontagem();
-            } else if (txtBotao === "PRÓXIMA RODADA") {
+            } 
+            else if (estadoJogo === ESTADO_PROXIMA) {
                 iniciarSorteioMontagem();
-            } else if (txtBotao === "SALVAR NO RANKING") {
+            } 
+            else if (estadoJogo === ESTADO_SALVAR) {
                 enviarPontuacaoFinal();
             }
         }
@@ -157,11 +163,19 @@
             document.getElementById('resultado-rodada').classList.add('hidden');
             tempoRestante = TEMPO_LIMITE;
             cardSelecionadoIdx = null;
-            bloqueiaCliques = false; 
+            bloqueiaCliques = false;
+
+            // ATUALIZA O ESTADO DO JOGO
+            estadoJogo = ESTADO_CONFIRMAR;
 
             modoAtual = Math.floor(Math.random() * 3) + 1;
             montarEstruturaPecas();
             atualizarBarraTempo();
+
+            const btn = document.getElementById('btn-acao');
+            btn.disabled = false;
+            btn.innerText = "CONFIRMAR MONTAGEM";
+            btn.className = "w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
 
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
@@ -173,10 +187,6 @@
                     validarMontagem(true);
                 }
             }, 1000);
-
-            const btn = document.getElementById('btn-acao');
-            btn.innerText = "CONFIRMAR MONTAGEM";
-            btn.className = "w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
         }
 
         function montarEstruturaPecas() {
@@ -262,7 +272,7 @@
         }
 
         function clicarPeca(index) {
-            if (bloqueiaCliques) return;
+            if (bloqueiaCliques || estadoJogo !== ESTADO_CONFIRMAR) return;
             
             if (cardSelecionadoIdx === null) {
                 cardSelecionadoIdx = index;
@@ -293,6 +303,8 @@
         }
 
         function validarMontagem(porEstouroTempo = false) {
+            if (estadoJogo !== ESTADO_CONFIRMAR) return; // Evita cliques duplicados acidentais
+            
             clearInterval(timerInterval);
             bloqueiaCliques = true; 
 
@@ -333,9 +345,11 @@
 
             const btn = document.getElementById('btn-acao');
             if (rodada < 10) {
+                estadoJogo = ESTADO_PROXIMA;
                 btn.innerText = "PRÓXIMA RODADA";
                 btn.className = "w-full bg-yellow-500 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
             } else {
+                estadoJogo = ESTADO_SALVAR;
                 btn.innerText = "SALVAR NO RANKING";
                 btn.className = "w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
             }
