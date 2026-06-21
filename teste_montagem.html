@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ambiente de Testes - Montagem Bíblica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+            background: #000c18;
+        }
+        .glass-panel {
+            background: rgba(0, 15, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(234, 179, 8, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+        .item-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .item-card.selected {
+            border-color: #facc15 !important;
+            background-color: rgba(250, 204, 21, 0.2) !important;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.4);
+        }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- CABEÇALHO -->
+    <div class="w-full max-w-2xl flex justify-between items-center mb-4 px-2">
+        <div class="flex flex-col">
+            <span class="text-yellow-400 font-black text-lg uppercase italic text-contour">🧪 Laboratório de Testes</span>
+            <span class="text-blue-200 text-[10px] uppercase tracking-widest">Rodada Real: <span id="rodada-atual">0</span>/3</span>
+        </div>
+        <div class="text-right">
+            <span class="block text-[10px] uppercase text-blue-300">Pontos Acumulados</span>
+            <span id="pontos-totais" class="text-2xl font-black text-white">0</span>
+        </div>
+    </div>
+
+    <!-- PAINEL CENTRAL -->
+    <div id="arena-box" class="glass-panel w-full max-w-2xl p-6 rounded-3xl text-center shadow-2xl">
+        
+        <!-- BARRA E TEXTO DO CRONÔMETRO -->
+        <div id="timer-container" class="w-full bg-black/40 h-3 rounded-full overflow-hidden mb-2 border border-white/5">
+            <div id="barra-tempo" class="bg-gradient-to-r from-green-400 to-emerald-500 h-full w-full transition-all duration-1000 linear" style="width: 100%;"></div>
+        </div>
+        <div id="timer-text" class="text-3xl font-black text-yellow-500 mb-4">30s</div>
+
+        <!-- SINALIZADOR DE FEEDBACK -->
+        <div id="resultado-rodada" class="hidden py-4 px-5 rounded-2xl border-2 text-center mb-4 font-bold text-sm bg-black/40"></div>
+
+        <!-- ÁREA DOS ENCAIXES -->
+        <div id="box-jogo" class="mb-6">
+            <h2 id="instrucao-modo" class="text-base font-black text-yellow-400 uppercase tracking-wide mb-2 italic">Carregando dados do JSON...</h2>
+            <p id="subtitulo-modo" class="text-xs text-gray-400 mb-4">Aguarde a inicialização do script.</p>
+            
+            <div id="container-pecas" class="flex flex-col gap-2 max-w-md mx-auto text-left">
+                <!-- Injetado dinamicamente -->
+            </div>
+        </div>
+
+        <!-- BOTÃO PRINCIPAL -->
+        <button id="btn-acao" onclick="gerenciarRodada()" 
+            class="w-full bg-yellow-500 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95">
+            Iniciar Teste do Motor
+        </button>
+    </div>
+
+    <script>
+        const TEMPO_LIMITE = 30;
+        let bibliaData = null, rodada = 0, pontosAcumulados = 0, tempoRestante = TEMPO_LIMITE, timerInterval;
+        let arrayGabarito = [], arrayJogador = [], cardSelecionadoIdx = null, bloqueiaCliques = true;
+
+        const DIVISOES = [
+            { nome: "Pentateuco", inicio: 0, fim: 4 },
+            { nome: "Históricos", inicio: 5, fim: 16 },
+            { nome: "Poéticos", inicio: 17, fim: 21 },
+            { nome: "Profetas Maiores", inicio: 22, fim: 26 },
+            { nome: "Profetas Menores", inicio: 27, fim: 38 },
+            { nome: "Evangelhos", inicio: 39, fim: 42 },
+            { nome: "Histórico NT", inicio: 43, fim: 43 },
+            { nome: "Cartas Paulinas", inicio: 44, fim: 56 },
+            { nome: "Cartas Gerais", inicio: 57, fim: 64 },
+            { nome: "Revelação", inicio: 65, fim: 65 }
+        ];
+
+        window.onload = async () => {
+            const btn = document.getElementById('btn-acao');
+            try {
+                // Modifique o caminho abaixo caso seu repositório use outra pasta para os JSONs
+                const response = await fetch('./biblias/NVI.json');
+                bibliaData = await response.json();
+                
+                document.getElementById('instrucao-modo').innerText = "JSON Carregado com Sucesso! ✅";
+                document.getElementById('subtitulo-modo').innerText = "Pronto para rodar a simulação das 3 rodadas integradas.";
+                bloqueiaCliques = false;
+            } catch (e) {
+                console.error(e);
+                document.getElementById('instrucao-modo').innerText = "Erro ao ler o JSON ❌";
+                document.getElementById('subtitulo-modo').innerText = "Verifique se o arquivo NVI.json está na pasta './biblias/'.";
+            }
+        };
+
+        function gerenciarRodada() {
+            const btn = document.getElementById('btn-acao');
+            if (btn.innerText === "INICIAR TESTE DO MOTOR" || btn.innerText === "PRÓXIMA RODADA") {
+                iniciarRodadaTeste();
+            } else if (btn.innerText === "CONFIRMAR MONTAGEM") {
+                validarMontagem();
+            } else if (btn.innerText === "REINICIAR SIMULAÇÃO") {
+                location.reload();
+            }
+        }
+
+        function iniciarRodadaTeste() {
+            rodada++;
+            document.getElementById('rodada-atual').innerText = rodada;
+            document.getElementById('resultado-rodada').classList.add('hidden');
+            tempoRestante = TEMPO_LIMITE;
+            cardSelecionadoIdx = null;
+            bloqueiaCliques = false;
+
+            // Define um modo específico fixo para cada rodada do teste
+            montarEstruturaPecas(rodada);
+            atualizarBarraTempo();
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                tempoRestante--;
+                document.getElementById('timer-text').innerText = `${tempoRestante}s`;
+                atualizarBarraTempo();
+                if (tempoRestante <= 0) {
+                    clearInterval(timerInterval);
+                    validarMontagem(true);
+                }
+            }, 1000);
+
+            const btn = document.getElementById('btn-acao');
+            btn.innerText = "CONFIRMAR MONTAGEM";
+            btn.className = "w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+        }
+
+        function montarEstruturaPecas(numeroRodada) {
+            arrayGabarito = [];
+            arrayJogador = [];
+
+            if (numeroRodada === 1) {
+                // RODADA 1: MODO CRONOLÓGICO
+                document.getElementById('instrucao-modo').innerText = "🔄 Rodada 1: Cronologia dos Livros";
+                document.getElementById('subtitulo-modo').innerText = "Ordene a sequência móvel baseada na ordem sequencial correta dos livros da Bíblia.";
+                
+                const idxInicio = Math.floor(Math.random() * (bibliaData.length - 5));
+                for(let i = 0; i < 5; i++) {
+                    const livro = bibliaData[idxInicio + i];
+                    arrayGabarito.push({ id: i, fixo: livro.name, mover: livro.name });
+                }
+            } 
+            else if (numeroRodada === 2) {
+                // RODADA 2: MODO CAPÍTULOS
+                document.getElementById('instrucao-modo').innerText = "📊 Rodada 2: Total de Capítulos";
+                document.getElementById('subtitulo-modo').innerText = "Combine a contagem correta de capítulos para os respectivos livros sorteados.";
+                
+                let indicesSorteados = [];
+                while(indicesSorteados.length < 5) {
+                    let r = Math.floor(Math.random() * bibliaData.length);
+                    if(!indicesSorteados.includes(r)) indicesSorteados.push(r);
+                }
+
+                indicesSorteados.forEach((idx, i) => {
+                    const livro = bibliaData[idx];
+                    const numCaps = `${livro.chapters.length} Capítulos`;
+                    arrayGabarito.push({ id: i, fixo: livro.name, mover: numCaps });
+                });
+            } 
+            else {
+                // RODADA 3: MODO SEÇÕES
+                document.getElementById('instrucao-modo').innerText = "📚 Rodada 3: Grandes Divisões";
+                document.getElementById('subtitulo-modo').innerText = "Encaixe as classificações teológicas corretas sobre as caixas dos livros sorteados.";
+                
+                let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5);
+                divSorteadas.forEach((div, i) => {
+                    let totalLivrosNaDiv = (div.fim - div.inicio) + 1;
+                    let idxSorteado = div.inicio + Math.floor(Math.random() * totalLivrosNaDiv);
+                    const livro = bibliaData[idxSorteado];
+                    arrayGabarito.push({ id: i, fixo: livro.name, mover: div.nome });
+                });
+            }
+
+            // Embaralha a coluna móvel para o teste
+            arrayJogador = arrayGabarito.map(item => ({ ...item }));
+            let colunasMoverEmbaralhadas = arrayJogador.map(i => i.mover).sort(() => Math.random() - 0.5);
+            arrayJogador.forEach((item, idx) => {
+                item.mover = colunasMoverEmbaralhadas[idx];
+            });
+
+            renderizarGradePecas();
+        }
+
+        function renderizarGradePecas() {
+            const container = document.getElementById('container-pecas');
+            container.innerHTML = "";
+
+            arrayJogador.forEach((item, idx) => {
+                const classeSelecao = cardSelecionadoIdx === idx ? 'selected' : '';
+                container.innerHTML += `
+                    <div onclick="clicarPeca(${idx})" class="item-card ${classeSelecao} p-4 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between text-sm">
+                        <div class="font-bold text-gray-400 w-1/2 border-r border-white/5 pr-2 select-none">${item.fixo}</div>
+                        <div class="font-black text-yellow-400 pl-4 w-1/2 text-right uppercase tracking-wide select-none">${item.mover}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function clicarPeca(index) {
+            if (bloqueiaCliques) return;
+            
+            if (cardSelecionadoIdx === null) {
+                cardSelecionadoIdx = index;
+                renderizarGradePecas();
+            } else {
+                let temp = arrayJogador[cardSelecionadoIdx].mover;
+                arrayJogador[cardSelecionadoIdx].mover = arrayJogador[index].mover;
+                arrayJogador[index].mover = temp;
+
+                cardSelecionadoIdx = null;
+                renderizarGradePecas();
+            }
+        }
+
+        function atualizarBarraTempo() {
+            const barra = document.getElementById('barra-tempo');
+            const pct = (tempoRestante / TEMPO_LIMITE) * 100;
+            barra.style.width = `${pct}%`;
+            if (pct > 50) barra.className = "bg-gradient-to-r from-green-400 to-emerald-500 h-full w-full transition-all duration-1000 linear";
+            else if (pct > 20) barra.className = "bg-gradient-to-r from-amber-400 to-orange-500 h-full w-full transition-all duration-1000 linear";
+            else barra.className = "bg-gradient-to-r from-red-500 to-rose-600 h-full w-full transition-all duration-1000 linear";
+        }
+
+        function validarMontagem(porEstouroTempo = false) {
+            clearInterval(timerInterval);
+            bloqueiaCliques = true;
+
+            let acertouTudo = true;
+            if (!porEstouroTempo) {
+                for (let i = 0; i < arrayJogador.length; i++) {
+                    const correspondenteGabarito = arrayGabarito.find(g => g.fixo === arrayJogador[i].fixo);
+                    if (arrayJogador[i].mover !== correspondenteGabarito.mover) {
+                        acertouTudo = false;
+                        break;
+                    }
+                }
+            } else {
+                acertouTudo = false;
+            }
+
+            const feedbackDiv = document.getElementById('resultado-rodada');
+            feedbackDiv.classList.remove('hidden');
+
+            if (acertouTudo) {
+                pontosAcumulados += tempoRestante;
+                document.getElementById('pontos-totais').innerText = pontosAcumulados;
+                feedbackDiv.className = "py-4 px-5 rounded-2xl border-2 border-green-500 text-center bg-green-950/40 backdrop-blur-sm mb-4";
+                feedbackDiv.innerText = `✓ CORRETO! Gabarito bateu com o JSON. Ganhou +${tempoRestante} Pontos. 🎉`;
+            } else {
+                feedbackDiv.className = "py-4 px-5 rounded-2xl border-2 border-red-500 text-center bg-red-950/40 backdrop-blur-sm mb-4";
+                feedbackDiv.innerText = porEstouroTempo ? "⏱️ FIM DO TEMPO! Rodada zerada." : "✗ INCORRETO! A montagem divergiu do gabarito oficial (0 Pontos).";
+            }
+
+            const btn = document.getElementById('btn-acao');
+            if (rodada < 3) {
+                btn.innerText = "PRÓXIMA RODADA";
+                btn.className = "w-full bg-yellow-500 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+            } else {
+                btn.innerText = "REINICIAR SIMULAÇÃO";
+                btn.className = "w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+            }
+        }
+    </script>
+</body>
+</html>
