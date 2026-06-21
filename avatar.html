@@ -57,7 +57,8 @@
                 <p class="text-[11px] text-gray-400 mb-4 text-left">Pódios conquistados nas apurações Semanais, Mensais, Semestrais e Anuais.</p>
                 
                 <div id="grade-medalhas" class="grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto custom-scroll pr-1 max-h-[460px]">
-                    </div>
+                    <!-- Medalhas injetadas dinamicamente -->
+                </div>
             </div>
         </div>
     </div>
@@ -130,7 +131,14 @@
                     return;
                 }
 
-                const nomesModulos = { regular: "Tradicional", avancado: "Avançado", gerais_biblia: "Gerais da Bíblia" };
+                // Dicionário atualizado com o novo módulo "montagem_biblica"
+                const nomesModulos = { 
+                    regular: "Tradicional", 
+                    avancado: "Avançado", 
+                    gerais_biblia: "Gerais da Bíblia",
+                    montagem_biblica: "Montagem Bíblica" 
+                };
+                
                 const nomesEscopos = {
                     idade: "Líder Categoria Local",
                     geral_idade: "Líder Geral de Idades",
