@@ -122,7 +122,10 @@
 
         async function gerenciarRodada() {
             const btn = document.getElementById('btn-acao');
-            const txtBotao = btn.innerText;
+            // NORMALIZAÇÃO UNIVERSAL DE TEXTO (Evita erros de navegador)
+            const txtBotao = btn.innerText.trim().toUpperCase();
+
+            if (bloqueiaCliques && txtBotao === "CONFIRMAR MONTAGEM") return;
 
             if (txtBotao === "COMEÇAR GINCANA") {
                 const versao = document.getElementById('versao-biblia').value;
@@ -182,4 +185,193 @@
 
             if (modoAtual === 1) {
                 document.getElementById('instrucao-modo').innerText = "🔄 Modo: Cronologia dos Livros";
-                document.getElementById('subtitulo-modo').innerText = "Clique em um livro e depois no outro para alternar suas posições até estarem
+                document.getElementById('subtitulo-modo').innerText = "Clique em um livro e depois no outro para alternar suas posições até estarem na ordem cronológica certa.";
+                
+                const idxInicio = Math.floor(Math.random() * (bibliaData.length - 5));
+                for(let i = 0; i < 5; i++) {
+                    const livro = bibliaData[idxInicio + i];
+                    arrayGabarito.push({ fixo: `Posição ${i+1}`, mover: livro.name });
+                    arrayJogador.push({ fixo: `Posição ${i+1}`, mover: livro.name });
+                }
+                arrayJogador.sort(() => Math.random() - 0.5);
+            } 
+            else if (modoAtual === 2) {
+                document.getElementById('instrucao-modo').innerText = "📊 Modo: Total de Capítulos";
+                document.getElementById('subtitulo-modo').innerText = "Os livros da esquerda estão fixos! Alterne os botões da direita para casar a quantidade de capítulos.";
+                
+                let indicesSorteados = [];
+                while(indicesSorteados.length < 5) {
+                    let r = Math.floor(Math.random() * bibliaData.length);
+                    if(!indicesSorteados.includes(r)) indicesSorteados.push(r);
+                }
+
+                indicesSorteados.forEach((idx, i) => {
+                    const livro = bibliaData[idx];
+                    const numCaps = `${livro.chapters.length} Caps`;
+                    arrayGabarito.push({ fixo: livro.name, mover: numCaps });
+                    arrayJogador.push({ fixo: livro.name, mover: numCaps });
+                });
+
+                let colunasMoverEmbaralhadas = arrayJogador.map(i => i.mover).sort(() => Math.random() - 0.5);
+                arrayJogador.forEach((item, idx) => { item.mover = colunasMoverEmbaralhadas[idx]; });
+            } 
+            else {
+                document.getElementById('instrucao-modo').innerText = "📚 Modo: Grandes Divisões";
+                document.getElementById('subtitulo-modo').innerText = "Os livros da esquerda estão fixos! Troque as classificações da direita até achar a divisão correta.";
+                
+                let divSorteadas = [...DIVISOES].sort(() => Math.random() - 0.5).slice(0, 5);
+                divSorteadas.forEach((div, i) => {
+                    let totalLivrosNaDiv = (div.fim - div.inicio) + 1;
+                    let idxSorteado = div.inicio + Math.floor(Math.random() * totalLivrosNaDiv);
+                    const livro = bibliaData[idxSorteado];
+                    arrayGabarito.push({ fixo: livro.name, mover: div.nome });
+                    arrayJogador.push({ fixo: livro.name, mover: div.nome });
+                });
+
+                let colunasMoverEmbaralhadas = arrayJogador.map(i => i.mover).sort(() => Math.random() - 0.5);
+                arrayJogador.forEach((item, idx) => { item.mover = colunasMoverEmbaralhadas[idx]; });
+            }
+
+            renderizarGradePecas();
+        }
+
+        function renderizarGradePecas() {
+            const container = document.getElementById('container-pecas');
+            container.innerHTML = "";
+
+            arrayJogador.forEach((item, idx) => {
+                if (modoAtual === 1) {
+                    const classeSelecao = cardSelecionadoIdx === idx ? 'selected' : '';
+                    container.innerHTML += `
+                        <div onclick="clicarPeca(${idx})" class="movable-box ${classeSelecao} p-4 rounded-xl border flex items-center justify-center text-center text-sm font-black text-yellow-400 uppercase tracking-wide select-none min-h-[52px]">
+                            ${item.mover}
+                        </div>
+                    `;
+                } else {
+                    const classeSelecaoBox = cardSelecionadoIdx === idx ? 'selected' : '';
+                    container.innerHTML += `
+                        <div class="item-card p-2.5 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between text-sm select-none">
+                            <div class="font-bold text-gray-400 w-1/2 pl-2 border-r border-white/5 truncate">${item.fixo}</div>
+                            <div onclick="clicarPeca(${idx})" class="movable-box ${classeSelecaoBox} p-2 rounded-lg border w-5/12 text-center font-black text-yellow-400 uppercase tracking-wide truncate">
+                                ${item.mover}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function clicarPeca(index) {
+            if (bloqueiaCliques) return;
+            
+            if (cardSelecionadoIdx === null) {
+                cardSelecionadoIdx = index;
+                renderizarGradePecas();
+            } else {
+                if (modoAtual === 1) {
+                    let tempItem = arrayJogador[cardSelecionadoIdx];
+                    arrayJogador[cardSelecionadoIdx] = arrayJogador[index];
+                    arrayJogador[index] = tempItem;
+                } else {
+                    let tempMover = arrayJogador[cardSelecionadoIdx].mover;
+                    arrayJogador[cardSelecionadoIdx].mover = arrayJogador[index].mover;
+                    arrayJogador[index].mover = tempMover;
+                }
+
+                cardSelecionadoIdx = null;
+                renderizarGradePecas();
+            }
+        }
+
+        function atualizarBarraTempo() {
+            const barra = document.getElementById('barra-tempo');
+            const pct = (tempoRestante / TEMPO_LIMITE) * 100;
+            barra.style.width = `${pct}%`;
+            if (pct > 50) barra.className = "bg-gradient-to-r from-green-400 to-emerald-500 h-full w-full transition-all duration-1000 linear";
+            else if (pct > 20) barra.className = "bg-gradient-to-r from-amber-400 to-orange-500 h-full w-full transition-all duration-1000 linear";
+            else barra.className = "bg-gradient-to-r from-red-500 to-rose-600 h-full w-full transition-all duration-1000 linear";
+        }
+
+        function validarMontagem(porEstouroTempo = false) {
+            clearInterval(timerInterval);
+            bloqueiaCliques = true; 
+
+            let acertouTudo = true;
+            if (!porEstouroTempo) {
+                if (modoAtual === 1) {
+                    for (let i = 0; i < arrayJogador.length; i++) {
+                        if (arrayJogador[i].mover !== arrayGabarito[i].mover) {
+                            acertouTudo = false;
+                            break;
+                        }
+                    }
+                } else {
+                    for (let i = 0; i < arrayJogador.length; i++) {
+                        const correspondenteGabarito = arrayGabarito.find(g => g.fixo === arrayJogador[i].fixo);
+                        if (arrayJogador[i].mover !== correspondenteGabarito.mover) {
+                            acertouTudo = false;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                acertouTudo = false;
+            }
+
+            const feedbackDiv = document.getElementById('resultado-rodada');
+            feedbackDiv.classList.remove('hidden');
+
+            if (acertouTudo) {
+                pontosAcumulados += tempoRestante;
+                document.getElementById('pontos-totais').innerText = pontosAcumulados;
+                feedbackDiv.className = "py-4 px-5 rounded-2xl border-2 border-green-500 text-center bg-green-950/40 backdrop-blur-sm mb-4";
+                feedbackDiv.innerText = `✓ MONTAGEM CORRETA! Você garantiu +${tempoRestante} Pontos. 🎉`;
+            } else {
+                feedbackDiv.className = "py-4 px-5 rounded-2xl border-2 border-red-500 text-center bg-red-950/40 backdrop-blur-sm mb-4";
+                feedbackDiv.innerText = porEstouroTempo ? "⏱️ TEMPO ESGOTADO! A rodada foi zerada." : "✗ MONTAGEM INCORRETA! Alguma peça ficou fora de ordem (0 Pontos).";
+            }
+
+            const btn = document.getElementById('btn-acao');
+            if (rodada < 10) {
+                btn.innerText = "PRÓXIMA RODADA";
+                btn.className = "w-full bg-yellow-500 text-blue-900 font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+            } else {
+                btn.innerText = "SALVAR NO RANKING";
+                btn.className = "w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95";
+            }
+        }
+
+        async function enviarPontuacaoFinal() {
+            const btn = document.getElementById('btn-acao');
+            btn.disabled = true; btn.innerText = "SALVANDO...";
+
+            try {
+                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+                if (authError || !user) {
+                    alert("Sessão expirada. Faça login novamente.");
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const { error } = await supabaseClient
+                    .from('ranking')
+                    .insert([{ 
+                        jogador_id: user.id, 
+                        pontos: pontosAcumulados,
+                        modulo: 'montagem_biblica'
+                    }]);
+
+                if (error) throw error;
+
+                alert(`Incrível! Sua pontuação de ${pontosAcumulados} pontos foi salva no Ranking de Montagem Bíblica!`);
+                window.location.href = 'ranking.html';
+
+            } catch (err) {
+                console.error(err);
+                alert(`Erro ao salvar os pontos: ${err.message || err}`);
+                btn.disabled = false; btn.innerText = "SALVAR NO RANKING";
+            }
+        }
+    </script>
+</body>
+</html>
