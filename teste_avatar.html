@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Laboratório de Teste - Forja de Avatares</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+            background: #000c18;
+        }
+        .glass-panel {
+            background: rgba(0, 20, 40, 0.6);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.2); color: white; }
+        option { background: #001428; color: white; }
+        .text-contour { text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+        
+        /* Container rígido do tamanho das imagens ajustadas */
+        .avatar-viewport {
+            width: 260px;
+            height: 340px;
+            position: relative;
+            overflow: hidden;
+            background: #001428;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        /* Camadas empilhadas cirurgicamente */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 340px;
+            object-fit: contain;
+            pointer-events: none; /* Evita cliques nas imagens superiores */
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="w-full max-w-4xl text-center mb-6 mt-2">
+        <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">🧪 Forja de Avatares - Bancada de Testes</h1>
+        <p class="text-blue-200 text-[10px] uppercase tracking-widest mt-1">Valide o alinhamento das sobreposições e nomenclatura de arquivos</p>
+    </div>
+
+    <div class="glass-panel w-full max-w-4xl p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-6 items-center">
+        
+        <div class="flex flex-col items-center gap-3">
+            <span class="text-[10px] uppercase text-yellow-500 font-bold tracking-widest">Visualização Real (260x340)</span>
+            
+            <div class="avatar-viewport rounded-2xl border-2 border-white/10">
+                <img id="layer-base" class="layer z-0" src="" alt="Base">
+                <img id="layer-helmet" class="layer z-10" src="" alt="Capacete">
+                <img id="layer-armor" class="layer z-20" src="" alt="Armadura">
+                <img id="layer-grevas" class="layer z-30" src="" alt="Pernas">
+                <img id="layer-sabaton" class="layer z-40" src="" alt="Pés">
+            </div>
+            
+            <div class="text-[11px] text-gray-400 italic text-center max-w-[260px]">
+                Ordem de Camadas: Corpo > Capacete > Armadura > Grevas > Sabatões.
+            </div>
+        </div>
+
+        <div class="flex-1 w-full space-y-4">
+            
+            <div class="grid grid-cols-2 gap-3 bg-black/20 p-4 rounded-xl border border-white/5">
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Gênero:</label>
+                    <select id="sel-genero" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="boy">Menino (boy)</option>
+                        <option value="girl">Menina (girl)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Cor de Pele:</label>
+                    <select id="sel-pele" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="white">Branca (white)</option>
+                        <option value="brown">Morena (brown)</option>
+                        <option value="black">Negra (black)</option>
+                        <option value="yellow">Amarela (yellow)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Cor de Cabelo:</label>
+                    <select id="sel-cabelo" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="black">Preto (black)</option>
+                        <option value="brown">Castanho (brown)</option>
+                        <option value="blond">Loiro (blond)</option>
+                        <option value="red">Ruivo (red)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Capacete (Helmet):</label>
+                    <select id="sel-helmet" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Peitoral (Armor):</label>
+                    <select id="sel-armor" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Pernas (Grevas):</label>
+                    <select id="sel-grevas" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Proteção de Pés (Sabaton):</label>
+                    <select id="sel-sabaton" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bg-black/40 border border-white/10 p-3 rounded-xl font-mono text-[10px] space-y-1">
+                <span class="text-yellow-500 font-bold block uppercase tracking-wider text-[9px] mb-1">🔍 Caminhos Gerados na Mesa de Testes:</span>
+                <div><strong>Base:</strong> <span id="path-base" class="text-green-300"></span></div>
+                <div><strong>Capacete:</strong> <span id="path-helmet" class="text-blue-300"></span></div>
+                <div><strong>Armadura:</strong> <span id="path-blue"></span><span id="path-armor" class="text-blue-300"></span></div>
+                <div><strong>Grevas:</strong> <span id="path-grevas" class="text-blue-300"></span></div>
+                <div><strong>Sabatão:</strong> <span id="path-sabaton" class="text-blue-300"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6">
+        <a href="avatar.html" class="bg-blue-600 hover:bg-blue-500 text-white font-black py-3 px-6 rounded-xl uppercase shadow-lg text-xs transition-all active:scale-95">
+            Voltar para Tela de Conquistas
+        </a>
+    </div>
+
+    <script>
+        function atualizarAvatar() {
+            // Captura de valores selecionados
+            const genero = document.getElementById('sel-genero').value;
+            const pele = document.getElementById('sel-pele').value;
+            const cabelo = document.getElementById('sel-cabelo').value;
+            const helmet = document.getElementById('sel-helmet').value;
+            const armor = document.getElementById('sel-armor').value;
+            const grevas = document.getElementById('sel-grevas').value;
+            const sabaton = document.getElementById('sel-sabaton').value;
+
+            // 1. Resolver Caminho do Personagem Base (Boy/Girl)
+            const pastaGenero = genero === 'boy' ? 'Meninos' : 'Meninas';
+            const srcBase = `imagens/Ajustadas/${pastaGenero}/${genero}-${pele}-${cabelo}.png`;
+            
+            const imgBase = document.getElementById('layer-base');
+            imgBase.src = srcBase;
+            document.getElementById('path-base').innerText = srcBase;
+
+            // 2. Resolver Camada: Capacete (Helmet)
+            const imgHelmet = document.getElementById('layer-helmet');
+            if (helmet === 'none') {
+                imgHelmet.classList.add('hidden');
+                document.getElementById('path-helmet').innerText = "(Desativado)";
+            } else {
+                const srcHelmet = `imagens/Ajustadas/Helmet/helmet-${helmet}.png`;
+                imgHelmet.src = srcHelmet;
+                imgHelmet.classList.remove('hidden');
+                document.getElementById('path-helmet').innerText = srcHelmet;
+            }
+
+            // 3. Resolver Camada: Peitoral (Armor)
+            const imgArmor = document.getElementById('layer-armor');
+            if (armor === 'none') {
+                imgArmor.classList.add('hidden');
+                document.getElementById('path-armor').innerText = "(Desativado)";
+            } else {
+                const srcArmor = `imagens/Ajustadas/Armor/armor-${armor}.png`;
+                imgArmor.src = srcArmor;
+                imgArmor.classList.remove('hidden');
+                document.getElementById('path-armor').innerText = srcArmor;
+            }
+
+            // 4. Resolver Camada: Pernas (Grevas)
+            const imgGrevas = document.getElementById('layer-grevas');
+            if (grevas === 'none') {
+                imgGrevas.classList.add('hidden');
+                document.getElementById('path-grevas').innerText = "(Desativado)";
+            } else {
+                const srcGrevas = `imagens/Ajustadas/Grevas/grevas-${grevas}.png`;
+                imgGrevas.src = srcGrevas;
+                imgGrevas.classList.remove('hidden');
+                document.getElementById('path-grevas').innerText = srcGrevas;
+            }
+
+            // 5. Resolver Camada: Pés (Sabaton)
+            const imgSabaton = document.getElementById('layer-sabaton');
+            if (sabaton === 'none') {
+                imgSabaton.classList.add('hidden');
+                document.getElementById('path-sabaton').innerText = "(Desativado)";
+            } else {
+                const srcSabaton = `imagens/Ajustadas/sabaton/sabaton-${sabaton}.png`;
+                imgSabaton.src = srcSabaton;
+                imgSabaton.classList.remove('hidden');
+                document.getElementById('path-sabaton').innerText = srcSabaton;
+            }
+        }
+
+        // Executa a primeira carga na inicialização da página
+        window.onload = () => {
+            atualizarAvatar();
+        };
+    </script>
+</body>
+</html>
