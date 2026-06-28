@@ -45,81 +45,55 @@
                 <option value="avancado">🔥 MÓDULO AVANÇADO (PALAVRA-CHAVE)</option>
                 <option value="gerais">📚 CONHECIMENTOS GERAIS DA BÍBLIA</option>
                 <option value="montagem">🧩 MÓDULO MONTAGEM BÍBLICA</option>
-                <option value="medalhas">🏅 SISTEMA DE PREMIAÇÕES (MEDALHAS)</option>
+                <option value="conquistas">🏅 CONQUISTAS, AVATAR E LOJA</option>
             </select>
         </div>
 
         <main class="min-h-[220px]">
-            <!-- Módulo Regular -->
+            <!-- Módulos de Jogo (Ocultos inicialmente conforme o JS) -->
             <div id="conteudo-regular" class="space-y-4 text-xs text-gray-200 leading-relaxed text-left">
                 <p>O jogo sorteará um <strong class="text-yellow-400">endereço bíblico aleatório</strong> (Livro, Capítulo e Versículo) na tela.</p>
                 <p>Sua missão é abrir a sua Bíblia física o mais rápido possível, localizar o versículo sorteado e iniciar a leitura em voz alta.</p>
-                <p>Assim que começar a ler, o sistema ouvirá sua voz pelo microfone. Se você ler o texto correto conforme a versão da Bíblia selecionada, a rodada será validada com sucesso.</p>
-                <p>A partida dura exatamente <strong class="text-yellow-400">10 rodadas</strong>. Cada segundo restante no cronômetro de 60 segundos conta como ponto para o seu placar final!</p>
+                <p>A partida dura <strong class="text-yellow-400">10 rodadas</strong> e os segundos restantes contam como pontos!</p>
             </div>
 
-            <!-- Módulo Avançado -->
             <div id="conteudo-avancado" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
-                <p>O jogo sorteará uma <strong class="text-purple-400">Palavra-Chave Significativa</strong> na tela.</p>
-                <p>Sua missão é folhear a sua Bíblia física e encontrar <strong>qualquer versículo</strong> que contenha essa palavra exata na versão escolhida.</p>
-                <p>Ao localizar, clique imediatamente em <strong>"ENCONTREI!"</strong> para parar a contagem do cronômetro.</p>
-                <p>O sistema ativará o microfone para realizar a auditoria automática. Você deve ditar (ou digitar) o endereço seguindo rigorosamente este padrão de voz:</p>
-                
-                <div class="bg-black/40 text-yellow-400 p-3 rounded-xl font-mono text-center text-[11px] border border-white/5 normal-case tracking-normal">
-                    "Livro de <strong>[Nome]</strong> capítulo <strong>[X]</strong> versículo <strong>[Y]</strong>"
-                </div>
-                <span class="text-[10px] text-purple-300 block text-center italic -mt-2">Exemplo falado: "Livro de Miquéias capítulo 6 versículo 2"</span>
-                
-                <p>O sistema lerá o banco de dados e verificará se a palavra sorteada habita no endereço indicado. Se a rodada for válida, os segundos restantes viram pontos!</p>
+                <p>O jogo sorteará uma <strong class="text-purple-400">Palavra-Chave Significativa</strong>.</p>
+                <p>Localize qualquer versículo que contenha essa palavra e dite o endereço seguindo o padrão de voz: "Livro de [Nome] capítulo [X] versículo [Y]".</p>
             </div>
 
-            <!-- Módulo Gerais -->
             <div id="conteudo-gerais" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
-                <p>Uma verdadeira maratona teológica com um banco de <strong class="text-purple-400">1.000 perguntas exclusivas</strong> sobre as Escrituras.</p>
-                <p>A cada partida, o sistema montará um deck balanceado com exatas <strong class="text-yellow-400">10 perguntas</strong> divididas na seguinte proporção:</p>
-                <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                    <li><strong class="text-green-400">5 perguntas fáceis:</strong> Personagens centrais, grandes milagres e versos populares.</li>
-                    <li><strong class="text-amber-400">4 perguntas médias:</strong> Livros históricos, profetas menores e geografia bíblica.</li>
-                    <li><strong class="text-red-400">1 pergunta difícil:</strong> Genealogias complexas, pesos, medidas exatas e profecias.</li>
-                </ul>
-                <p>Você terá exatamente <strong class="text-yellow-400">30 segundos</strong> para ler e clicar na resposta desejada. Para evitar cliques acidentais, a alternativa só será computada quando você clicar no botão de confirmação mestre.</p>
-                <p>Se a resposta estiver correta, todo o tempo restante no relógio acumula direto para a sua pontuação final da rodada!</p>
+                <p>Maratona de perguntas com níveis fácil, médio e difícil.</p>
+                <p>Você terá 30 segundos por pergunta. Confirme a alternativa no botão mestre para garantir seus pontos no ranking!</p>
             </div>
 
-            <!-- Módulo Montagem -->
             <div id="conteudo-montagem" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
-                <p>Um verdadeiro quebra-cabeça estrutural e teológico jogado em <strong class="text-yellow-400">10 rodadas</strong>. A cada rodada, o motor sorteará um dentre <strong class="text-yellow-400">3 modos de jogo diferentes</strong>:</p>
-                <ul class="list-none space-y-2 text-gray-300 pl-1">
-                    <li>🔄 <strong class="text-yellow-400">Cronologia dos Livros:</strong> Organize a sequência correta dos livros da Bíblia.</li>
-                    <li>📊 <strong class="text-amber-400">Total de Capítulos:</strong> Associe cada livro à sua contagem correta de capítulos.</li>
-                    <li>📚 <strong class="text-emerald-400">Grandes Divisões:</strong> Classifique os livros conforme suas divisões teológicas.</li>
-                </ul>
-                <p><strong>Como jogar:</strong> Use a seleção alternada! Clique em um item para selecioná-lo (ele ficará com borda amarela) e clique em outro para trocá-los de posição. Após alinhar tudo, clique em <strong class="text-blue-400">"Confirmar Montagem"</strong>. Se tudo estiver correto, o tempo restante vira pontuação.</p>
+                <p>Quebra-cabeça teológico: ordene cronologias, capítulos ou grandes divisões.</p>
+                <p>Use a <strong>Seleção Alternada</strong> (clique em um item e depois em outro para trocar de lugar). Clique em "Confirmar Montagem" para validar.</p>
             </div>
 
-            <!-- Módulo Medalhas -->
-            <div id="conteudo-medalhas" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
-                <p>A Arena monitora seu desempenho e distribui insígnias históricas automáticas baseadas em ciclos:</p>
-                <div class="grid grid-cols-2 gap-2 text-[11px] bg-black/30 p-3 rounded-xl border border-white/5 font-medium">
-                    <div>🗓️ <strong class="text-yellow-400">Semanal:</strong> Todo domingo.</div>
-                    <div>📅 <strong class="text-purple-400">Mensal:</strong> Todo dia 1º.</div>
-                    <div>🔥 <strong class="text-emerald-400">Semestral:</strong> 01/01 e 01/07.</div>
-                    <div>👑 <strong class="text-amber-500">Anual:</strong> Todo dia 01/01.</div>
+            <!-- CONTEÚDO ATUALIZADO: CONQUISTAS, AVATAR E LOJA -->
+            <div id="conteudo-conquistas" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
+                <p>Todo ponto conquistado na Arena acumula no seu saldo para uso na <strong class="text-yellow-400">Forja de Avatares</strong>!</p>
+                
+                <h3 class="text-amber-400 font-bold border-b border-white/10 pb-1">👤 Personalização e Loja</h3>
+                <p>No seu perfil, você pode alterar a cor da pele e do cabelo do seu avatar livremente. Para proteger seu guerreiro, compre peças na <strong>Forja</strong>:</p>
+                <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                    <li><strong>Preços:</strong> Ferro (1000), Bronze (2000), Prata (3000) e Ouro (5000).</li>
+                    <li><strong>Dinâmica:</strong> Pontos ganhos na Arena são o seu dinheiro. Uma vez comprado, o item fica no seu inventário para sempre.</li>
+                    <li><strong>Equipamento:</strong> Clique em "Equipar" para atualizar o visual do seu avatar na hora.</li>
+                </ul>
+
+                <h3 class="text-amber-400 font-bold border-b border-white/10 pb-1">🏅 Mural de Medalhas</h3>
+                <p>Pódios conquistados geram medalhas em ciclos (Semanal, Mensal, Semestral, Anual).</p>
+                <div class="grid grid-cols-2 gap-2 text-[10px] bg-black/30 p-2 rounded-lg font-medium text-center">
+                    <div>🥇 Ouro</div><div>🥈 Prata</div><div>🥉 Bronze</div>
                 </div>
-                <p>As medalhas (Ouro, Prata e Bronze) são calculadas para cada módulo. Você pode conquistar medalhas em filtros de idade, organização ou no <strong>Pódio Absoluto Livre</strong> (Supreme).</p>
             </div>
         </main>
 
-        <div class="mt-4 pt-4 border-t border-white/10 text-left bg-black/20 p-3 rounded-xl border border-white/5">
-            <h3 class="text-[10px] uppercase text-red-400 font-black tracking-wider mb-1">⚠️ Regras de Desclassificação:</h3>
-            <p id="texto-alerta-regras" class="text-[11px] text-gray-400 leading-tight">
-                Tempo esgotado, erros de leitura, endereços inválidos ou montagens incorretas resultam em <strong>0 pontos</strong> na rodada.
-            </p>
-        </div>
-
         <div class="mt-6">
-            <a href="index.html" 
-                class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl text-center shadow-lg uppercase text-sm transition-all active:scale-95">
+            <a href="index.html" class="block w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl text-center shadow-lg uppercase text-sm transition-all active:scale-95">
                 Voltar à Tela Inicial
             </a>
         </div>
@@ -132,7 +106,7 @@
                 avancado: document.getElementById('conteudo-avancado'),
                 gerais: document.getElementById('conteudo-gerais'),
                 montagem: document.getElementById('conteudo-montagem'),
-                medalhas: document.getElementById('conteudo-medalhas')
+                conquistas: document.getElementById('conteudo-conquistas')
             };
 
             Object.values(conteudos).forEach(el => {
