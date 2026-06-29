@@ -42,7 +42,6 @@
 </head>
 <body class="p-4">
 
-    <!-- CABEÇALHO -->
     <div class="w-full max-w-5xl flex flex-col items-center text-center mb-4 mt-2">
         <h1 id="player-name" class="text-3xl font-black text-yellow-400 uppercase italic text-contour">Carregando...</h1>
         <p id="player-org" class="text-xs text-blue-300 uppercase font-bold tracking-widest mt-1">-</p>
@@ -54,7 +53,6 @@
 
     <div class="w-full max-w-5xl flex flex-col lg:flex-row gap-6 mb-6">
         
-        <!-- COLUNA ESQUERDA: AVATAR E APARÊNCIA BÁSICA -->
         <div class="glass-panel p-6 rounded-3xl flex flex-col items-center w-full lg:w-[350px]">
             <h2 class="text-sm font-black uppercase text-yellow-500 tracking-wider mb-4 border-b border-white/10 pb-2 w-full text-center">Visual do Guerreiro</h2>
             
@@ -88,26 +86,21 @@
             </div>
         </div>
 
-        <!-- COLUNA DIREITA: A FORJA (LOJA) -->
         <div class="glass-panel flex-1 p-6 rounded-3xl flex flex-col min-h-[500px]">
             <h2 class="text-sm font-black uppercase text-amber-400 tracking-wider mb-1 text-left border-b border-white/10 pb-2">⚒️ A Forja (Armaduras e Equipamentos)</h2>
-            <p class="text-[10px] text-gray-400 mb-6 text-left">Utilize os pontos conquistados na Arena para forjar sua armadura. Os itens adquiridos são seus para sempre!</p>
+            <p class="text-[10px] text-gray-400 mb-6 text-left">Evolua seu equipamento gradativamente! Você precisa forjar a armadura de Ferro para liberar a de Bronze, e assim por diante.</p>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="loja-container">
-                <!-- A loja é injetada dinamicamente via JS -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- MURAL DE MEDALHAS ABAIXO -->
     <div class="glass-panel w-full max-w-5xl p-6 rounded-3xl flex flex-col mb-8">
         <h2 class="text-sm font-black uppercase text-amber-400 tracking-wider mb-1 text-left border-b border-white/10 pb-2">🏅 Mural de Medalhas de Honra</h2>
         <div id="grade-medalhas" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-4 overflow-y-auto custom-scroll pr-1 max-h-[300px]">
-            <!-- Medalhas injetadas dinamicamente -->
-        </div>
+            </div>
     </div>
 
-    <!-- NAVEGAÇÃO -->
     <div class="flex space-x-4 mb-8 w-full max-w-5xl justify-center">
         <a href="modulos.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-3 px-6 rounded-xl uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1 max-w-xs">
             Voltar aos Módulos
@@ -131,6 +124,7 @@
             { id: 'sabaton', nome: 'Sabatões' }
         ];
         const QUALIDADES = ['iron', 'bronze', 'silver', 'gold'];
+        const NOMES_QUALIDADES = { iron: 'Ferro', bronze: 'Bronze', silver: 'Prata', gold: 'Ouro' };
         const CORES_QUALIDADE = { iron: 'text-gray-400', bronze: 'text-orange-400', silver: 'text-slate-300', gold: 'text-yellow-400' };
 
         let userID = null;
@@ -251,21 +245,39 @@
                         ${isNenhumEquipado ? '✓ Desequipado' : 'Desequipar'}
                     </button>`;
 
-                // Lista as qualidades (Ferro, Bronze, etc)
-                QUALIDADES.forEach(qualidade => {
+                // Lista as qualidades seguindo a progressão (Ferro -> Bronze -> Prata -> Ouro)
+                QUALIDADES.forEach((qualidade, index) => {
                     const idUnico = `${equip.id}_${qualidade}`;
                     const preco = PRECOS[qualidade];
                     const possuiItem = avatarData.inventario.includes(idUnico);
                     const estaEquipado = avatarData[equip.id] === qualidade;
                     const cor = CORES_QUALIDADE[qualidade];
+                    const nomeApresentacao = NOMES_QUALIDADES[qualidade];
+
+                    // Verifica regra de progressão: Se não for ferro (index > 0), tem que possuir o anterior
+                    let podeDesbloquear = true;
+                    let nomeAnterior = "";
+                    if (index > 0) {
+                        const qualidadeAnterior = QUALIDADES[index - 1];
+                        const idAnterior = `${equip.id}_${qualidadeAnterior}`;
+                        if (!avatarData.inventario.includes(idAnterior)) {
+                            podeDesbloquear = false;
+                            nomeAnterior = NOMES_QUALIDADES[qualidadeAnterior];
+                        }
+                    }
 
                     let btnHTML = "";
                     if (estaEquipado) {
                         btnHTML = `<button class="w-full bg-green-600/30 border border-green-500/50 text-green-300 font-black p-2 rounded-lg text-[10px] uppercase cursor-default">✓ Equipado</button>`;
                     } else if (possuiItem) {
                         btnHTML = `<button onclick="equiparItem('${equip.id}', '${qualidade}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black p-2 rounded-lg text-[10px] uppercase transition-all shadow-md active:scale-95">Equipar</button>`;
+                    } else if (!podeDesbloquear) {
+                        // Bloqueado por não ter o item de nível anterior
+                        btnHTML = `<button class="w-full bg-gray-900 text-gray-600 border border-gray-700/50 font-black p-2 rounded-lg text-[8px] uppercase cursor-not-allowed">
+                            🔒 Requer ${nomeAnterior}
+                        </button>`;
                     } else {
-                        // Verifica se tem saldo para comprar
+                        // Desbloqueado: Verifica se tem saldo para comprar
                         const podeComprar = saldoAtual >= preco;
                         const btnClass = podeComprar 
                             ? "bg-yellow-600 hover:bg-yellow-500 text-black shadow-md" 
@@ -278,8 +290,6 @@
                         </button>`;
                     }
 
-                    let nomeApresentacao = qualidade === 'iron' ? 'Ferro' : qualidade === 'bronze' ? 'Bronze' : qualidade === 'silver' ? 'Prata' : 'Ouro';
-                    
                     htmlColuna += `
                         <div class="bg-black/50 p-2 rounded-lg border border-white/5 flex flex-col items-center gap-2">
                             <span class="text-xs font-black uppercase tracking-wider ${cor}">${nomeApresentacao}</span>
@@ -344,10 +354,9 @@
                 const nomesEscopos = { idade: "Líder Categoria Local", geral_idade: "Líder Geral Idades", organizacao: "Líder da Organização", geral_organizacao: "Líder Geral Org", livro_livre: "Pódio Absoluto" };
 
                 medalhasGanhas.forEach(med => {
-                    // Lógica para formatar o ciclo conforme o período (Semanal, Mensal, Semestral, Anual)
+                    // Lógica para formatar o ciclo conforme o período
                     let cicloLabel = "";
                     if (med.periodo_tipo === 'semanal') {
-                        // Exemplo: 2026.26 (Assumindo que a data_domingo seja yyyy-mm-dd)
                         const d = new Date(med.data_domingo);
                         cicloLabel = `Semana ${d.getFullYear()}.${Math.ceil((((d - new Date(d.getFullYear(),0,1)) / 86400000) + 1)/7)}`;
                     } else if (med.periodo_tipo === 'mensal') {
