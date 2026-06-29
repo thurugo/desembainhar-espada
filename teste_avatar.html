@@ -3,360 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Quartel General - Avatar e Conquistas</title>
+    <title>Laboratório de Teste - Forja de Avatares</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             margin: 0; padding: 4px; min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: white; font-family: sans-serif; position: relative;
-        }
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
-            background-size: cover; z-index: -1;
+            background: #000c18;
         }
         .glass-panel {
-            background: rgba(0, 15, 30, 0.7);
+            background: rgba(0, 20, 40, 0.6);
             backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 2px solid rgba(255, 215, 0, 0.4);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
         }
-        .text-contour { text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(250, 204, 21, 0.5); border-radius: 10px; }
-        
-        select { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 215, 0, 0.3); color: white; }
+        select { background: rgba(0, 20, 40, 0.8); border: 1px solid rgba(255, 215, 0, 0.2); color: white; }
         option { background: #001428; color: white; }
-
+        .text-contour { text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; }
+        
+        /* Container rígido do tamanho das imagens ajustadas */
         .avatar-viewport {
-            width: 260px; height: 340px; position: relative;
-            background: #000c18; box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-            border: 2px solid rgba(255, 215, 0, 0.4); border-radius: 1rem;
-            overflow: hidden; flex-shrink: 0;
+            width: 260px;
+            height: 340px;
+            position: relative;
+            overflow: hidden;
+            background: #001428;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
         }
-        .layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+        /* Camadas empilhadas cirurgicamente */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 340px;
+            object-fit: contain;
+            pointer-events: none; /* Evita cliques nas imagens superiores */
+        }
     </style>
 </head>
 <body class="p-4">
 
-    <!-- CABEÇALHO -->
-    <div class="w-full max-w-5xl flex flex-col items-center text-center mb-4 mt-2">
-        <h1 id="player-name" class="text-3xl font-black text-yellow-400 uppercase italic text-contour">Carregando...</h1>
-        <p id="player-org" class="text-xs text-blue-300 uppercase font-bold tracking-widest mt-1">-</p>
-        <div class="bg-black/60 border border-yellow-500/50 px-6 py-2 rounded-full mt-3 shadow-xl inline-flex items-center gap-2">
-            <span class="text-[10px] uppercase text-gray-300 font-bold tracking-wider">Saldo de Pontos:</span>
-            <span id="saldo-pontos" class="text-xl font-black text-yellow-400">0</span>
-        </div>
+    <div class="w-full max-w-4xl text-center mb-6 mt-2">
+        <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-tighter italic text-contour">🧪 Forja de Avatares - Bancada de Testes</h1>
+        <p class="text-blue-200 text-[10px] uppercase tracking-widest mt-1">Valide o alinhamento das sobreposições e nomenclatura de arquivos</p>
     </div>
 
-    <div class="w-full max-w-5xl flex flex-col lg:flex-row gap-6 mb-6">
+    <div class="glass-panel w-full max-w-4xl p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row gap-6 items-center">
         
-        <!-- COLUNA ESQUERDA: AVATAR E APARÊNCIA BÁSICA -->
-        <div class="glass-panel p-6 rounded-3xl flex flex-col items-center w-full lg:w-[350px]">
-            <h2 class="text-sm font-black uppercase text-yellow-500 tracking-wider mb-4 border-b border-white/10 pb-2 w-full text-center">Visual do Guerreiro</h2>
+        <div class="flex flex-col items-center gap-3">
+            <span class="text-[10px] uppercase text-yellow-500 font-bold tracking-widest">Visualização Real (260x340)</span>
             
-            <div class="avatar-viewport mb-6 relative">
+            <div class="avatar-viewport rounded-2xl border-2 border-white/10">
                 <img id="layer-base" class="layer z-0" src="" alt="Base">
-                <img id="layer-helmet" class="layer z-10 hidden" src="" alt="Capacete">
-                <img id="layer-armor" class="layer z-20 hidden" src="" alt="Armadura">
-                <img id="layer-grevas" class="layer z-30 hidden" src="" alt="Pernas">
-                <img id="layer-sabaton" class="layer z-40 hidden" src="" alt="Pés">
+                <img id="layer-helmet" class="layer z-10" src="" alt="Capacete">
+                <img id="layer-armor" class="layer z-20" src="" alt="Armadura">
+                <img id="layer-grevas" class="layer z-30" src="" alt="Pernas">
+                <img id="layer-sabaton" class="layer z-40" src="" alt="Pés">
             </div>
+            
+            <div class="text-[11px] text-gray-400 italic text-center max-w-[260px]">
+                Ordem de Camadas: Corpo > Capacete > Armadura > Grevas > Sabatões.
+            </div>
+        </div>
 
-            <div class="w-full space-y-3">
+        <div class="flex-1 w-full space-y-4">
+            
+            <div class="grid grid-cols-2 gap-3 bg-black/20 p-4 rounded-xl border border-white/5">
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Gênero:</label>
+                    <select id="sel-genero" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="boy">Menino (boy)</option>
+                        <option value="girl">Menina (girl)</option>
+                    </select>
+                </div>
                 <div>
                     <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Cor de Pele:</label>
-                    <select id="sel-pele" onchange="salvarAparenciaBasica()" class="w-full p-2.5 rounded-xl text-xs font-bold outline-none">
-                        <option value="white">Branca</option>
-                        <option value="brown">Morena</option>
-                        <option value="black">Negra</option>
-                        <option value="yellow">Amarela</option>
+                    <select id="sel-pele" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="white">Branca (white)</option>
+                        <option value="brown">Morena (brown)</option>
+                        <option value="black">Negra (black)</option>
+                        <option value="yellow">Amarela (yellow)</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Cor de Cabelo:</label>
-                    <select id="sel-cabelo" onchange="salvarAparenciaBasica()" class="w-full p-2.5 rounded-xl text-xs font-bold outline-none">
-                        <option value="black">Preto</option>
-                        <option value="brown">Castanho</option>
-                        <option value="blond">Loiro</option>
-                        <option value="red">Ruivo</option>
+                    <select id="sel-cabelo" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="black">Preto (black)</option>
+                        <option value="brown">Castanho (brown)</option>
+                        <option value="blond">Loiro (blond)</option>
+                        <option value="red">Ruivo (red)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Capacete (Helmet):</label>
+                    <select id="sel-helmet" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Peitoral (Armor):</label>
+                    <select id="sel-armor" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Pernas (Grevas):</label>
+                    <select id="sel-grevas" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
+                    </select>
+                </div>
+                <div class="col-span-2">
+                    <label class="block text-[10px] uppercase text-gray-400 font-bold mb-1">Proteção de Pés (Sabaton):</label>
+                    <select id="sel-sabaton" onchange="atualizarAvatar()" class="w-full p-2 rounded-lg text-xs font-bold outline-none">
+                        <option value="none">Nenhum (Vazio)</option>
+                        <option value="iron">Ferro (iron)</option>
+                        <option value="bronze">Bronze (bronze)</option>
+                        <option value="silver">Prata (silver)</option>
+                        <option value="gold">Ouro (gold)</option>
                     </select>
                 </div>
             </div>
-        </div>
 
-        <!-- COLUNA DIREITA: A FORJA (LOJA) -->
-        <div class="glass-panel flex-1 p-6 rounded-3xl flex flex-col min-h-[500px]">
-            <h2 class="text-sm font-black uppercase text-amber-400 tracking-wider mb-1 text-left border-b border-white/10 pb-2">⚒️ A Forja (Armaduras e Equipamentos)</h2>
-            <p class="text-[10px] text-gray-400 mb-6 text-left">Utilize os pontos conquistados na Arena para forjar sua armadura. Os itens adquiridos são seus para sempre!</p>
-            
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="loja-container">
-                <!-- A loja é injetada dinamicamente via JS -->
+            <div class="bg-black/40 border border-white/10 p-3 rounded-xl font-mono text-[10px] space-y-1">
+                <span class="text-yellow-500 font-bold block uppercase tracking-wider text-[9px] mb-1">🔍 Caminhos Gerados na Mesa de Testes:</span>
+                <div><strong>Base:</strong> <span id="path-base" class="text-green-300"></span></div>
+                <div><strong>Capacete:</strong> <span id="path-helmet" class="text-blue-300"></span></div>
+                <div><strong>Armadura:</strong> <span id="path-blue"></span><span id="path-armor" class="text-blue-300"></span></div>
+                <div><strong>Grevas:</strong> <span id="path-grevas" class="text-blue-300"></span></div>
+                <div><strong>Sabatão:</strong> <span id="path-sabaton" class="text-blue-300"></span></div>
             </div>
         </div>
     </div>
 
-    <!-- MURAL DE MEDALHAS ABAIXO -->
-    <div class="glass-panel w-full max-w-5xl p-6 rounded-3xl flex flex-col mb-8">
-        <h2 class="text-sm font-black uppercase text-amber-400 tracking-wider mb-1 text-left border-b border-white/10 pb-2">🏅 Mural de Medalhas de Honra</h2>
-        <div id="grade-medalhas" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 mt-4 overflow-y-auto custom-scroll pr-1 max-h-[300px]">
-            <!-- Medalhas injetadas dinamicamente -->
-        </div>
-    </div>
-
-    <!-- NAVEGAÇÃO -->
-    <div class="flex space-x-4 mb-8 w-full max-w-5xl justify-center">
-        <a href="modulos.html" class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-black py-3 px-6 rounded-xl uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1 max-w-xs">
-            Voltar aos Módulos
-        </a>
-        <a href="index.html" class="bg-black/40 hover:bg-black/60 text-white font-bold py-3 px-6 rounded-xl border border-white/10 uppercase shadow-lg text-sm transition-all active:scale-95 text-center flex-1 max-w-xs">
-            Tela Inicial
+    <div class="mt-6">
+        <a href="avatar.html" class="bg-blue-600 hover:bg-blue-500 text-white font-black py-3 px-6 rounded-xl uppercase shadow-lg text-xs transition-all active:scale-95">
+            Voltar para Tela de Conquistas
         </a>
     </div>
 
     <script>
-        const SB_URL = "https://blpvsgldhvmtbbowrttk.supabase.co";
-        const SB_KEY = "sb_publishable_bPuQQEzClwdb_UisF96wWg_HX4XsiZ0";
-        const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+        function atualizarAvatar() {
+            // Captura de valores selecionados
+            const genero = document.getElementById('sel-genero').value;
+            const pele = document.getElementById('sel-pele').value;
+            const cabelo = document.getElementById('sel-cabelo').value;
+            const helmet = document.getElementById('sel-helmet').value;
+            const armor = document.getElementById('sel-armor').value;
+            const grevas = document.getElementById('sel-grevas').value;
+            const sabaton = document.getElementById('sel-sabaton').value;
 
-        // CONFIGURAÇÃO DA LOJA ATUALIZADA
-        const PRECOS = { iron: 1000, bronze: 2000, silver: 3000, gold: 5000 };
-        const TIPOS_EQUIP = [
-            { id: 'helmet', nome: 'Capacete' },
-            { id: 'armor', nome: 'Armadura' },
-            { id: 'grevas', nome: 'Grevas' },
-            { id: 'sabaton', nome: 'Sabatões' }
-        ];
-        const QUALIDADES = ['iron', 'bronze', 'silver', 'gold'];
-        const CORES_QUALIDADE = { iron: 'text-gray-400', bronze: 'text-orange-400', silver: 'text-slate-300', gold: 'text-yellow-400' };
+            // 1. Resolver Caminho do Personagem Base (Boy/Girl)
+            const pastaGenero = genero === 'boy' ? 'Meninos' : 'Meninas';
+            const srcBase = `imagens/Ajustadas/${pastaGenero}/${genero}-${pele}-${cabelo}.png`;
+            
+            const imgBase = document.getElementById('layer-base');
+            imgBase.src = srcBase;
+            document.getElementById('path-base').innerText = srcBase;
 
-        let userID = null;
-        let generoJogador = 'boy'; // Padrão: ER=boy, MR=girl
-        let saldoAtual = 0;
-        let avatarData = null; // Guarda os dados da tabela avatar_perfil
+            // 2. Resolver Camada: Capacete (Helmet)
+            const imgHelmet = document.getElementById('layer-helmet');
+            if (helmet === 'none') {
+                imgHelmet.classList.add('hidden');
+                document.getElementById('path-helmet').innerText = "(Desativado)";
+            } else {
+                const srcHelmet = `imagens/Ajustadas/Helmet/helmet-${helmet}.png`;
+                imgHelmet.src = srcHelmet;
+                imgHelmet.classList.remove('hidden');
+                document.getElementById('path-helmet').innerText = srcHelmet;
+            }
 
-        window.onload = async () => {
-            await inicializarQuartelGeral();
-        };
+            // 3. Resolver Camada: Peitoral (Armor)
+            const imgArmor = document.getElementById('layer-armor');
+            if (armor === 'none') {
+                imgArmor.classList.add('hidden');
+                document.getElementById('path-armor').innerText = "(Desativado)";
+            } else {
+                const srcArmor = `imagens/Ajustadas/Armor/armor-${armor}.png`;
+                imgArmor.src = srcArmor;
+                imgArmor.classList.remove('hidden');
+                document.getElementById('path-armor').innerText = srcArmor;
+            }
 
-        async function inicializarQuartelGeral() {
-            try {
-                const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
-                if (authError || !user) {
-                    alert("Sessão expirada. Faça login.");
-                    window.location.href = 'login.html';
-                    return;
-                }
-                userID = user.id;
+            // 4. Resolver Camada: Pernas (Grevas)
+            const imgGrevas = document.getElementById('layer-grevas');
+            if (grevas === 'none') {
+                imgGrevas.classList.add('hidden');
+                document.getElementById('path-grevas').innerText = "(Desativado)";
+            } else {
+                const srcGrevas = `imagens/Ajustadas/Grevas/grevas-${grevas}.png`;
+                imgGrevas.src = srcGrevas;
+                imgGrevas.classList.remove('hidden');
+                document.getElementById('path-grevas').innerText = srcGrevas;
+            }
 
-                // 1. CARREGAR PERFIL BÁSICO (Para Nome e Organização -> Gênero)
-                const { data: perfil } = await supabaseClient.from('perfis').select('*').eq('id', userID).single();
-                if (perfil) {
-                    document.getElementById('player-name').innerText = perfil.nome;
-                    document.getElementById('player-org').innerText = perfil.organizacao === "ER" ? "Embaixadores do Rei" : "Mensageiras do Rei";
-                    generoJogador = perfil.organizacao === "MR" ? "girl" : "boy";
-                }
-
-                // 2. CALCULAR PONTOS TOTAIS GANHOS NAS ARENAS
-                const { data: rankData } = await supabaseClient.from('ranking').select('pontos').eq('jogador_id', userID);
-                let pontosGanhos = 0;
-                if (rankData) {
-                    pontosGanhos = rankData.reduce((acc, curr) => acc + curr.pontos, 0);
-                }
-
-                // 3. CARREGAR OU CRIAR DADOS DO AVATAR E INVENTÁRIO
-                let { data: avatarDB } = await supabaseClient.from('avatar_perfil').select('*').eq('jogador_id', userID).single();
-                
-                if (!avatarDB) {
-                    const defaultAvatar = {
-                        jogador_id: userID, pele: 'white', cabelo: 'black', 
-                        helmet: 'none', armor: 'none', grevas: 'none', sabaton: 'none', 
-                        pontos_gastos: 0, inventario: []
-                    };
-                    await supabaseClient.from('avatar_perfil').insert([defaultAvatar]);
-                    avatarDB = defaultAvatar;
-                }
-                avatarData = avatarDB;
-
-                // 4. CALCULAR SALDO REAL
-                saldoAtual = pontosGanhos - (avatarData.pontos_gastos || 0);
-                document.getElementById('saldo-pontos').innerText = saldoAtual;
-
-                // Setar seletores com as escolhas salvas
-                document.getElementById('sel-pele').value = avatarData.pele;
-                document.getElementById('sel-cabelo').value = avatarData.cabelo;
-
-                // Renderizar a tela
-                atualizarRenderAvatar();
-                renderizarLoja();
-                await renderizarMuralMedalhas();
-
-            } catch (err) {
-                console.error("Erro na inicialização:", err);
+            // 5. Resolver Camada: Pés (Sabaton)
+            const imgSabaton = document.getElementById('layer-sabaton');
+            if (sabaton === 'none') {
+                imgSabaton.classList.add('hidden');
+                document.getElementById('path-sabaton').innerText = "(Desativado)";
+            } else {
+                const srcSabaton = `imagens/Ajustadas/sabaton/sabaton-${sabaton}.png`;
+                imgSabaton.src = srcSabaton;
+                imgSabaton.classList.remove('hidden');
+                document.getElementById('path-sabaton').innerText = srcSabaton;
             }
         }
 
-        // ---------- MOTOR VISUAL DO AVATAR ----------
-        function atualizarRenderAvatar() {
-            const pele = avatarData.pele;
-            const cabelo = avatarData.cabelo;
-            
-            const pastaGenero = generoJogador === 'boy' ? 'Meninos' : 'Meninas';
-            document.getElementById('layer-base').src = `imagens/Ajustadas/${pastaGenero}/${generoJogador}-${pele}-${cabelo}.png`;
-
-            const aplicarCamada = (tipo, pasta) => {
-                const layer = document.getElementById(`layer-${tipo}`);
-                if (avatarData[tipo] === 'none') {
-                    layer.classList.add('hidden');
-                } else {
-                    layer.src = `imagens/Ajustadas/${pasta}/${tipo}-${avatarData[tipo]}.png`;
-                    layer.classList.remove('hidden');
-                }
-            };
-
-            aplicarCamada('helmet', 'Helmet');
-            aplicarCamada('armor', 'Armor');
-            aplicarCamada('grevas', 'Grevas');
-            aplicarCamada('sabaton', 'sabaton');
-        }
-
-        async function salvarAparenciaBasica() {
-            avatarData.pele = document.getElementById('sel-pele').value;
-            avatarData.cabelo = document.getElementById('sel-cabelo').value;
-            atualizarRenderAvatar();
-            
-            await supabaseClient.from('avatar_perfil')
-                .update({ pele: avatarData.pele, cabelo: avatarData.cabelo })
-                .eq('jogador_id', userID);
-        }
-
-        // ---------- MOTOR DA LOJA E INVENTÁRIO ----------
-        function renderizarLoja() {
-            const container = document.getElementById('loja-container');
-            container.innerHTML = "";
-
-            TIPOS_EQUIP.forEach(equip => {
-                let htmlColuna = `<div class="bg-black/30 p-3 rounded-xl border border-white/5 flex flex-col gap-2">`;
-                htmlColuna += `<h3 class="text-yellow-500 font-black uppercase text-[10px] tracking-widest text-center mb-1 border-b border-white/10 pb-2">${equip.nome}</h3>`;
-                
-                // Botão para "Remover Equipamento" (Desequipar)
-                const isNenhumEquipado = avatarData[equip.id] === 'none';
-                htmlColuna += `
-                    <button onclick="equiparItem('${equip.id}', 'none')" 
-                        class="w-full p-2 rounded-lg text-[10px] font-bold uppercase transition-all border 
-                        ${isNenhumEquipado ? 'bg-blue-600/30 text-blue-300 border-blue-500/50 cursor-default' : 'bg-black/50 text-gray-400 border-white/10 hover:bg-white/5'}">
-                        ${isNenhumEquipado ? '✓ Desequipado' : 'Desequipar'}
-                    </button>`;
-
-                // Lista as qualidades (Ferro, Bronze, etc)
-                QUALIDADES.forEach(qualidade => {
-                    const idUnico = `${equip.id}_${qualidade}`;
-                    const preco = PRECOS[qualidade];
-                    const possuiItem = avatarData.inventario.includes(idUnico);
-                    const estaEquipado = avatarData[equip.id] === qualidade;
-                    const cor = CORES_QUALIDADE[qualidade];
-
-                    let btnHTML = "";
-                    if (estaEquipado) {
-                        btnHTML = `<button class="w-full bg-green-600/30 border border-green-500/50 text-green-300 font-black p-2 rounded-lg text-[10px] uppercase cursor-default">✓ Equipado</button>`;
-                    } else if (possuiItem) {
-                        btnHTML = `<button onclick="equiparItem('${equip.id}', '${qualidade}')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black p-2 rounded-lg text-[10px] uppercase transition-all shadow-md active:scale-95">Equipar</button>`;
-                    } else {
-                        // Verifica se tem saldo para comprar
-                        const podeComprar = saldoAtual >= preco;
-                        const btnClass = podeComprar 
-                            ? "bg-yellow-600 hover:bg-yellow-500 text-black shadow-md" 
-                            : "bg-red-900/50 text-red-300 border border-red-500/30 cursor-not-allowed";
-                        
-                        btnHTML = `<button onclick="comprarItem('${idUnico}', '${equip.id}', '${qualidade}', ${preco})" 
-                            class="w-full ${btnClass} font-black p-2 rounded-lg text-[10px] uppercase transition-all active:scale-95"
-                            ${!podeComprar ? 'disabled' : ''}>
-                            Comprar (${preco} pts)
-                        </button>`;
-                    }
-
-                    let nomeApresentacao = qualidade === 'iron' ? 'Ferro' : qualidade === 'bronze' ? 'Bronze' : qualidade === 'silver' ? 'Prata' : 'Ouro';
-                    
-                    htmlColuna += `
-                        <div class="bg-black/50 p-2 rounded-lg border border-white/5 flex flex-col items-center gap-2">
-                            <span class="text-xs font-black uppercase tracking-wider ${cor}">${nomeApresentacao}</span>
-                            ${btnHTML}
-                        </div>
-                    `;
-                });
-
-                htmlColuna += `</div>`;
-                container.innerHTML += htmlColuna;
-            });
-        }
-
-        async function comprarItem(idUnico, tipoEquip, qualidade, preco) {
-            if (saldoAtual < preco) return;
-
-            const confirmar = confirm(`Deseja forjar a peça de ${qualidade.toUpperCase()} por ${preco} pontos?`);
-            if (!confirmar) return;
-
-            // Atualiza memória local
-            avatarData.inventario.push(idUnico);
-            avatarData.pontos_gastos += preco;
-            saldoAtual -= preco;
-            
-            // Já equipa automaticamente ao comprar
-            avatarData[tipoEquip] = qualidade;
-
-            document.getElementById('saldo-pontos').innerText = saldoAtual;
-            
-            // Salva no banco
-            await supabaseClient.from('avatar_perfil').update({
-                inventario: avatarData.inventario,
-                pontos_gastos: avatarData.pontos_gastos,
-                [tipoEquip]: qualidade
-            }).eq('jogador_id', userID);
-
-            atualizarRenderAvatar();
-            renderizarLoja();
-        }
-
-        async function equiparItem(tipoEquip, qualidade) {
-            avatarData[tipoEquip] = qualidade;
-            atualizarRenderAvatar();
-            renderizarLoja();
-
-            await supabaseClient.from('avatar_perfil').update({
-                [tipoEquip]: qualidade
-            }).eq('jogador_id', userID);
-        }
-
-        // ---------- MURAL DE MEDALHAS ----------
-        async function renderizarMuralMedalhas() {
-            const container = document.getElementById('grade-medalhas');
-            container.innerHTML = "";
-            try {
-                const { data: medalhasGanhas } = await supabaseClient.from('medalhas_historico').select('*').eq('jogador_id', userID);
-                if (!medalhasGanhas || medalhasGanhas.length === 0) {
-                    container.innerHTML = `<p class="col-span-full text-center text-xs text-gray-500 py-6 italic">Nenhuma medalha obtida.</p>`;
-                    return;
-                }
-                const nomesModulos = { regular: "Tradicional", avancado: "Avançado", gerais_biblia: "Gerais da Bíblia", montagem_biblica: "Montagem Bíblica" };
-                const nomesEscopos = { idade: "Líder Categoria Local", geral_idade: "Líder Geral Idades", organizacao: "Líder da Organização", geral_organizacao: "Líder Geral Org", livro_livre: "Pódio Absoluto" };
-
-                medalhasGanhas.forEach(med => {
-                    let urlImg = `imagens/medalhas_${med.tipo_medalha}${med.escopo === 'livro_livre' ? '-supreme' : ''}.png`;
-                    container.innerHTML += `
-                        <div class="bg-black/40 border border-white/5 p-3 rounded-2xl flex flex-col items-center text-center justify-between min-h-[120px]">
-                            <img src="${urlImg}" class="w-10 h-10 object-contain mb-1 drop-shadow-md" alt="Medalha">
-                            <div>
-                                <span class="block text-[9px] font-black tracking-wide uppercase text-yellow-400 leading-tight">${nomesEscopos[med.escopo] || "Conquista"}</span>
-                                <span class="block text-[8px] text-gray-400 mt-1">${nomesModulos[med.modulo] || "Arena"}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (err) { console.error("Erro no Mural:", err); }
-        }
+        // Executa a primeira carga na inicialização da página
+        window.onload = () => {
+            atualizarAvatar();
+        };
     </script>
 </body>
 </html>
