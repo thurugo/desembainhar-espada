@@ -75,23 +75,28 @@
 
     <div class="glass-panel w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl mb-6">
         
-        <div class="grid grid-cols-2 gap-2 mb-4 mt-4 max-w-xl mx-auto px-4">
+        <!-- BARRAS DE MÓDULOS ATUALIZADA -->
+        <div class="flex flex-wrap justify-center gap-2 mb-4 mt-4 max-w-xl mx-auto px-4">
             <button id="btn-filtro-regular" onclick="alternarModulo('regular')" 
-                class="bg-yellow-500 text-blue-950 font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate">
+                class="flex-auto min-w-[130px] bg-yellow-500 text-blue-950 font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate">
                 ⚔️ Tradicional
             </button>
             <button id="btn-filtro-avancado" onclick="alternarModulo('avancado')" 
-                class="bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
+                class="flex-auto min-w-[130px] bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
                 🔥 Avançado
             </button>
             <button id="btn-rank-gerais" onclick="alternarModulo('gerais_biblia')" 
-                class="bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
+                class="flex-auto min-w-[130px] bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
                 📚 Gerais da Bíblia
             </button> 
             <button id="btn-rank-montagem" onclick="alternarModulo('montagem_biblica')" 
-                class="bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
-                🧩 Montagem Bíblica
+                class="flex-auto min-w-[130px] bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
+                🧩 Montagem
             </button>    
+            <button id="btn-rank-organizacoes" onclick="alternarModulo('organizacoes')" 
+                class="flex-auto min-w-[130px] bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate">
+                🔰 Organizações
+            </button> 
         </div>
         
         <div class="w-full overflow-x-auto custom-scroll">
@@ -180,21 +185,28 @@
         const btnAvanc = document.getElementById('btn-filtro-avancado');
         const btnGerais = document.getElementById('btn-rank-gerais');
         const btnMontagem = document.getElementById('btn-rank-montagem');
+        const btnOrg = document.getElementById('btn-rank-organizacoes');
         
-        const classeInativo = "bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate";
+        // Formatação base inativa para todos os botões (Flex ajustável)
+        const classeInativo = "flex-auto min-w-[130px] bg-blue-950/40 text-blue-300 font-bold px-3 py-2 rounded-xl text-xs border border-blue-500/20 uppercase transition-all text-center truncate";
+        
         if(btnReg) btnReg.className = classeInativo;
         if(btnAvanc) btnAvanc.className = classeInativo;
         if(btnGerais) btnGerais.className = classeInativo;
         if(btnMontagem) btnMontagem.className = classeInativo;
+        if(btnOrg) btnOrg.className = classeInativo;
         
+        // Formatação base ativa dependendo do módulo
         if (modulo === 'regular' && btnReg) {
-            btnReg.className = "bg-yellow-500 text-blue-950 font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
+            btnReg.className = "flex-auto min-w-[130px] bg-yellow-500 text-blue-950 font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         } else if (modulo === 'avancado' && btnAvanc) {
-            btnAvanc.className = "bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
+            btnAvanc.className = "flex-auto min-w-[130px] bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         } else if (modulo === 'gerais_biblia' && btnGerais) {
-            btnGerais.className = "bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
+            btnGerais.className = "flex-auto min-w-[130px] bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         } else if (modulo === 'montagem_biblica' && btnMontagem) {
-            btnMontagem.className = "bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
+            btnMontagem.className = "flex-auto min-w-[130px] bg-purple-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
+        } else if (modulo === 'organizacoes' && btnOrg) {
+            btnOrg.className = "flex-auto min-w-[130px] bg-pink-600 text-white font-black px-3 py-2 rounded-xl text-xs uppercase shadow-md transition-all text-center truncate";
         }
         
         aplicarFiltros();
