@@ -45,6 +45,7 @@
                 <option value="avancado">🔥 MÓDULO AVANÇADO (PALAVRA-CHAVE)</option>
                 <option value="gerais">📚 CONHECIMENTOS GERAIS DA BÍBLIA</option>
                 <option value="montagem">🧩 MÓDULO MONTAGEM BÍBLICA</option>
+                <option value="organizacoes">🔰 CONHECIMENTOS DAS ORGANIZAÇÕES</option>
                 <option value="conquistas">🏅 CONQUISTAS, AVATAR E LOJA</option>
             </select>
         </div>
@@ -72,7 +73,19 @@
                 <p>Use a <strong>Seleção Alternada</strong> (clique em um item e depois em outro para trocar de lugar). Clique em "Confirmar Montagem" para validar.</p>
             </div>
 
-            <!-- CONTEÚDO ATUALIZADO: CONQUISTAS, AVATAR E LOJA -->
+            <!-- NOVO MÓDULO: CONHECIMENTOS DAS ORGANIZAÇÕES -->
+            <div id="conteudo-organizacoes" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
+                <p>Mostre que você conhece a fundo a história, regras e insígnias do seu grupo! O sistema identificará automaticamente se você é um <strong class="text-blue-400">Embaixador do Rei</strong> ou uma <strong class="text-pink-400">Mensageira do Rei</strong> e carregará o banco de dados oficial adequado.</p>
+                <p>A partida consiste em exatas <strong class="text-yellow-400">10 rodadas</strong>, equilibradas na seguinte proporção:</p>
+                <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                    <li><strong class="text-green-400">5 perguntas Fáceis.</strong></li>
+                    <li><strong class="text-amber-400">3 perguntas Médias.</strong></li>
+                    <li><strong class="text-red-400">2 perguntas Difíceis.</strong></li>
+                </ul>
+                <p>Você terá <strong class="text-yellow-400">30 segundos</strong> para ler as alternativas e fazer a sua escolha. Selecione a opção desejada e depois clique no botão mestre para confirmar. Todo segundo economizado nas respostas certas será somado à sua pontuação final!</p>
+            </div>
+
+            <!-- CONQUISTAS, AVATAR E LOJA -->
             <div id="conteudo-conquistas" class="hidden space-y-4 text-xs text-gray-200 leading-relaxed text-left">
                 <p>Todo ponto conquistado na Arena acumula no seu saldo para uso na <strong class="text-yellow-400">Forja de Avatares</strong>!</p>
                 
@@ -80,7 +93,7 @@
                 <p>No seu perfil, você pode alterar a cor da pele e do cabelo do seu avatar livremente. Para proteger seu guerreiro, compre peças na <strong>Forja</strong>:</p>
                 <ul class="list-disc pl-5 space-y-1 text-gray-300">
                     <li><strong>Preços:</strong> Ferro (1000), Bronze (2000), Prata (3000) e Ouro (5000).</li>
-                    <li><strong>Dinâmica:</strong> Pontos ganhos na Arena são o seu dinheiro. Uma vez comprado, o item fica no seu inventário para sempre.</li>
+                    <li><strong>Dinâmica:</strong> Pontos ganhos na Arena são o seu dinheiro. Uma vez comprado, o item fica no seu inventário para sempre. Lembre-se: é necessário possuir a peça de menor qualidade para desbloquear a compra da peça superior!</li>
                     <li><strong>Equipamento:</strong> Clique em "Equipar" para atualizar o visual do seu avatar na hora.</li>
                 </ul>
 
@@ -106,6 +119,7 @@
                 avancado: document.getElementById('conteudo-avancado'),
                 gerais: document.getElementById('conteudo-gerais'),
                 montagem: document.getElementById('conteudo-montagem'),
+                organizacoes: document.getElementById('conteudo-organizacoes'),
                 conquistas: document.getElementById('conteudo-conquistas')
             };
 
