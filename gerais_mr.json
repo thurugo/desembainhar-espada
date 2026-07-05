@@ -1,0 +1,3604 @@
+{
+  "questoes": [
+    {
+      "id": 1,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da missionária pioneira que organizou as Mensageiras do Rei no Brasil em 1949?",
+      "opcoes": {
+        "A": "Minnie Landrum",
+        "B": "Minnie Lou Lanier",
+        "C": "Albertina Meador",
+        "D": "Dorine Hawkins"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 2,
+      "nivel": "facil",
+      "pergunta": "A organização Mensageiras do Rei é voltada para meninas de qual faixa etária?",
+      "opcoes": {
+        "A": "7 a 13 anos",
+        "B": "10 a 18 anos",
+        "C": "9 a 16 anos",
+        "D": "8 a 15 anos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 3,
+      "nivel": "facil",
+      "pergunta": "Qual é a divisa oficial das Mensageiras do Rei, baseada em Isaías 60:1?",
+      "opcoes": {
+        "A": "Levanta-te, resplandece, porque já vem a tua luz.",
+        "B": "Lâmpada para os meus pés é a tua palavra e luz.",
+        "C": "Do Senhor é a terra e toda a sua plenitude agora.",
+        "D": "Ide por todo o mundo e pregai o evangelho a todos."
+      },
+      "correta": "A"
+    },
+    {
+      "id": 4,
+      "nivel": "facil",
+      "pergunta": "De acordo com o Manual, a ênfase principal da organização Mensageiras do Rei é:",
+      "opcoes": {
+        "A": "O estudo de artes manuais.",
+        "B": "A educação missionária.",
+        "C": "A prática de esportes.",
+        "D": "O treinamento musical."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 5,
+      "nivel": "facil",
+      "pergunta": "No emblema das MR, o que representam as cinco pontas da estrela?",
+      "opcoes": {
+        "A": "Os cinco continentes do mundo.",
+        "B": "Os cinco livros do Pentateuco.",
+        "C": "Os cinco ideais da organização.",
+        "D": "Os cinco ministérios da igreja."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 6,
+      "nivel": "facil",
+      "pergunta": "Qual é o título do hino oficial da organização Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Cristo é o nosso Rei",
+        "B": "Mensagem do Amor",
+        "C": "Estrela Missionária",
+        "D": "Contaremos a História"
+      },
+      "correta": "D"
+    },
+    {
+      "id": 7,
+      "nivel": "facil",
+      "pergunta": "Qual cor no emblema das MR representa a luz de Cristo que a mensageira deve refletir?",
+      "opcoes": {
+        "A": "Verde",
+        "B": "Amarelo",
+        "C": "Branco",
+        "D": "Azul"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 8,
+      "nivel": "facil",
+      "pergunta": "Segundo a Bíblia, no livro de Êxodo, quem vigiou o cestinho de Moisés no rio Nilo?",
+      "opcoes": {
+        "A": "Joquebede",
+        "B": "Miriã",
+        "C": "Sifrá",
+        "D": "Puá"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 9,
+      "nivel": "facil",
+      "pergunta": "Qual destas meninas bíblicas foi levada cativa e serviu na casa de Naamã, o sírio?",
+      "opcoes": {
+        "A": "A menina israelita",
+        "B": "A filha de Jairo",
+        "C": "Rode",
+        "D": "Ester"
+      },
+      "correta": "A"
+    },
+    {
+      "id": 10,
+      "nivel": "facil",
+      "pergunta": "Quem era o primo e pai adotivo de Ester que a orientou no palácio da Pérsia?",
+      "opcoes": {
+        "A": "Hamã",
+        "B": "Assuero",
+        "C": "Mordecai",
+        "D": "Hegai"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 11,
+      "nivel": "facil",
+      "pergunta": "Qual anjo apareceu a Maria para anunciar que ela seria a mãe de Jesus?",
+      "opcoes": {
+        "A": "Miguel",
+        "B": "Rafael",
+        "C": "Gabriel",
+        "D": "Uriel"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 12,
+      "nivel": "facil",
+      "pergunta": "O que Jesus disse ao ressuscitar a filha de Jairo, que tinha 12 anos?",
+      "opcoes": {
+        "A": "Efatá!",
+        "B": "Talitá kumi!",
+        "C": "Lázaro, vem para fora!",
+        "D": "Menina, cura-te agora!"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 13,
+      "nivel": "facil",
+      "pergunta": "Na história de Pedro em Atos 12, qual menina ficou tão feliz que esqueceu de abrir a porta?",
+      "opcoes": {
+        "A": "Maria",
+        "B": "Rode",
+        "C": "Isabel",
+        "D": "Tabita"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 14,
+      "nivel": "facil",
+      "pergunta": "De acordo com o Salmo 139:14, como o salmista reconhece que foi formado por Deus?",
+      "opcoes": {
+        "A": "De modo simples e humilde.",
+        "B": "De modo forte e corajoso.",
+        "C": "De modo assombrosamente maravilhoso.",
+        "D": "De modo rápido e inteligente."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 15,
+      "nivel": "facil",
+      "pergunta": "Qual destas organizações missionárias também pertence à UFMBB, além das MR?",
+      "opcoes": {
+        "A": "Embaixadores do Rei",
+        "B": "Amigos de Missões",
+        "C": "Sociedade Bíblica",
+        "D": "União de Jovens"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 16,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade brasileira foi realizado o primeiro acampamento nacional de MR em 1950?",
+      "opcoes": {
+        "A": "Salvador",
+        "B": "Rio de Janeiro",
+        "C": "Curitiba",
+        "D": "Recife"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 17,
+      "nivel": "medio",
+      "pergunta": "Qual era o nome da missionária que desafiou Minnie Lou a vir ao Brasil em 1939?",
+      "opcoes": {
+        "A": "Pearl Bigle",
+        "B": "Minnie Landrum",
+        "C": "Sophia Nichols",
+        "D": "Anne Luther"
+      },
+      "correta": "A"
+    },
+    {
+      "id": 18,
+      "nivel": "medio",
+      "pergunta": "O \"Giro Batista\" ensina que a UFMBB foi criada em qual data histórica?",
+      "opcoes": {
+        "A": "23 de junho de 1908",
+        "B": "15 de novembro de 1915",
+        "C": "10 de maio de 1949",
+        "D": "27 de janeiro de 1982"
+      },
+      "correta": "A"
+    },
+    {
+      "id": 19,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do sistema de graduação das Mensageiras do Rei que possui quatro etapas?",
+      "opcoes": {
+        "A": "Caminhada Real",
+        "B": "Aventura Real",
+        "C": "Escada do Rei",
+        "D": "Brilho da Estrela"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 20,
+      "nivel": "medio",
+      "pergunta": "No sistema de graduação, qual é o nome dado à segunda etapa simples?",
+      "opcoes": {
+        "A": "Candidata",
+        "B": "Mensageira",
+        "C": "Mensageira Real",
+        "D": "Rainha"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 21,
+      "nivel": "medio",
+      "pergunta": "Qual destes livros poéticos da Bíblia é descrito como o \"hinário do povo de Israel\"?",
+      "opcoes": {
+        "A": "Jó",
+        "B": "Salmos",
+        "C": "Provérbios",
+        "D": "Eclesiastes"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 22,
+      "nivel": "medio",
+      "pergunta": "Qual profeta do Antigo Testamento foi enviado por Deus para pregar em Nínive?",
+      "opcoes": {
+        "A": "Joel",
+        "B": "Jonas",
+        "C": "Amós",
+        "D": "Miqueias"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 23,
+      "nivel": "medio",
+      "pergunta": "Na biografia de Minnie Lou, qual era a cor da Kombi que ela dirigia para visitar igrejas?",
+      "opcoes": {
+        "A": "Verde-musgo",
+        "B": "Branco-neve",
+        "C": "Azul-claro",
+        "D": "Amarelo-ouro"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 24,
+      "nivel": "medio",
+      "pergunta": "De acordo com o livro \"Deixando de ser menina\", qual órgão realiza cerca de 500 tarefas?",
+      "opcoes": {
+        "A": "Coração",
+        "B": "Pulmão",
+        "C": "Fígado",
+        "D": "Rim"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 25,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Aceitarei a responsabilidade da Grande Comissão\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 119.105",
+        "C": "Marcos 16.15",
+        "D": "Efésios 2.10"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 26,
+      "nivel": "medio",
+      "pergunta": "Quem sucedeu Minnie Lou Lanier como Líder Nacional das Mensageiras do Rei em 1967?",
+      "opcoes": {
+        "A": "Elza Sant’Anna",
+        "B": "Edna Pinto de Moraes",
+        "C": "Raquel Zarnotti",
+        "D": "Celina Veronese"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 27,
+      "nivel": "medio",
+      "pergunta": "Em qual seminário Minnie Lou ingressou após concluir o curso na Universidade Tift-College?",
+      "opcoes": {
+        "A": "Seminário de Educação Cristã (SEC)",
+        "B": "Seminário Teológico Batista do Sul (Kentucky)",
+        "C": "Instituto de Treinamento Cristão (ITC)",
+        "D": "Seminário do Rio de Janeiro"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 28,
+      "nivel": "medio",
+      "pergunta": "No emblema das MR, o que o contorno verde da estrela representa?",
+      "opcoes": {
+        "A": "A esperança de salvação.",
+        "B": "O crescimento cristão.",
+        "C": "A natureza criada por Deus.",
+        "D": "A união das igrejas batistas."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 29,
+      "nivel": "medio",
+      "pergunta": "Qual é o nome das duas escolas da UFMBB que formam vocacionados para o ministério?",
+      "opcoes": {
+        "A": "CIEM e SEC",
+        "B": "ITC e IBER",
+        "C": "CBB e MCM",
+        "D": "Tift e Richmond"
+      },
+      "correta": "A"
+    },
+    {
+      "id": 30,
+      "nivel": "medio",
+      "pergunta": "Segundo o livro \"Meninas como eu\", por que Mordecai orientou Ester a esconder sua origem?",
+      "opcoes": {
+        "A": "Para ela não sofrer preconceito.",
+        "B": "Para facilitar seu casamento.",
+        "C": "Por uma ordem direta de Deus.",
+        "D": "Para testar sua obediência."
+      },
+      "correta": "A"
+    },
+    {
+      "id": 31,
+      "nivel": "dificil",
+      "pergunta": "Qual o significado do termo hebraico \"Ezer\", usado para descrever a missão da mulher?",
+      "opcoes": {
+        "A": "Aquela que é submissa em tudo.",
+        "B": "Mãe de todos os seres viventes.",
+        "C": "Ajudadora ou auxiliadora.",
+        "D": "Companheira de caminhada."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 32,
+      "nivel": "dificil",
+      "pergunta": "Na 3ª etapa da Aventura Real, em qual local Paulo permaneceu preso por dois anos?",
+      "opcoes": {
+        "A": "Éfeso",
+        "B": "Roma",
+        "C": "Cesareia",
+        "D": "Jerusalém"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 33,
+      "nivel": "dificil",
+      "pergunta": "Qual era o valor mensal enviado pela Junta de Richmond para Minnie Lou pagar professor?",
+      "opcoes": {
+        "A": "Cinco dólares",
+        "B": "Dez dólares",
+        "C": "Vinte dólares",
+        "D": "Quinze dólares"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 34,
+      "nivel": "dificil",
+      "pergunta": "Em 1964, no aniversário de 15 anos da organização, qual evento nacional foi realizado?",
+      "opcoes": {
+        "A": "Congresso de Líderes",
+        "B": "Corte Real",
+        "C": "Assembléia da UFMBB",
+        "D": "Giro Missionário"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 35,
+      "nivel": "dificil",
+      "pergunta": "No livro de Atos, qual o nome do destinatário a quem Lucas escreveu sua obra histórica?",
+      "opcoes": {
+        "A": "Barnabé",
+        "B": "Teófilo",
+        "C": "Cornélio",
+        "D": "Apolo"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 36,
+      "nivel": "dificil",
+      "pergunta": "Qual órgão do corpo humano é responsável por filtrar entre 1500 a 2000 litros de sangue?",
+      "opcoes": {
+        "A": "Fígado",
+        "B": "Rins",
+        "C": "Coração",
+        "D": "Pulmões"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 37,
+      "nivel": "dificil",
+      "pergunta": "Qual foi o primeiro sinal da puberdade na menina mencionado pela Dra. Élida Moreira?",
+      "opcoes": {
+        "A": "O estirão puberal.",
+        "B": "O desenvolvimento das mamas.",
+        "C": "O aparecimento de pelos.",
+        "D": "A primeira menstruação."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 38,
+      "nivel": "dificil",
+      "pergunta": "Em qual cidade brasileira Minnie Lou teve sua primeira escala ao chegar em 1945?",
+      "opcoes": {
+        "A": "Fortaleza",
+        "B": "Belém do Pará",
+        "C": "Rio de Janeiro",
+        "D": "Natal"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 39,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do missionário que era vizinho de Minnie Lou e pastor em Itacuruçá?",
+      "opcoes": {
+        "A": "Dr. Cowsert",
+        "B": "Dr. Allen",
+        "C": "Dr. Gill",
+        "D": "Pr. Edgar Hallock"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 40,
+      "nivel": "dificil",
+      "pergunta": "Na 2ª etapa da Aventura Real, qual é o terceiro passo ensinado no caminho da salvação?",
+      "opcoes": {
+        "A": "Arrepender-se dos pecados.",
+        "B": "Crer em Jesus Cristo.",
+        "C": "Confessar Jesus como Senhor.",
+        "D": "Batizar-se nas águas."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 41,
+      "nivel": "facil",
+      "pergunta": "Quem foi o herói de missões conhecido como o \"Pai das Missões Modernas\"?",
+      "opcoes": {
+        "A": "William Bagby",
+        "B": "Guilherme Carey",
+        "C": "Adoniram Judson",
+        "D": "Hudson Taylor"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 42,
+      "nivel": "facil",
+      "pergunta": "Qual cor no emblema das MR representa a pureza que a mensageira deve buscar?",
+      "opcoes": {
+        "A": "Amarelo",
+        "B": "Branco",
+        "C": "Verde",
+        "D": "Dourado"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 43,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, a mensageira promete lutar por conservar o corpo limpo e o quê?",
+      "opcoes": {
+        "A": "A alma forte.",
+        "B": "A mente pura.",
+        "C": "O coração alegre.",
+        "D": "O espírito atento."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 44,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do lugar de acampamentos nacionais muito apreciado pelas mensageiras?",
+      "opcoes": {
+        "A": "Monte Hermom",
+        "B": "Sítio do Sossego",
+        "C": "Vale da Paz",
+        "D": "Jardim do Éden"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 45,
+      "nivel": "facil",
+      "pergunta": "A Bíblia é dividida em dois grandes testamentos. Quantos livros tem o Antigo?",
+      "opcoes": {
+        "A": "27 livros",
+        "B": "39 livros",
+        "C": "66 livros",
+        "D": "12 livros"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 46,
+      "nivel": "facil",
+      "pergunta": "Qual grupo de livros do Novo Testamento conta sobre o nascimento e vida de Jesus?",
+      "opcoes": {
+        "A": "Cartas",
+        "B": "Evangelhos",
+        "C": "Proféticos",
+        "D": "Históricos"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 47,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, a mensageira promete reconhecer e fazer o que com seus erros?",
+      "opcoes": {
+        "A": "Escondê-los sempre.",
+        "B": "Corrigi-los.",
+        "C": "Esquecê-los.",
+        "D": "Justificá-los."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 48,
+      "nivel": "facil",
+      "pergunta": "Qual é o significado do monograma \"MR\" presente no emblema da organização?",
+      "opcoes": {
+        "A": "Missionária Real",
+        "B": "Mensageira do Rei",
+        "C": "Menina de Respeito",
+        "D": "Missão e Reavivamento"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 49,
+      "nivel": "facil",
+      "pergunta": "De acordo com o Manual, quem são os membros ex-officio da diretoria das MR?",
+      "opcoes": {
+        "A": "Pais e mães",
+        "B": "Pastor e Orientadora",
+        "C": "Diáconos e Jovens",
+        "D": "Líderes de música"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 50,
+      "nivel": "facil",
+      "pergunta": "Qual é a missão da igreja mencionada na 3ª etapa da Aventura Real?",
+      "opcoes": {
+        "A": "Construir templos grandes.",
+        "B": "Fazer discípulos.",
+        "C": "Organizar festivais.",
+        "D": "Arrecadar fundos."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 51,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Reconhecerei a minha mordomia\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 24.1",
+        "C": "Salmos 119.105",
+        "D": "Efésios 2.10"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 52,
+      "nivel": "medio",
+      "pergunta": "No livro de Salmos, qual capítulo é citado como um convite missionário a todas as nações?",
+      "opcoes": {
+        "A": "Salmo 23",
+        "B": "Salmo 67",
+        "C": "Salmo 91",
+        "D": "Salmo 1"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 53,
+      "nivel": "medio",
+      "pergunta": "De acordo com a biografia de Minnie Lou, em qual estado americano ela nasceu?",
+      "opcoes": {
+        "A": "Kentucky",
+        "B": "Geórgia",
+        "C": "Flórida",
+        "D": "Texas"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 54,
+      "nivel": "medio",
+      "pergunta": "Qual era o trabalho paralelo que Minnie Lou realizava para ajudar nas despesas de casa?",
+      "opcoes": {
+        "A": "Costureira",
+        "B": "Cabeleireira",
+        "C": "Professora de piano",
+        "D": "Vendedora de livros"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 55,
+      "nivel": "medio",
+      "pergunta": "Na 1ª etapa da Aventura Real, qual o novo nome que Deus deu a Jacó?",
+      "opcoes": {
+        "A": "Abraão",
+        "B": "Israel",
+        "C": "Isaque",
+        "D": "José"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 56,
+      "nivel": "medio",
+      "pergunta": "Qual termo bíblico indica que \"tudo pertence a Deus e somos apenas administradores\"?",
+      "opcoes": {
+        "A": "Santidade",
+        "B": "Mordomia",
+        "C": "Consagração",
+        "D": "Comunhão"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 57,
+      "nivel": "medio",
+      "pergunta": "Quem foi o primeiro missionário batista enviado especificamente para trabalhar no Brasil?",
+      "opcoes": {
+        "A": "Guilherme Carey",
+        "B": "William Bagby",
+        "C": "Adoniram Judson",
+        "D": "Taylor"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 58,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do seminário em Recife voltado para a formação de mulheres?",
+      "opcoes": {
+        "A": "CIEM",
+        "B": "SEC",
+        "C": "IBER",
+        "D": "ITC"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 59,
+      "nivel": "medio",
+      "pergunta": "No livro \"Deus me deu um corpo\", qual atitude torna a vida das mulheres sem cor e graça?",
+      "opcoes": {
+        "A": "Cuidar demais da beleza.",
+        "B": "Pensar sobre o corpo de maneira negativa.",
+        "C": "Praticar exercícios físicos.",
+        "D": "Estudar muito a Bíblia."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 60,
+      "nivel": "medio",
+      "pergunta": "Segundo a doutrina bíblica ensinada nas MR, o que é a Trindade?",
+      "opcoes": {
+        "A": "Três deuses diferentes.",
+        "B": "Tríplice manifestação de Deus (Pai, Filho e Espírito Santo).",
+        "C": "A união de três religiões.",
+        "D": "Os três testamentos da Bíblia."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 61,
+      "nivel": "dificil",
+      "pergunta": "Qual versículo de Romanos é usado para explicar que o evangelho é para todos os povos?",
+      "opcoes": {
+        "A": "Romanos 3.23",
+        "B": "Romanos 10.13",
+        "C": "Romanos 5.8",
+        "D": "Romanos 6.23"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 62,
+      "nivel": "dificil",
+      "pergunta": "Na história de Naamã, qual era o nome da cidade em Israel onde morava o profeta Eliseu?",
+      "opcoes": {
+        "A": "Jerusalém",
+        "B": "Samaria",
+        "C": "Nazaré",
+        "D": "Jericó"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 63,
+      "nivel": "dificil",
+      "pergunta": "Qual foi o ano exato em que Minnie Lou deixou a liderança das MR para assumir as MCM?",
+      "opcoes": {
+        "A": "1949",
+        "B": "1967",
+        "C": "1981",
+        "D": "1950"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 64,
+      "nivel": "dificil",
+      "pergunta": "No Pentateuco, qual livro narra a caminhada pelo deserto em direção à Terra Prometida?",
+      "opcoes": {
+        "A": "Levítico",
+        "B": "Números",
+        "C": "Deuteronômio",
+        "D": "Êxodo"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 65,
+      "nivel": "dificil",
+      "pergunta": "Como é chamado o crescimento físico muito rápido característico da adolescência?",
+      "opcoes": {
+        "A": "Salto hormonal",
+        "B": "Estirão puberal",
+        "C": "Pico de massa",
+        "D": "Fase de transição"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 66,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do rei persa que destituiu a rainha Vasti antes de escolher Ester?",
+      "opcoes": {
+        "A": "Artaxerxes",
+        "B": "Assuero",
+        "C": "Ciro",
+        "D": "Dario"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 67,
+      "nivel": "dificil",
+      "pergunta": "Quantas informações estima-se que o cérebro humano seja capaz de absorver na vida?",
+      "opcoes": {
+        "A": "100 bilhões",
+        "B": "100 trilhões",
+        "C": "1 milhão",
+        "D": "50 trilhões"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 68,
+      "nivel": "dificil",
+      "pergunta": "Qual substância o fígado armazena para fornecer energia ao corpo em forma de glicose?",
+      "opcoes": {
+        "A": "Adrenalina",
+        "B": "Glicogênio",
+        "C": "Insulina",
+        "D": "Hemoglobina"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 69,
+      "nivel": "dificil",
+      "pergunta": "Na biografia de Minnie Lou, qual irmão caçula retornou da guerra antes da sua partida?",
+      "opcoes": {
+        "A": "Oscar",
+        "B": "Sidney",
+        "C": "Montague",
+        "D": "Patrick"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 70,
+      "nivel": "dificil",
+      "pergunta": "Qual a primeira promessa messiânica encontrada na Bíblia (Protoevangelho)?",
+      "opcoes": {
+        "A": "Gênesis 12.1-3",
+        "B": "Gênesis 3.15",
+        "C": "Isaías 7.14",
+        "D": "Miqueias 5.2"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 71,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, o que a mensageira promete não tomar em vão?",
+      "opcoes": {
+        "A": "O tempo livre.",
+        "B": "O nome de Deus.",
+        "C": "A oferta missionária.",
+        "D": "A palavra do pastor."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 72,
+      "nivel": "facil",
+      "pergunta": "Qual destes é o primeiro ideal das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Reconhecerei a minha mordomia.",
+        "B": "Viverei em Cristo pela oração.",
+        "C": "Enfeitar-me-ei com boas obras.",
+        "D": "Aceitarei a Grande Comissão."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 73,
+      "nivel": "facil",
+      "pergunta": "Na história de Miriã, em qual objeto o bebê Moisés foi colocado para ser salvo?",
+      "opcoes": {
+        "A": "Uma caixa de madeira.",
+        "B": "Um cesto de juncos.",
+        "C": "Um barco de couro.",
+        "D": "Uma rede de pesca."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 74,
+      "nivel": "facil",
+      "pergunta": "Quem encontrou o bebê Moisés no rio Nilo e decidiu criá-lo?",
+      "opcoes": {
+        "A": "Uma escrava egípcia.",
+        "B": "A filha de Faraó.",
+        "C": "A rainha do Egito.",
+        "D": "Uma serva de Miriã."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 75,
+      "nivel": "facil",
+      "pergunta": "Segundo a Bíblia, quem foi a primeira pessoa a ver Jesus ressuscitado?",
+      "opcoes": {
+        "A": "Pedro",
+        "B": "Maria Madalena",
+        "C": "João",
+        "D": "Tiago"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 76,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do livro que narra o início da Igreja de Jesus e as missões dos apóstolos?",
+      "opcoes": {
+        "A": "Mateus",
+        "B": "Atos",
+        "C": "Apocalipse",
+        "D": "Romanos"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 77,
+      "nivel": "facil",
+      "pergunta": "De acordo com Gênesis 1.27, o ser humano foi criado à imagem e o que de Deus?",
+      "opcoes": {
+        "A": "Vontade",
+        "B": "Semelhança",
+        "C": "Beleza",
+        "D": "Glória"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 78,
+      "nivel": "facil",
+      "pergunta": "Qual órgão envia o sangue com oxigênio para todo o corpo?",
+      "opcoes": {
+        "A": "Fígado",
+        "B": "Coração",
+        "C": "Estômago",
+        "D": "Cérebro"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 79,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da organização feminina para mulheres adultas que cuida das MR?",
+      "opcoes": {
+        "A": "Amigos de Missões",
+        "B": "Mulher Cristã em Missão",
+        "C": "Sociedade de Damas",
+        "D": "Estrelas da Fé"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 80,
+      "nivel": "facil",
+      "pergunta": "Para ser aprovada em uma tarefa da Aventura Real, quem deve assinar a revista?",
+      "opcoes": {
+        "A": "O Pastor",
+        "B": "A Líder/Orientadora",
+        "C": "O Pai ou Mãe",
+        "D": "A Presidente da igreja"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 81,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Crescerei em sabedoria pelo estudo da Bíblia\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 119.105",
+        "C": "Efésios 2.10",
+        "D": "Marcos 16.15"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 82,
+      "nivel": "medio",
+      "pergunta": "No livro \"Meninas como eu\", quem interrompeu Jesus no caminho para a casa de Jairo?",
+      "opcoes": {
+        "A": "Os fariseus.",
+        "B": "Uma mulher doente.",
+        "C": "O cego de Jericó.",
+        "D": "O apóstolo Pedro."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 83,
+      "nivel": "medio",
+      "pergunta": "Qual foi o sinal miraculoso que marcou a vinda do Espírito Santo em Pentecostes?",
+      "opcoes": {
+        "A": "Um terremoto forte.",
+        "B": "O som de um vento e línguas de fogo.",
+        "C": "Uma chuva de granizo.",
+        "D": "Uma luz cegante no céu."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 84,
+      "nivel": "medio",
+      "pergunta": "Quem foi o companheiro de Paulo que foi libertado da prisão com ele em Filipos?",
+      "opcoes": {
+        "A": "Barnabé",
+        "B": "Silas",
+        "C": "Timóteo",
+        "D": "Lucas"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 85,
+      "nivel": "medio",
+      "pergunta": "Segundo o Manual, o planejamento das Mensageiras do Rei é feito em qual periodicidade?",
+      "opcoes": {
+        "A": "Mensal",
+        "B": "Trimestral",
+        "C": "Semestral",
+        "D": "Anual"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 86,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade histórica se localiza o Seminário de Educação Cristã (SEC)?",
+      "opcoes": {
+        "A": "Rio de Janeiro",
+        "B": "Recife",
+        "C": "Salvador",
+        "D": "São Paulo"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 87,
+      "nivel": "medio",
+      "pergunta": "No hino oficial, qual a palavra-chave que resume a primeira estrofe?",
+      "opcoes": {
+        "A": "Hino",
+        "B": "História",
+        "C": "Cristo",
+        "D": "Nova"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 88,
+      "nivel": "medio",
+      "pergunta": "Como é chamado o sangramento vaginal que ocorre todos os meses na mulher saudável?",
+      "opcoes": {
+        "A": "Ovulação",
+        "B": "Menstruação",
+        "C": "Gestação",
+        "D": "Fecundação"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 89,
+      "nivel": "medio",
+      "pergunta": "Qual era o principal recurso financeiro da família de Minnie Lou na Geórgia?",
+      "opcoes": {
+        "A": "Um salão de beleza.",
+        "B": "Uma grande fazenda.",
+        "C": "Uma loja de roupas.",
+        "D": "Uma oficina de carpintaria."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 90,
+      "nivel": "medio",
+      "pergunta": "O \"Pequeno Grupo Multiplicador\" (PGM) é uma estratégia para quê, segundo o Manual?",
+      "opcoes": {
+        "A": "Arrecadar dinheiro.",
+        "B": "Multiplicar a organização e ganhar meninas.",
+        "C": "Ensinar culinária.",
+        "D": "Organizar viagens."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 91,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do general que liderou o exército sírio contra Israel no tempo de Eliseu?",
+      "opcoes": {
+        "A": "Ben-Hadade",
+        "B": "Naamã",
+        "C": "Hazael",
+        "D": "Rezim"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 92,
+      "nivel": "dificil",
+      "pergunta": "Qual a referência bíblica da promessa do Espírito Santo citada em Atos 2?",
+      "opcoes": {
+        "A": "Isaías 53",
+        "B": "Joel 2.28-32",
+        "C": "Salmo 2",
+        "D": "Malaquias 4"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 93,
+      "nivel": "dificil",
+      "pergunta": "No livro \"Aventura Real\", qual é a função específica da \"Líder de Serviço Real\"?",
+      "opcoes": {
+        "A": "Dirigir o louvor.",
+        "B": "Coordenar ações em benefício do próximo.",
+        "C": "Fazer a chamada.",
+        "D": "Limpar o templo."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 94,
+      "nivel": "dificil",
+      "pergunta": "Qual foi o tempo aproximado de duração do ministério terreno de Jesus?",
+      "opcoes": {
+        "A": "Um ano",
+        "B": "Três anos",
+        "C": "Sete anos",
+        "D": "Cinco anos"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 95,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do primeiro manual das MR traduzido para o português em 1949?",
+      "opcoes": {
+        "A": "Guia da Mensageira",
+        "B": "Manual das Mensageiras do Rei",
+        "C": "Estrela do Sul",
+        "D": "Aventura Real"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 96,
+      "nivel": "dificil",
+      "pergunta": "De acordo com Atos 13, quem foi o companheiro de Paulo em sua primeira viagem missionária?",
+      "opcoes": {
+        "A": "Silas",
+        "B": "Barnabé",
+        "C": "João Marcos",
+        "D": "Lucas"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 97,
+      "nivel": "dificil",
+      "pergunta": "O apóstolo Paulo relaciona o nosso corpo com o quê, em 1 Coríntios 6:19?",
+      "opcoes": {
+        "A": "Uma indústria perfeita.",
+        "B": "O templo do Espírito Santo.",
+        "C": "Um vaso de barro.",
+        "D": "Uma tenda passageira."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 98,
+      "nivel": "dificil",
+      "pergunta": "Na história de Naamã, qual o nome do rio onde ele mergulhou sete vezes?",
+      "opcoes": {
+        "A": "Rio Nilo",
+        "B": "Rio Jordão",
+        "C": "Rio Eufrates",
+        "D": "Rio Abana"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 99,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do primeiro local de acampamento que Minnie Lou ajudou a melhorar com ofertas?",
+      "opcoes": {
+        "A": "Quinta da Boa Vista",
+        "B": "Sítio do Sossego",
+        "C": "CIEM",
+        "D": "Teresópolis"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 100,
+      "nivel": "dificil",
+      "pergunta": "Qual destes nomes de Jesus é profetizado em Isaías 9:6 como \"Pai da Eternidade\"?",
+      "opcoes": {
+        "A": "Conselheiro Maravilhoso",
+        "B": "Pai Eterno",
+        "C": "Príncipe da Paz",
+        "D": "Deus Forte"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 101,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, o que a mensageira promete não tomar em vão?",
+      "opcoes": {
+        "A": "O tempo livre.",
+        "B": "O nome de Deus.",
+        "C": "A santa ceia.",
+        "D": "O compromisso."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 102,
+      "nivel": "facil",
+      "pergunta": "Qual é a cor que representa a organização Mensageiras do Rei em conjunto com o Amarelo?",
+      "opcoes": {
+        "A": "Vermelho",
+        "B": "Verde",
+        "C": "Azul",
+        "D": "Roxo"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 103,
+      "nivel": "facil",
+      "pergunta": "A Bíblia diz que Deus nos fez à sua imagem e o quê?",
+      "opcoes": {
+        "A": "Glória.",
+        "B": "Semelhança.",
+        "C": "Santidade.",
+        "D": "Sabedoria."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 104,
+      "nivel": "facil",
+      "pergunta": "Qual etapa da Aventura Real vem logo após a etapa de \"Candidata\"?",
+      "opcoes": {
+        "A": "Mensageira Real",
+        "B": "Mensageira",
+        "C": "Rainha",
+        "D": "Estrela"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 105,
+      "nivel": "facil",
+      "pergunta": "Segundo o Manual, o que significa o monograma \"MR\"?",
+      "opcoes": {
+        "A": "Missão Real",
+        "B": "Mensageira do Rei",
+        "C": "Menina de Religião",
+        "D": "Missão e Reavivamento"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 106,
+      "nivel": "facil",
+      "pergunta": "O hino \"Contaremos a História\" diz que as nações se curvarão diante de quem?",
+      "opcoes": {
+        "A": "Do Pastor.",
+        "B": "De Jesus.",
+        "C": "Das Mensageiras.",
+        "D": "Do Brasil."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 107,
+      "nivel": "facil",
+      "pergunta": "Qual é o nome da instituição que cuida das MR e das MCM no Brasil?",
+      "opcoes": {
+        "A": "CBB",
+        "B": "UFMBB",
+        "C": "JMN",
+        "D": "JMM"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 108,
+      "nivel": "facil",
+      "pergunta": "De acordo com a Bíblia, quem é o único caminho para a salvação?",
+      "opcoes": {
+        "A": "A igreja.",
+        "B": "Jesus Cristo.",
+        "C": "As boas obras.",
+        "D": "A oração."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 109,
+      "nivel": "facil",
+      "pergunta": "No livro de Atos, quem foi o apóstolo que pregou no dia de Pentecostes?",
+      "opcoes": {
+        "A": "Paulo",
+        "B": "Pedro",
+        "C": "João",
+        "D": "Tiago"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 110,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da mãe de Jesus que recebeu a visita do anjo Gabriel?",
+      "opcoes": {
+        "A": "Isabel",
+        "B": "Maria",
+        "C": "Marta",
+        "D": "Ana"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 111,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Enfeitar-me-ei com boas obras\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Efésios 2.10",
+        "C": "Marcos 16.15",
+        "D": "Salmos 24.1"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 112,
+      "nivel": "medio",
+      "pergunta": "No livro \"Meninas como eu\", qual o nome da serva que atendeu a porta para Pedro?",
+      "opcoes": {
+        "A": "Tabita",
+        "B": "Rode",
+        "C": "Lídia",
+        "D": "Priscila"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 113,
+      "nivel": "medio",
+      "pergunta": "Qual era o cargo de Jairo na comunidade onde ele vivia?",
+      "opcoes": {
+        "A": "Sumo Sacerdote",
+        "B": "Chefe da sinagoga",
+        "C": "Governador romano",
+        "D": "Cobrador de impostos"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 114,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade nasceu Minnie Lou Lanier, a pioneira das MR?",
+      "opcoes": {
+        "A": "Savannah",
+        "B": "Pembroke",
+        "C": "Miami",
+        "D": "Atlanta"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 115,
+      "nivel": "medio",
+      "pergunta": "Qual é a data oficial do Dia da Mensageira do Rei no Brasil?",
+      "opcoes": {
+        "A": "23 de Junho",
+        "B": "17 de Junho",
+        "C": "10 de Maio",
+        "D": "15 de Novembro"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 116,
+      "nivel": "medio",
+      "pergunta": "Na 3ª etapa da Aventura Real, qual o local onde Paulo foi picado por uma víbora?",
+      "opcoes": {
+        "A": "Chipre",
+        "B": "Malta",
+        "C": "Creta",
+        "D": "Sicília"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 117,
+      "nivel": "medio",
+      "pergunta": "Como é chamada a união de igrejas batistas de uma mesma região?",
+      "opcoes": {
+        "A": "Convenção",
+        "B": "Associação",
+        "C": "Federação",
+        "D": "Sínodo"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 118,
+      "nivel": "medio",
+      "pergunta": "No livro \"Deixando de ser menina\", qual hábito é essencial para o descanso da mente?",
+      "opcoes": {
+        "A": "Ver TV.",
+        "B": "O sono.",
+        "C": "Falar muito.",
+        "D": "Viajar."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 119,
+      "nivel": "medio",
+      "pergunta": "Qual destes é o último dos cinco ideais das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Reconhecerei a minha mordomia.",
+        "B": "Enfeitar-me-ei com boas obras.",
+        "C": "Aceitarei a responsabilidade da Grande Comissão.",
+        "D": "Viverei em Cristo pela oração."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 120,
+      "nivel": "medio",
+      "pergunta": "Segundo a Bíblia, quem foi o homem escolhido por Deus para formar a nação de Israel?",
+      "opcoes": {
+        "A": "Moisés",
+        "B": "Abraão",
+        "C": "Noé",
+        "D": "Davi"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 121,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do rio citado em 2 Reis que Naamã considerava melhor que o Jordão?",
+      "opcoes": {
+        "A": "Nilo",
+        "B": "Abana",
+        "C": "Tigre",
+        "D": "Querite"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 122,
+      "nivel": "dificil",
+      "pergunta": "No Manual das MR, qual o significado da cor branca no emblema?",
+      "opcoes": {
+        "A": "Paz mundial.",
+        "B": "Pureza.",
+        "C": "Alegria cristã.",
+        "D": "Verdade bíblica."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 123,
+      "nivel": "dificil",
+      "pergunta": "Qual é a referência bíblica da promessa de Jesus de que voltaria para nos buscar?",
+      "opcoes": {
+        "A": "Mateus 28.20",
+        "B": "João 14.1-3",
+        "C": "Atos 1.8",
+        "D": "Apocalipse 22.20"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 124,
+      "nivel": "dificil",
+      "pergunta": "No livro de Atos, qual o nome do primeiro mártir cristão a morrer por sua fé?",
+      "opcoes": {
+        "A": "Tiago",
+        "B": "Estêvão",
+        "C": "Filipe",
+        "D": "André"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 125,
+      "nivel": "dificil",
+      "pergunta": "Qual glândula lança substâncias no sangue que iniciam as mudanças da puberdade?",
+      "opcoes": {
+        "A": "Salivar",
+        "B": "Glândulas endócrinas (hormônios)",
+        "C": "Sudoríparas",
+        "D": "Sebáceas"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 126,
+      "nivel": "dificil",
+      "pergunta": "Na biografia de Minnie Lou, quem era a sua companheira de viagem que falava inglês?",
+      "opcoes": {
+        "A": "Albertina Meador",
+        "B": "Dorine Hawkins",
+        "C": "Minnie Landrum",
+        "D": "Elza Sant’Anna"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 127,
+      "nivel": "dificil",
+      "pergunta": "Em qual cidade da Síria Naamã era um oficial respeitado?",
+      "opcoes": {
+        "A": "Samaria",
+        "B": "Damasco",
+        "C": "Antioquia",
+        "D": "Tarso"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 128,
+      "nivel": "dificil",
+      "pergunta": "Qual o significado da expressão bíblica \"Talitá kumi\", dita por Jesus?",
+      "opcoes": {
+        "A": "Deus te abençoe.",
+        "B": "Menina, levante-se.",
+        "C": "Abre-te, sésamo.",
+        "D": "Seja curada."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 129,
+      "nivel": "dificil",
+      "pergunta": "Qual o nome do mestre aos pés de quem Paulo aprendeu a religião judaica?",
+      "opcoes": {
+        "A": "Ananias",
+        "B": "Gamaliel",
+        "C": "Nicodemos",
+        "D": "Caifás"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 130,
+      "nivel": "dificil",
+      "pergunta": "Na 2ª etapa da Aventura Real, qual milagre de Jesus envolveu transformar água em vinho?",
+      "opcoes": {
+        "A": "Pesca maravilhosa.",
+        "B": "Bodas de Caná.",
+        "C": "Multiplicação dos pães.",
+        "D": "Cura do cego."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 131,
+      "nivel": "facil",
+      "pergunta": "Quem é o autor do Salmo 139, que fala sobre como fomos formados por Deus?",
+      "opcoes": {
+        "A": "Moisés",
+        "B": "Davi",
+        "C": "Salomão",
+        "D": "Samuel"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 132,
+      "nivel": "facil",
+      "pergunta": "De acordo com o Manual, qual o nome do sistema de estudos das MR?",
+      "opcoes": {
+        "A": "Caminho de Luz",
+        "B": "Aventura Real",
+        "C": "Vida de Estrela",
+        "D": "Trilha Missionária"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 133,
+      "nivel": "facil",
+      "pergunta": "Quantos ideais as Mensageiras do Rei possuem?",
+      "opcoes": {
+        "A": "Três ideais",
+        "B": "Cinco ideais",
+        "C": "Sete ideais",
+        "D": "Dez ideais"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 134,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, a mensageira promete contribuir e o quê pelo trabalho de missões?",
+      "opcoes": {
+        "A": "Cantar.",
+        "B": "Orar.",
+        "C": "Estudar.",
+        "D": "Trabalhar."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 135,
+      "nivel": "facil",
+      "pergunta": "A Bíblia ensina que o pecado nos separa de quem?",
+      "opcoes": {
+        "A": "Da família.",
+        "B": "De Deus.",
+        "C": "Dos amigos.",
+        "D": "Da escola."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 136,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da última etapa superior da organização MR?",
+      "opcoes": {
+        "A": "Rainha",
+        "B": "Mensageira Real em Ação",
+        "C": "Estrela Polar",
+        "D": "Líder de Honra"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 137,
+      "nivel": "facil",
+      "pergunta": "No emblema das MR, qual elemento representa a pureza?",
+      "opcoes": {
+        "A": "A cor amarela.",
+        "B": "A cor branca.",
+        "C": "A cor verde.",
+        "D": "O monograma."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 138,
+      "nivel": "facil",
+      "pergunta": "Quem é a dona da casa onde a igreja estava orando por Pedro em Atos 12?",
+      "opcoes": {
+        "A": "Rode",
+        "B": "Maria, mãe de João Marcos",
+        "C": "Isabel",
+        "D": "Lídia"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 139,
+      "nivel": "facil",
+      "pergunta": "Qual menina da Bíblia tornou-se rainha e salvou o seu povo da destruição?",
+      "opcoes": {
+        "A": "Rute",
+        "B": "Ester",
+        "C": "Noemi",
+        "D": "Débora"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 140,
+      "nivel": "facil",
+      "pergunta": "Jesus ensinou que devemos amar a quem como a nós mesmos?",
+      "opcoes": {
+        "A": "Somente a família.",
+        "B": "O próximo.",
+        "C": "Aos que gostam de nós.",
+        "D": "Aos governantes."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 141,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Viverei em Cristo pela oração\"?",
+      "opcoes": {
+        "A": "Marcos 16.15",
+        "B": "Mateus 21.22",
+        "C": "Salmos 119.105",
+        "D": "Salmos 24.1"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 142,
+      "nivel": "medio",
+      "pergunta": "Segundo o livro \"Deixando de ser menina\", o que é o ciclo menstrual?",
+      "opcoes": {
+        "A": "O tempo de crescimento rápido.",
+        "B": "O intervalo entre uma menstruação e outra.",
+        "C": "A fase de aparecimento de espinhas.",
+        "D": "O tempo de prática de exercícios."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 143,
+      "nivel": "medio",
+      "pergunta": "Qual destes esportes é considerado o \"mais completo\" no livro da Dra. Élida?",
+      "opcoes": {
+        "A": "Futebol",
+        "B": "Natação",
+        "C": "Ciclismo",
+        "D": "Vôlei"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 144,
+      "nivel": "medio",
+      "pergunta": "Na 3ª etapa da Aventura Real, qual o nome do homem gentio que recebeu Pedro em sua casa?",
+      "opcoes": {
+        "A": "Simão, o curtidor",
+        "B": "Cornélio",
+        "C": "Saulo",
+        "D": "Barnabé"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 145,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do cargo daquela que dirige a organização MR em uma igreja local?",
+      "opcoes": {
+        "A": "Presidente",
+        "B": "Orientadora",
+        "C": "Secretária",
+        "D": "Coordenadora"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 146,
+      "nivel": "medio",
+      "pergunta": "No sistema de graduação, qual etapa vem logo após \"Mensageira\"?",
+      "opcoes": {
+        "A": "Candidata",
+        "B": "Mensageira Real",
+        "C": "Rainha",
+        "D": "Estrela"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 147,
+      "nivel": "medio",
+      "pergunta": "Qual cidade da Geórgia ficava a 50 km da fazenda da família Lanier?",
+      "opcoes": {
+        "A": "Pembroke",
+        "B": "Savannah",
+        "C": "Miami",
+        "D": "Atlanta"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 148,
+      "nivel": "medio",
+      "pergunta": "No livro \"Meninas como eu\", qual menina demonstrou compaixão por quem a escravizou?",
+      "opcoes": {
+        "A": "Ester",
+        "B": "A cativa de Naamã",
+        "C": "Miriã",
+        "D": "Rode"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 149,
+      "nivel": "medio",
+      "pergunta": "De acordo com a doutrina bíblica, qual a consequência final do pecado sem Jesus?",
+      "opcoes": {
+        "A": "Solidão.",
+        "B": "Morte eterna.",
+        "C": "Pobreza.",
+        "D": "Doença física."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 150,
+      "nivel": "medio",
+      "pergunta": "Qual era o tema central das pregações de Jesus, segundo o evangelho de Lucas?",
+      "opcoes": {
+        "A": "As leis de Moisés.",
+        "B": "O Reino de Deus.",
+        "C": "A história de Israel.",
+        "D": "A política romana."
+      },
+      "correta": "B"
+    },
+    {
+      "id": 151,
+      "nivel": "facil",
+      "pergunta": "Segundo o livro \"Meninas como eu\", qual era o nome da mãe de Moisés e Miriã?",
+      "opcoes": {
+        "A": "Sifrá",
+        "B": "Puá",
+        "C": "Joquebede",
+        "D": "Zípora"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 152,
+      "nivel": "facil",
+      "pergunta": "Em qual rio o bebê Moisés foi colocado dentro de um cesto de juncos?",
+      "opcoes": {
+        "A": "Rio Jordão",
+        "B": "Rio Eufrates",
+        "C": "Rio Nilo",
+        "D": "Rio Tigre"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 153,
+      "nivel": "facil",
+      "pergunta": "Qual era a nacionalidade da menina que serviu na casa de Naamã?",
+      "opcoes": {
+        "A": "Síria",
+        "B": "Egípcia",
+        "C": "Israelita",
+        "D": "Filisteia"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 154,
+      "nivel": "facil",
+      "pergunta": "Qual rainha da Pérsia se recusou a aparecer no banquete do rei Assuero?",
+      "opcoes": {
+        "A": "Ester",
+        "B": "Vasti",
+        "C": "Jezabel",
+        "D": "Atalia"
+      },
+      "correta": "B"
+    },
+    {
+      "id": 155,
+      "nivel": "facil",
+      "pergunta": "Qual era a profissão de José, o noivo de Maria, mãe de Jesus?",
+      "opcoes": {
+        "A": "Pescador",
+        "B": "Pastor de ovelhas",
+        "C": "Carpinteiro",
+        "D": "Coletor de impostos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 156,
+      "nivel": "facil",
+      "pergunta": "Como a Bíblia descreve a aparência física de Ester quando jovem?",
+      "opcoes": {
+        "A": "Alta e forte",
+        "B": "Simples e humilde",
+        "C": "Bonita e formosa",
+        "D": "Sábia e prudente"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 157,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da prima de Maria que também teve uma gravidez milagrosa?",
+      "opcoes": {
+        "A": "Ana",
+        "B": "Marta",
+        "C": "Isabel",
+        "D": "Dorcas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 158,
+      "nivel": "facil",
+      "pergunta": "Quantos anos tinha a filha de Jairo quando Jesus a ressuscitou?",
+      "opcoes": {
+        "A": "10 anos",
+        "B": "8 anos",
+        "C": "12 anos",
+        "D": "15 anos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 159,
+      "nivel": "facil",
+      "pergunta": "De acordo com Atos 12, na casa de quem a igreja estava reunida orando?",
+      "opcoes": {
+        "A": "Casa de Pedro",
+        "B": "Casa de Lídia",
+        "C": "Casa de Maria, mãe de João Marcos",
+        "D": "Casa de Cornélio"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 160,
+      "nivel": "facil",
+      "pergunta": "Qual foi a reação dos irmãos quando Rode disse que Pedro estava à porta?",
+      "opcoes": {
+        "A": "Ficaram muito felizes.",
+        "B": "Começaram a cantar.",
+        "C": "Disseram que ela estava louca.",
+        "D": "Abriram a porta correndo."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 161,
+      "nivel": "facil",
+      "pergunta": "Segundo o livro \"Deus me deu um corpo\", quem nos formou de modo admirável?",
+      "opcoes": {
+        "A": "A natureza",
+        "B": "O acaso",
+        "C": "Deus, o Criador",
+        "D": "Nossos pais apenas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 162,
+      "nivel": "facil",
+      "pergunta": "Qual versículo afirma que o ser humano foi criado à imagem de Deus?",
+      "opcoes": {
+        "A": "João 3.16",
+        "B": "Salmos 23.1",
+        "C": "Gênesis 1.27",
+        "D": "Romanos 8.28"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 163,
+      "nivel": "facil",
+      "pergunta": "De acordo com o Manual, qual é a ênfase principal das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Lazer e diversão",
+        "B": "Arrecadação de fundos",
+        "C": "Educação missionária",
+        "D": "Competição esportiva"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 164,
+      "nivel": "facil",
+      "pergunta": "Qual é a cor da estrela no emblema oficial das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Vermelha",
+        "B": "Azul",
+        "C": "Amarela",
+        "D": "Branca"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 165,
+      "nivel": "facil",
+      "pergunta": "No emblema das MR, o que representa o monograma \"MR\"?",
+      "opcoes": {
+        "A": "Missão Regional",
+        "B": "Menina Religiosa",
+        "C": "Mensageira do Rei",
+        "D": "Mente Renovada"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 166,
+      "nivel": "facil",
+      "pergunta": "Qual é o nome do sistema de graduação que ajuda a mensageira a crescer?",
+      "opcoes": {
+        "A": "Escada de Ouro",
+        "B": "Trilha da Fé",
+        "C": "Aventura Real",
+        "D": "Caminho do Rei"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 167,
+      "nivel": "facil",
+      "pergunta": "Qual o nome dado à menina que está iniciando na organização MR?",
+      "opcoes": {
+        "A": "Iniciante",
+        "B": "Novata",
+        "C": "Candidata",
+        "D": "Aprendiz"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 168,
+      "nivel": "facil",
+      "pergunta": "Qual etapa vem logo após a etapa de \"Mensageira\" na Aventura Real?",
+      "opcoes": {
+        "A": "Rainha",
+        "B": "Estrela",
+        "C": "Mensageira Real",
+        "D": "Líder de Honra"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 169,
+      "nivel": "facil",
+      "pergunta": "Quantas etapas simples compõem o sistema da Aventura Real?",
+      "opcoes": {
+        "A": "Duas etapas",
+        "B": "Cinco etapas",
+        "C": "Três etapas",
+        "D": "Quatro etapas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 170,
+      "nivel": "facil",
+      "pergunta": "Qual é o título da primeira etapa superior das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Rainha Regente",
+        "B": "Embaixadora",
+        "C": "Mensageira Real em Ação",
+        "D": "Estrela Missionária"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 171,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, a mensageira promete falar sempre o quê?",
+      "opcoes": {
+        "A": "Palavras de fé",
+        "B": "O que pensa",
+        "C": "A verdade",
+        "D": "Sobre a Bíblia"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 172,
+      "nivel": "facil",
+      "pergunta": "O hino oficial das MR diz que contaremos a história para livrar as nações de quê?",
+      "opcoes": {
+        "A": "Da pobreza",
+        "B": "Da guerra",
+        "C": "Do mal",
+        "D": "Da ignorância"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 173,
+      "nivel": "facil",
+      "pergunta": "Qual é a referência bíblica da divisa das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Salmos 119.11",
+        "B": "Mateus 28.19",
+        "C": "Isaías 60.1",
+        "D": "Marcos 16.15"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 174,
+      "nivel": "facil",
+      "pergunta": "No emblema das MR, qual cor representa a pureza?",
+      "opcoes": {
+        "A": "Verde",
+        "B": "Amarelo",
+        "C": "Branco",
+        "D": "Azul"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 175,
+      "nivel": "facil",
+      "pergunta": "Quem foi a primeira Líder Nacional das Mensageiras do Rei no Brasil?",
+      "opcoes": {
+        "A": "Sophia Nichols",
+        "B": "Minnie Landrum",
+        "C": "Minnie Lou Lanier",
+        "D": "Edna Moraes"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 176,
+      "nivel": "facil",
+      "pergunta": "Em que ano a organização Mensageiras do Rei começou no Brasil?",
+      "opcoes": {
+        "A": "1908",
+        "B": "1915",
+        "C": "1949",
+        "D": "1950"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 177,
+      "nivel": "facil",
+      "pergunta": "De acordo com a Bíblia, quem é o Rei das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "O Pastor",
+        "B": "O Presidente da CBB",
+        "C": "Jesus Cristo",
+        "D": "O Rei Davi"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 178,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do livro que conta a história da criação do mundo?",
+      "opcoes": {
+        "A": "Êxodo",
+        "B": "Apocalipse",
+        "C": "Gênesis",
+        "D": "Mateus"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 179,
+      "nivel": "facil",
+      "pergunta": "No início de tudo, em qual local perfeito Adão e Eva viviam?",
+      "opcoes": {
+        "A": "Monte Sinai",
+        "B": "Terra de Canaã",
+        "C": "Jardim do Éden",
+        "D": "Cidade de Jerusalém"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 180,
+      "nivel": "facil",
+      "pergunta": "Qual é a principal consequência do pecado, conforme Romanos 6.23?",
+      "opcoes": {
+        "A": "Tristeza",
+        "B": "Solidão",
+        "C": "A morte",
+        "D": "Doença"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 181,
+      "nivel": "facil",
+      "pergunta": "Segundo o Manual, quem escolhe a Orientadora das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "O grupo de meninas",
+        "B": "A União Feminina",
+        "C": "A igreja local",
+        "D": "O Pastor sozinha"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 182,
+      "nivel": "facil",
+      "pergunta": "Qual é a idade mínima para uma menina ingressar nas Mensageiras do Rei?",
+      "opcoes": {
+        "A": "7 anos",
+        "B": "8 anos",
+        "C": "9 anos",
+        "D": "10 anos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 183,
+      "nivel": "facil",
+      "pergunta": "No emblema das MR, o que o contorno verde da estrela simboliza?",
+      "opcoes": {
+        "A": "A esperança",
+        "B": "A natureza",
+        "C": "O crescimento cristão",
+        "D": "A vida eterna"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 184,
+      "nivel": "facil",
+      "pergunta": "Qual é a cor da organização Mensageiras do Rei que simboliza a luz de Cristo?",
+      "opcoes": {
+        "A": "Branco",
+        "B": "Verde",
+        "C": "Amarelo",
+        "D": "Roxo"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 185,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, a mensageira promete não tomar em vão o nome de quem?",
+      "opcoes": {
+        "A": "Dos pais",
+        "B": "Do Pastor",
+        "C": "De Deus",
+        "D": "Dos profetas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 186,
+      "nivel": "facil",
+      "pergunta": "Qual livro da Bíblia é conhecido como o \"livro dos louvores\"?",
+      "opcoes": {
+        "A": "Provérbios",
+        "B": "Eclesiastes",
+        "C": "Salmos",
+        "D": "Jó"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 187,
+      "nivel": "facil",
+      "pergunta": "Quem foi o homem a quem Deus prometeu fazer \"pai de uma grande nação\"?",
+      "opcoes": {
+        "A": "Moisés",
+        "B": "Noé",
+        "C": "Abraão",
+        "D": "Isaque"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 188,
+      "nivel": "facil",
+      "pergunta": "Qual mar Jesus atravessou e acalmou a tempestade durante o seu ministério?",
+      "opcoes": {
+        "A": "Mar Vermelho",
+        "B": "Mar Morto",
+        "C": "Mar da Galileia",
+        "D": "Mar Mediterrâneo"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 189,
+      "nivel": "facil",
+      "pergunta": "De acordo com João 14.6, quem disse ser \"o caminho, a verdade e a vida\"?",
+      "opcoes": {
+        "A": "João Batista",
+        "B": "O apóstolo Pedro",
+        "C": "Jesus Cristo",
+        "D": "O apóstolo Paulo"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 190,
+      "nivel": "facil",
+      "pergunta": "Qual foi o apóstolo que negou Jesus três vezes antes do galo cantar?",
+      "opcoes": {
+        "A": "André",
+        "B": "Tiago",
+        "C": "Pedro",
+        "D": "Judas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 191,
+      "nivel": "facil",
+      "pergunta": "Como se chama o conjunto de 66 livros inspirados por Deus?",
+      "opcoes": {
+        "A": "Catecismo",
+        "B": "Hinário",
+        "C": "Bíblia Sagrada",
+        "D": "Talmude"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 192,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da última etapa que a mensageira pode alcançar na organização?",
+      "opcoes": {
+        "A": "Rainha de Honra",
+        "B": "Estrela de Prata",
+        "C": "Mensageira Real em Ação",
+        "D": "Líder Vitalícia"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 193,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do órgão oficial de notícias e estudos da UFMBB para as MR?",
+      "opcoes": {
+        "A": "Manancial",
+        "B": "Visão Missionária",
+        "C": "Aventura Missionária",
+        "D": "O Jornal Batista"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 194,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, o que a mensageira promete reconhecer e corrigir?",
+      "opcoes": {
+        "A": "Seus talentos",
+        "B": "Suas virtudes",
+        "C": "Seus erros",
+        "D": "Seus sonhos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 195,
+      "nivel": "facil",
+      "pergunta": "Quem foi o homem rico que pediu o corpo de Jesus para sepultar?",
+      "opcoes": {
+        "A": "Nicodemos",
+        "B": "Zaqueu",
+        "C": "José de Arimateia",
+        "D": "Lázaro"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 196,
+      "nivel": "facil",
+      "pergunta": "Em qual cidade Jesus nasceu, cumprindo a profecia de Miqueias?",
+      "opcoes": {
+        "A": "Nazaré",
+        "B": "Jerusalém",
+        "C": "Belém",
+        "D": "Jericó"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 197,
+      "nivel": "facil",
+      "pergunta": "Qual discípulo traiu Jesus por trinta moedas de prata?",
+      "opcoes": {
+        "A": "Mateus",
+        "B": "Tomé",
+        "C": "Judas Iscariotes",
+        "D": "Simão Zelote"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 198,
+      "nivel": "facil",
+      "pergunta": "De acordo com Mateus 21.22, tudo o que pedirdes em oração, fazendo o quê, recebereis?",
+      "opcoes": {
+        "A": "Gritando",
+        "B": "Jejuando",
+        "C": "Crendo",
+        "D": "Cantando"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 199,
+      "nivel": "facil",
+      "pergunta": "No livro \"Meninas como eu\", qual menina foi levada cativa pelo exército sírio?",
+      "opcoes": {
+        "A": "Ester",
+        "B": "Rode",
+        "C": "A menina israelita",
+        "D": "Miriã"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 200,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do pai de Minnie Lou Lanier?",
+      "opcoes": {
+        "A": "Sidney Lanier",
+        "B": "Montague Lanier",
+        "C": "Patrick Henry Lanier",
+        "D": "Oscar Lanier"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 201,
+      "nivel": "medio",
+      "pergunta": "Em qual estado americano nasceu a missionária pioneira Minnie Lou Lanier?",
+      "opcoes": {
+        "A": "Kentucky",
+        "B": "Flórida",
+        "C": "Geórgia",
+        "D": "Texas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 202,
+      "nivel": "medio",
+      "pergunta": "Qual era o principal recurso financeiro da família Lanier em sua fazenda na Geórgia?",
+      "opcoes": {
+        "A": "Criação de gado",
+        "B": "Extração de madeira",
+        "C": "Agricultura (moagem de cana)",
+        "D": "Produção de tecidos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 203,
+      "nivel": "medio",
+      "pergunta": "Quantos irmãos Minnie Lou tinha, sendo ela a sexta filha do casal?",
+      "opcoes": {
+        "A": "Cinco irmãos",
+        "B": "Seis irmãos",
+        "C": "Sete irmãos",
+        "D": "Oito irmãos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 204,
+      "nivel": "medio",
+      "pergunta": "Qual tragédia destruiu a casa da família Lanier quando Minnie Lou tinha seis anos?",
+      "opcoes": {
+        "A": "Um tornado",
+        "B": "Uma inundação",
+        "C": "Um incêndio",
+        "D": "Um terremoto"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 205,
+      "nivel": "medio",
+      "pergunta": "Aos 12 anos, para qual cidade a família Lanier se mudou saindo da fazenda?",
+      "opcoes": {
+        "A": "Atlanta",
+        "B": "Pembroke",
+        "C": "Savannah",
+        "D": "Miami"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 206,
+      "nivel": "medio",
+      "pergunta": "Qual habilidade Minnie Lou aprendeu para ajudar nas despesas da família na cidade?",
+      "opcoes": {
+        "A": "Costura",
+        "B": "Datilografia",
+        "C": "Cabeleireira",
+        "D": "Culinária"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 207,
+      "nivel": "medio",
+      "pergunta": "Em qual universidade Minnie Lou Lanier concluiu seus estudos na Geórgia?",
+      "opcoes": {
+        "A": "Richmond University",
+        "B": "Savannah College",
+        "C": "Tift-College",
+        "D": "Louisville University"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 208,
+      "nivel": "medio",
+      "pergunta": "Qual missionária desafiou Minnie Lou a vir ao Brasil durante um culto chuvoso?",
+      "opcoes": {
+        "A": "Minnie Landrum",
+        "B": "Sophia Nichols",
+        "C": "Pearl Bigle",
+        "D": "Dorine Hawkins"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 209,
+      "nivel": "medio",
+      "pergunta": "Em qual data exata Minnie Lou embarcou em Miami com destino ao Brasil em 1945?",
+      "opcoes": {
+        "A": "10 de maio",
+        "B": "17 de junho",
+        "C": "7 de novembro",
+        "D": "25 de dezembro"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 210,
+      "nivel": "medio",
+      "pergunta": "Qual foi a primeira escala de Minnie Lou em solo brasileiro no ano de 1945?",
+      "opcoes": {
+        "A": "Rio de Janeiro",
+        "B": "Fortaleza",
+        "C": "Belém do Pará",
+        "D": "Recife"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 211,
+      "nivel": "medio",
+      "pergunta": "Qual era o cargo de Jairo, pai da menina ressuscitada por Jesus?",
+      "opcoes": {
+        "A": "Sumo Sacerdote",
+        "B": "Governador da província",
+        "C": "Chefe da sinagoga",
+        "D": "Centurião romano"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 212,
+      "nivel": "medio",
+      "pergunta": "De acordo com a biografia, qual irmão de Minnie Lou voltou da guerra antes dela partir?",
+      "opcoes": {
+        "A": "Oscar",
+        "B": "Montague",
+        "C": "Sidney",
+        "D": "Patrick"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 213,
+      "nivel": "medio",
+      "pergunta": "No livro \"Deixando de ser menina\", qual órgão realiza cerca de 500 tarefas?",
+      "opcoes": {
+        "A": "Coração",
+        "B": "Estômago",
+        "C": "Fígado",
+        "D": "Pâncreas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 214,
+      "nivel": "medio",
+      "pergunta": "Qual é a função do glicogênio armazenado no fígado humano?",
+      "opcoes": {
+        "A": "Filtrar o sangue",
+        "B": "Produzir bile",
+        "C": "Guardar energia (glicose)",
+        "D": "Bombear oxigênio"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 215,
+      "nivel": "medio",
+      "pergunta": "Qual é a quantidade aproximada de sangue filtrada pelos rins diariamente?",
+      "opcoes": {
+        "A": "500 a 800 litros",
+        "B": "1000 a 1200 litros",
+        "C": "1500 a 2000 litros",
+        "D": "3000 a 4000 litros"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 216,
+      "nivel": "medio",
+      "pergunta": "Como se chama a primeira menstruação na vida de uma menina?",
+      "opcoes": {
+        "A": "Menopausa",
+        "B": "Ovulação",
+        "C": "Menarca",
+        "D": "Puberdade"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 217,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Crescerei em sabedoria pelo estudo da Bíblia\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 24.1",
+        "C": "Salmos 119.105",
+        "D": "Efésios 2.10"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 218,
+      "nivel": "medio",
+      "pergunta": "Em qual salmo Davi afirma que foi formado de modo \"admirável e maravilhoso\"?",
+      "opcoes": {
+        "A": "Salmo 23",
+        "B": "Salmo 91",
+        "C": "Salmo 139",
+        "D": "Salmo 119"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 219,
+      "nivel": "medio",
+      "pergunta": "Qual o significado da expressão aramaica \"Talitá kumi\", dita por Jesus?",
+      "opcoes": {
+        "A": "Paz seja convosco",
+        "B": "Seja curada agora",
+        "C": "Menina, levante-se",
+        "D": "Deus é o Senhor"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 220,
+      "nivel": "medio",
+      "pergunta": "Quem era o rei da Pérsia na época em que Ester foi coroada rainha?",
+      "opcoes": {
+        "A": "Ciro",
+        "B": "Dario",
+        "C": "Assuero",
+        "D": "Artaxerxes"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 221,
+      "nivel": "medio",
+      "pergunta": "No sistema das MR, o que simbolizam as cinco pontas da estrela?",
+      "opcoes": {
+        "A": "As cinco regiões do Brasil",
+        "B": "Os cinco continentes",
+        "C": "Os cinco ideais das MR",
+        "D": "Os cinco ministérios"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 222,
+      "nivel": "medio",
+      "pergunta": "De acordo com o Manual, qual a duração do planejamento das MR?",
+      "opcoes": {
+        "A": "Mensal",
+        "B": "Semestral",
+        "C": "Trimestral",
+        "D": "Anual"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 223,
+      "nivel": "medio",
+      "pergunta": "Quem é o autor do livro de Atos e do terceiro evangelho?",
+      "opcoes": {
+        "A": "Mateus",
+        "B": "Marcos",
+        "C": "Lucas",
+        "D": "João"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 224,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade a organização Mensageiras do Rei foi oficializada no Brasil em 1949?",
+      "opcoes": {
+        "A": "Salvador",
+        "B": "São Paulo",
+        "C": "Rio de Janeiro",
+        "D": "Belo Horizonte"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 225,
+      "nivel": "medio",
+      "pergunta": "Qual é a data de aniversário da UFMBB (União Feminina Missionária Batista do Brasil)?",
+      "opcoes": {
+        "A": "10 de Maio",
+        "B": "17 de Junho",
+        "C": "23 de Junho",
+        "D": "15 de Novembro"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 226,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do local de acampamento nacional das MR no Rio de Janeiro?",
+      "opcoes": {
+        "A": "Quinta da Boa Vista",
+        "B": "Monte Hermom",
+        "C": "Sítio do Sossego",
+        "D": "Vale das Bênçãos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 227,
+      "nivel": "medio",
+      "pergunta": "Quantas vezes o coração humano bate, em média, durante um único dia?",
+      "opcoes": {
+        "A": "50 mil vezes",
+        "B": "80 mil vezes",
+        "C": "100 mil vezes",
+        "D": "150 mil vezes"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 228,
+      "nivel": "medio",
+      "pergunta": "Qual glândula é responsável por lançar hormônios no sangue durante a puberdade?",
+      "opcoes": {
+        "A": "Glândula Salivar",
+        "B": "Glândula Lacrimal",
+        "C": "Glândulas Endócrinas",
+        "D": "Glândulas Sudoríparas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 229,
+      "nivel": "medio",
+      "pergunta": "No livro \"Aventura Real\", qual é a função da Secretária na diretoria das MR?",
+      "opcoes": {
+        "A": "Dirigir o louvor",
+        "B": "Presidir a reunião",
+        "C": "Fazer os relatórios e chamadas",
+        "D": "Orientar os estudos bíblicos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 230,
+      "nivel": "medio",
+      "pergunta": "Quem substituiu Minnie Lou Lanier na Liderança Nacional das MR em 1967?",
+      "opcoes": {
+        "A": "Raquel Zarnotti",
+        "B": "Elza Sant'Anna",
+        "C": "Edna Pinto de Moraes",
+        "D": "Celina Veronese"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 231,
+      "nivel": "medio",
+      "pergunta": "No livro \"Meninas como eu\", qual menina era serva na casa de Maria, mãe de Marcos?",
+      "opcoes": {
+        "A": "Lídia",
+        "B": "Tabita",
+        "C": "Rode",
+        "D": "Priscila"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 232,
+      "nivel": "medio",
+      "pergunta": "Qual missionária ajudou Minnie Lou a se adaptar no Rio de Janeiro em 1945?",
+      "opcoes": {
+        "A": "Sophia Nichols",
+        "B": "Dorine Hawkins",
+        "C": "Minnie Landrum",
+        "D": "Albertina Meador"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 233,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade brasileira Minnie Lou recebeu uma grande homenagem em 1981?",
+      "opcoes": {
+        "A": "Rio de Janeiro",
+        "B": "Curitiba",
+        "C": "Belém do Pará",
+        "D": "Salvador"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 234,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do seminário batista em Recife voltado para a educação cristã?",
+      "opcoes": {
+        "A": "CIEM",
+        "B": "IBER",
+        "C": "SEC",
+        "D": "STBS"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 235,
+      "nivel": "medio",
+      "pergunta": "Qual desses esportes é recomendado como o \"mais completo\" no livro de saúde das MR?",
+      "opcoes": {
+        "A": "Vôlei",
+        "B": "Ciclismo",
+        "C": "Natação",
+        "D": "Futebol"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 236,
+      "nivel": "medio",
+      "pergunta": "No Pacto das MR, qual o objetivo final para que a mensageira cresça espiritualmente?",
+      "opcoes": {
+        "A": "Ser admirada por todos.",
+        "B": "Ganhar muitos prêmios.",
+        "C": "Estar na presença do Rei.",
+        "D": "Tornar-se uma líder famosa."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 237,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do inimigo de Mordecai que planejou destruir os judeus na Pérsia?",
+      "opcoes": {
+        "A": "Assuero",
+        "B": "Hegai",
+        "C": "Hamã",
+        "D": "Bigtã"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 238,
+      "nivel": "medio",
+      "pergunta": "Como se chama a estratégia das MR para multiplicar grupos e ganhar novas meninas?",
+      "opcoes": {
+        "A": "GCE (Grupo Cristão de Estudo)",
+        "B": "EBD (Escola Bíblica Dominical)",
+        "C": "PGM (Pequeno Grupo Multiplicador)",
+        "D": "MCM (Mulher Cristã em Missão)"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 239,
+      "nivel": "medio",
+      "pergunta": "Qual é a referência bíblica do ideal \"Aceitarei a responsabilidade da Grande Comissão\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 119.105",
+        "C": "Marcos 16.15",
+        "D": "Efésios 2.10"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 240,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do primeiro manual das MR traduzido para o português?",
+      "opcoes": {
+        "A": "Aventura Real",
+        "B": "Guia da Orientadora",
+        "C": "Manual das Mensageiras do Rei",
+        "D": "Estrela do Sul"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 241,
+      "nivel": "facil",
+      "pergunta": "Qual o primeiro sinal físico da puberdade mencionado no livro da Dra. Élida?",
+      "opcoes": {
+        "A": "O crescimento dos pelos.",
+        "B": "A primeira menstruação.",
+        "C": "O desenvolvimento das mamas.",
+        "D": "O aparecimento de espinhas."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 242,
+      "nivel": "facil",
+      "pergunta": "No livro \"Meninas como eu\", Maria visitou qual parente nas montanhas da Judeia?",
+      "opcoes": {
+        "A": "Maria Madalena",
+        "B": "Marta",
+        "C": "Isabel",
+        "D": "Joana"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 243,
+      "nivel": "facil",
+      "pergunta": "Qual era o cargo do homem que desafiou Minnie Lou a entrar no armário (câmara escura)?",
+      "opcoes": {
+        "A": "Orientador",
+        "B": "Diácono",
+        "C": "Missionário/Pastor",
+        "D": "Seminarista"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 244,
+      "nivel": "facil",
+      "pergunta": "Qual é a primeira palavra da divisa das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Resplandece",
+        "B": "Porque",
+        "C": "Levanta-te",
+        "D": "Luz"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 245,
+      "nivel": "facil",
+      "pergunta": "No hino oficial, qual a palavra que completa: \"Às nações contaremos a _________\"?",
+      "opcoes": {
+        "A": "Verdade",
+        "B": "Nova",
+        "C": "História",
+        "D": "Mensagem"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 246,
+      "nivel": "facil",
+      "pergunta": "Quem é o autor do Salmo 24.1: \"Do Senhor é a terra e a sua plenitude\"?",
+      "opcoes": {
+        "A": "Moisés",
+        "B": "Salomão",
+        "C": "Davi",
+        "D": "Asafe"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 247,
+      "nivel": "facil",
+      "pergunta": "Quantas pontas tem a estrela que representa os ideais das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Quatro pontas",
+        "B": "Seis pontas",
+        "C": "Cinco pontas",
+        "D": "Sete pontas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 248,
+      "nivel": "facil",
+      "pergunta": "Qual a cor que representa o crescimento cristão no emblema das MR?",
+      "opcoes": {
+        "A": "Amarelo",
+        "B": "Branco",
+        "C": "Verde",
+        "D": "Azul"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 249,
+      "nivel": "facil",
+      "pergunta": "Segundo o livro \"Deixando de ser menina\", qual hábito é indispensável para o descanso?",
+      "opcoes": {
+        "A": "Praticar esportes",
+        "B": "Ver televisão",
+        "C": "O sono",
+        "D": "Comer doces"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 250,
+      "nivel": "facil",
+      "pergunta": "Qual é o nome do criador das Mensageiras do Rei e de todo o universo?",
+      "opcoes": {
+        "A": "Abraão",
+        "B": "Davi",
+        "C": "Deus",
+        "D": "Moisés"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 251,
+      "nivel": "medio",
+      "pergunta": "No livro \"Meninas como eu\", qual o motivo de Mordecai ter pedido a Ester que escondesse sua origem?",
+      "opcoes": {
+        "A": "Para ela se sentir superior.",
+        "B": "Para enganar o rei Assuero.",
+        "C": "Para protegê-la de preconceitos.",
+        "D": "Por ordem direta do profeta."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 252,
+      "nivel": "medio",
+      "pergunta": "Qual o nome da instituição que forma missionários e fica localizada no Rio de Janeiro?",
+      "opcoes": {
+        "A": "SEC",
+        "B": "IBER",
+        "C": "CIEM",
+        "D": "STBS"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 253,
+      "nivel": "medio",
+      "pergunta": "Na biografia de Minnie Lou, qual era o nome carinhoso da mãe dela?",
+      "opcoes": {
+        "A": "Liz",
+        "B": "Beth",
+        "C": "Lizzie",
+        "D": "Mary"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 254,
+      "nivel": "medio",
+      "pergunta": "Em qual local Minnie Lou teve sua primeira experiência frustrante ao orar em público?",
+      "opcoes": {
+        "A": "No colégio",
+        "B": "No seminário",
+        "C": "Na classe da EBD",
+        "D": "No acampamento"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 255,
+      "nivel": "medio",
+      "pergunta": "No emblema das MR, o que o traço amarelo representa simbolicamente?",
+      "opcoes": {
+        "A": "A pureza da mensageira.",
+        "B": "O dinheiro para missões.",
+        "C": "A luz de Cristo refletida no mundo.",
+        "D": "A coroa da rainha."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 256,
+      "nivel": "medio",
+      "pergunta": "Qual o nome da revista trimestral usada para os estudos das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Visão Missionária",
+        "B": "O Jornal Batista",
+        "C": "Aventura Missionária",
+        "D": "Caminhada Real"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 257,
+      "nivel": "medio",
+      "pergunta": "No livro \"Deixando de ser menina\", qual órgão manda sangue oxigenado para todo o corpo?",
+      "opcoes": {
+        "A": "Pulmão",
+        "B": "Fígado",
+        "C": "Coração",
+        "D": "Rim"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 258,
+      "nivel": "medio",
+      "pergunta": "Qual a frequência recomendada para a troca de lençóis e fronhas para higiene pessoal?",
+      "opcoes": {
+        "A": "Diariamente",
+        "B": "A cada 15 dias",
+        "C": "Semanalmente",
+        "D": "Uma vez por mês"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 259,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade histórica Minnie Lou frequentou a escola em uma única sala rural?",
+      "opcoes": {
+        "A": "Savannah",
+        "B": "Atlanta",
+        "C": "Pembroke (proximidades)",
+        "D": "Louisville"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 260,
+      "nivel": "medio",
+      "pergunta": "Qual desses personagens NÃO faz parte da história de Rode em Atos 12?",
+      "opcoes": {
+        "A": "Pedro",
+        "B": "Maria",
+        "C": "Paulo",
+        "D": "João Marcos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 261,
+      "nivel": "facil",
+      "pergunta": "Qual é a terceira etapa simples da organização Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Candidata",
+        "B": "Mensageira",
+        "C": "Mensageira Real",
+        "D": "Rainha"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 262,
+      "nivel": "facil",
+      "pergunta": "No hino oficial, quem é que salvará por fé todo aquele que Sua palavra ouvir?",
+      "opcoes": {
+        "A": "O Pastor",
+        "B": "A Igreja",
+        "C": "Jesus Cristo",
+        "D": "A Mensageira"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 263,
+      "nivel": "facil",
+      "pergunta": "Qual é a referência bíblica do ideal \"Enfeitar-me-ei com boas obras\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 119.105",
+        "C": "Efésios 2.10",
+        "D": "Marcos 16.15"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 264,
+      "nivel": "facil",
+      "pergunta": "Qual anjo anunciou a Maria que ela seria a mãe de Jesus?",
+      "opcoes": {
+        "A": "Miguel",
+        "B": "Rafael",
+        "C": "Gabriel",
+        "D": "Uriel"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 265,
+      "nivel": "facil",
+      "pergunta": "De acordo com o Manual, para quem é oferecido o Jantar Real?",
+      "opcoes": {
+        "A": "Para todas as meninas da igreja.",
+        "B": "Para as meninas iniciantes apenas.",
+        "C": "Para quem concluiu etapas da Aventura Real.",
+        "D": "Somente para as Orientadoras."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 266,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do livro que narra as viagens missionárias de Paulo?",
+      "opcoes": {
+        "A": "Lucas",
+        "B": "Romanos",
+        "C": "Atos dos Apóstolos",
+        "D": "Apocalipse"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 267,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, a mensageira promete lutar por conservar o que limpo?",
+      "opcoes": {
+        "A": "O seu quarto",
+        "B": "O seu caderno",
+        "C": "O seu corpo",
+        "D": "O seu sapato"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 268,
+      "nivel": "facil",
+      "pergunta": "Quantos versículos a mensageira deve decorar na 2ª etapa para o Plano da Salvação?",
+      "opcoes": {
+        "A": "Três versículos",
+        "B": "Sete versículos",
+        "C": "Cinco versículos",
+        "D": "Dez versículos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 269,
+      "nivel": "facil",
+      "pergunta": "Qual versículo afirma: \"Lâmpada para os meus pés é a tua palavra e luz para o meu caminho\"?",
+      "opcoes": {
+        "A": "Salmo 23.1",
+        "B": "Salmo 91.1",
+        "C": "Salmo 119.105",
+        "D": "Salmo 1.1"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 270,
+      "nivel": "facil",
+      "pergunta": "Qual o nome do mar onde Pedro tentou andar sobre as águas em direção a Jesus?",
+      "opcoes": {
+        "A": "Mar Morto",
+        "B": "Mar Vermelho",
+        "C": "Mar da Galileia",
+        "D": "Mar Mediterrâneo"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 271,
+      "nivel": "facil",
+      "pergunta": "Qual é a função da Presidente na diretoria das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Fazer a chamada.",
+        "B": "Contar as ofertas.",
+        "C": "Convocar e dirigir as reuniões.",
+        "D": "Comprar as revistas."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 272,
+      "nivel": "facil",
+      "pergunta": "Qual é o nome dado às ações que as MR fazem em benefício de alguém por amor a Jesus?",
+      "opcoes": {
+        "A": "Trabalho Social",
+        "B": "Gincana Real",
+        "C": "Serviço Real",
+        "D": "Missão Amiga"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 273,
+      "nivel": "facil",
+      "pergunta": "No emblema das MR, o que simboliza a cor branca?",
+      "opcoes": {
+        "A": "A paz mundial.",
+        "B": "A salvação.",
+        "C": "A pureza.",
+        "D": "O céu."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 274,
+      "nivel": "facil",
+      "pergunta": "Em qual cidade brasileira está localizada a sede nacional da UFMBB?",
+      "opcoes": {
+        "A": "São Paulo",
+        "B": "Brasília",
+        "C": "Rio de Janeiro",
+        "D": "Salvador"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 275,
+      "nivel": "facil",
+      "pergunta": "Qual o nome da missionária pioneira retratada no livro \"Levanta e Resplandece\"?",
+      "opcoes": {
+        "A": "Sofia Nichols",
+        "B": "Edna Moraes",
+        "C": "Minnie Lou Lanier",
+        "D": "Albertina Meador"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 276,
+      "nivel": "facil",
+      "pergunta": "De acordo com Gênesis 3, qual animal foi usado pela serpente para enganar Eva?",
+      "opcoes": {
+        "A": "Leão",
+        "B": "Águia",
+        "C": "Serpente",
+        "D": "Cordeiro"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 277,
+      "nivel": "facil",
+      "pergunta": "Qual discípulo foi solto da prisão milagrosamente por um anjo em Atos 12?",
+      "opcoes": {
+        "A": "Paulo",
+        "B": "João",
+        "C": "Pedro",
+        "D": "André"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 278,
+      "nivel": "facil",
+      "pergunta": "Qual é o nome do primeiro livro do Novo Testamento?",
+      "opcoes": {
+        "A": "Gênesis",
+        "B": "Atos",
+        "C": "Mateus",
+        "D": "Romanos"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 279,
+      "nivel": "facil",
+      "pergunta": "No Pacto das MR, o que a mensageira promete não tomar em vão?",
+      "opcoes": {
+        "A": "O tempo livre.",
+        "B": "A oferta missionária.",
+        "C": "O nome de Deus.",
+        "D": "A amizade das colegas."
+      },
+      "correta": "C"
+    },
+    {
+      "id": 280,
+      "nivel": "facil",
+      "pergunta": "Qual é a referência bíblica da Grande Comissão?",
+      "opcoes": {
+        "A": "Mateus 5.1",
+        "B": "Lucas 2.1",
+        "C": "Marcos 16.15",
+        "D": "João 1.1"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 281,
+      "nivel": "medio",
+      "pergunta": "Qual foi o valor mensal que a Junta de Richmond enviava para Minnie Lou pagar um professor?",
+      "opcoes": {
+        "A": "Cinco dólares",
+        "B": "Oito dólares",
+        "C": "Dez dólares",
+        "D": "Vinte dólares"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 282,
+      "nivel": "medio",
+      "pergunta": "No livro \"Deixando de ser menina\", qual órgão do corpo é comparado a um \"laboratório\"?",
+      "opcoes": {
+        "A": "Coração",
+        "B": "Estômago",
+        "C": "Fígado",
+        "D": "Pâncreas"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 283,
+      "nivel": "medio",
+      "pergunta": "Qual era a cor da Kombi que Minnie Lou dirigia para visitar as igrejas no Rio de Janeiro?",
+      "opcoes": {
+        "A": "Branco-neve",
+        "B": "Verde-musgo",
+        "C": "Azul-claro",
+        "D": "Amarelo-ouro"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 284,
+      "nivel": "medio",
+      "pergunta": "Em 1964, qual evento nacional foi realizado para comemorar os 15 anos das MR?",
+      "opcoes": {
+        "A": "Congresso de Líderes",
+        "B": "Assembléia da UFMBB",
+        "C": "Corte Real",
+        "D": "Giro Missionário"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 285,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do mestre de Paulo, aos pés de quem ele aprendeu a religião judaica?",
+      "opcoes": {
+        "A": "Nicodemos",
+        "B": "Ananias",
+        "C": "Gamaliel",
+        "D": "Caifás"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 286,
+      "nivel": "medio",
+      "pergunta": "Na biografia de Minnie Lou, quem era sua companheira de apartamento que a sucedeu na Liderança das Mulheres?",
+      "opcoes": {
+        "A": "Raquel Zarnotti",
+        "B": "Edna Moraes",
+        "C": "Elza Sant’Anna",
+        "D": "Sophia Nichols"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 287,
+      "nivel": "medio",
+      "pergunta": "Qual substância o fígado armazena como reserva de energia?",
+      "opcoes": {
+        "A": "Insulina",
+        "B": "Hemoglobina",
+        "C": "Glicogênio",
+        "D": "Adrenalina"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 288,
+      "nivel": "medio",
+      "pergunta": "No emblema das MR, qual elemento representa a própria mensageira?",
+      "opcoes": {
+        "A": "O monograma MR",
+        "B": "O traço amarelo",
+        "C": "A estrela",
+        "D": "O contorno verde"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 289,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade gaúcha Pearl Bigle realizava seu trabalho missionário independente?",
+      "opcoes": {
+        "A": "Porto Alegre",
+        "B": "Pelotas",
+        "C": "Rio Grande do Sul (Estado mencionado como campo)",
+        "D": "Caxias do Sul"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 290,
+      "nivel": "medio",
+      "pergunta": "Qual profeta do Antigo Testamento relata o chamado de Abraão em Ur dos Caldeus?",
+      "opcoes": {
+        "A": "Isaías",
+        "B": "Jeremias",
+        "C": "Moisés (autor do Gênesis)",
+        "D": "Ezequiel"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 291,
+      "nivel": "medio",
+      "pergunta": "Qual o nome da escola da UFMBB localizada no Recife?",
+      "opcoes": {
+        "A": "CIEM",
+        "B": "IBER",
+        "C": "SEC",
+        "D": "ITC"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 292,
+      "nivel": "medio",
+      "pergunta": "No livro da Dra. Élida, qual hábito é essencial para manter a saúde dos dentes?",
+      "opcoes": {
+        "A": "Comer chiclete sem açúcar",
+        "B": "Tomar muito leite",
+        "C": "Usar fio dental e escovação",
+        "D": "Visitar o médico anualmente"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 293,
+      "nivel": "medio",
+      "pergunta": "Qual a referência bíblica do ideal \"Reconhecerei a minha mordomia\"?",
+      "opcoes": {
+        "A": "Mateus 21.22",
+        "B": "Salmos 119.105",
+        "C": "Salmos 24.1",
+        "D": "Efésios 2.10"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 294,
+      "nivel": "medio",
+      "pergunta": "Em qual data Minnie Lou Lanier foi eleita a primeira Líder Nacional das MR?",
+      "opcoes": {
+        "A": "10 de maio de 1949",
+        "B": "17 de junho de 1949",
+        "C": "10 de maio de 1949 (Eleita na Assembléia da UFMBB)",
+        "D": "23 de junho de 1949"
+      },
+      "correta": "A"
+    },
+    {
+      "id": 295,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do missionário vizinho de Minnie Lou por mais de 10 anos?",
+      "opcoes": {
+        "A": "Dr. Allen",
+        "B": "Pr. Edgar Hallock",
+        "C": "Dr. J. J. Cowsert",
+        "D": "Dr. David Gomes"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 296,
+      "nivel": "medio",
+      "pergunta": "Qual glândula produz substâncias que iniciam as mudanças da puberdade?",
+      "opcoes": {
+        "A": "Glândulas sudoríparas",
+        "B": "Glândulas sebáceas",
+        "C": "Glândulas endócrinas",
+        "D": "Glândulas salivares"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 297,
+      "nivel": "medio",
+      "pergunta": "Como é chamado o crescimento rápido dos ossos na adolescência?",
+      "opcoes": {
+        "A": "Salto hormonal",
+        "B": "Pulo da idade",
+        "C": "Estirão puberal",
+        "D": "Pico de massa"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 298,
+      "nivel": "medio",
+      "pergunta": "Em qual cidade brasileira foi realizado o acampamento de 1953 com coroação de rainhas?",
+      "opcoes": {
+        "A": "Rio de Janeiro",
+        "B": "Salvador",
+        "C": "Curitiba",
+        "D": "Recife"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 299,
+      "nivel": "medio",
+      "pergunta": "Qual o nome do hino oficial das Mensageiras do Rei?",
+      "opcoes": {
+        "A": "Estrela da Manhã",
+        "B": "Mensagem do Rei",
+        "C": "Contaremos a História",
+        "D": "Brilho Real"
+      },
+      "correta": "C"
+    },
+    {
+      "id": 300,
+      "nivel": "medio",
+      "pergunta": "Qual a referência bíblica do ideal \"Viverei em Cristo pela oração\"?",
+      "opcoes": {
+        "A": "Marcos 16.15",
+        "B": "Efésios 2.10",
+        "C": "Mateus 21.22",
+        "D": "Salmos 24.1"
+      },
+      "correta": "C"
+    }
+  ]
+}
