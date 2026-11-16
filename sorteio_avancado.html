@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sorteador - Esgrima Avançado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0; padding: 4px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 15, 30, 0.75);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(168, 85, 247, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+        }
+        .text-contour {
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        select { background: rgba(0, 20, 40, 0.85); border: 1px solid rgba(168, 85, 247, 0.4); color: white; }
+        option { background: #001428; color: white; }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="glass-panel w-full max-w-xl p-6 rounded-3xl text-center shadow-2xl">
+        
+        <div class="mb-4">
+            <span class="bg-purple-600/30 text-purple-300 border border-purple-500/30 text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-widest inline-block mb-2">
+                Modo Presencial / Dinâmica
+            </span>
+            <h1 class="text-2xl font-black text-yellow-400 uppercase italic text-contour">🔥 Esgrima Avançado</h1>
+            <p class="text-purple-200 text-xs mt-1">Sorteador de Palavras-Chave (Base NVI)</p>
+        </div>
+
+        <!-- Filtro de Frequência / Dificuldade -->
+        <div class="mb-6 max-w-xs mx-auto">
+            <label class="block text-[10px] uppercase text-purple-300 font-bold mb-1">Frequência da Palavra na NVI:</label>
+            <select id="filtro-dificuldade" class="w-full p-2.5 rounded-xl text-xs font-bold outline-none text-center">
+                <option value="todas">🎲 Aleatória (Qualquer Frequência)</option>
+                <option value="facil">🟢 Fácil (Muito comum: +50 ocorrências)</option>
+                <option value="medio">🟡 Média (Moderada: 10 a 50 ocorrências)</option>
+                <option value="dificil">🔴 Difícil (Rara: 2 a 9 ocorrências)</option>
+            </select>
+        </div>
+
+        <!-- Painel de Exibição -->
+        <div class="bg-black/50 border border-white/10 rounded-2xl p-6 mb-6 min-h-[190px] flex flex-col items-center justify-center">
+            <span id="status-carga" class="text-xs text-purple-300 animate-pulse uppercase font-bold">Indexando vocabulário da NVI...</span>
+            
+            <div id="resultado-area" class="hidden w-full">
+                <span class="text-[10px] uppercase tracking-widest text-gray-400 block mb-1">Palavra-Chave Sorteada:</span>
+                <div id="palavra-sorteada" class="text-3xl md:text-5xl font-black text-yellow-400 uppercase tracking-wider text-contour mb-2">
+                    ---
+                </div>
+                <span id="qtd-ocorrencias" class="text-[11px] text-purple-300 font-mono block mb-4">
+                    Aparece X vezes na NVI
+                </span>
+
+                <!-- Botão para ver exemplos de respostas -->
+                <button id="btn-exemplos" onclick="alternarExemplos()" class="text-[11px] bg-white/10 hover:bg-white/20 text-purple-200 px-4 py-1.5 rounded-full font-bold uppercase transition-all">
+                    📖 Ver Exemplos de Versículos
+                </button>
+
+                <div id="caixa-exemplos" class="hidden mt-4 p-3 bg-purple-950/60 border border-purple-500/30 rounded-xl text-xs text-gray-200 space-y-2 text-left">
+                    <!-- Exemplos injetados aqui -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Botão Principal -->
+        <button id="btn-sortear" onclick="sortearPalavra()" disabled
+            class="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-lg transition-all active:scale-95 mb-4">
+            🎲 Sortear Palavra
+        </button>
+
+        <div class="flex justify-between items-center text-xs text-gray-400 px-2">
+            <span>Palavras sorteadas: <strong id="contador" class="text-white">0</strong></span>
+            <a href="index.html" class="text-purple-300 hover:underline">Voltar ao Início</a>
+        </div>
+    </div>
+
+    <script>
+        // Mapa: palavra -> array de referências { ref: "Gênesis 1:1", texto: "..." }
+        let indicePalavras = {};
+        let listasPorNivel = { todas: [], facil: [], medio: [], dificil: [] };
+        let sorteios = 0;
+
+        // Lista de palavras muito genéricas para ignorar
+        const STOPWORDS = new Set([
+            "porque", "quando", "assim", "sobre", "entre", "contra", "disse", "então", 
+            "foram", "estava", "estavam", "todos", "todas", "aqueles", "aquelas", 
+            "disseram", "senhor", "vocês", "você", "nosso", "nossa", "nossos", "nossas",
+            "deles", "delas", "disso", "disto", "isso", "isto", "aquilo", "onde", "como",
+            "mais", "menos", "muito", "muitos", "muitas", "também", "ainda", "agora",
+            "depois", "antes", "mesmo", "mesma", "outro", "outra", "outros", "outras",
+            "fazer", "feito", "feita", "tinha", "tinham", "sejam", "seja", "estar", "estão"
+        ]);
+
+        window.onload = () => {
+            indexarNVI();
+        };
+
+        async function indexarNVI() {
+            const status = document.getElementById('status-carga');
+            const btn = document.getElementById('btn-sortear');
+
+            try {
+                let response = await fetch('./biblias/NVI.json');
+                if (!response.ok) response = await fetch('./NVI.json');
+                if (!response.ok) throw new Error("NVI.json não encontrado.");
+
+                const biblia = await response.json();
+
+                // Varre toda a Bíblia e indexa palavras significativas
+                biblia.forEach(livro => {
+                    livro.chapters.forEach((cap, cIdx) => {
+                        cap.forEach((verso, vIdx) => {
+                            // Remove pontuação e quebra em palavras
+                            const palavras = verso
+                                .toLowerCase()
+                                .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"“”'‘’—]/g, " ")
+                                .split(/\s+/);
+
+                            // Usa Set para não contar a mesma palavra duas vezes no mesmo versículo
+                            const unicasNoVerso = new Set(palavras);
+
+                            unicasNoVerso.forEach(p => {
+                                // Filtra palavras com 5 ou mais letras, sem números e fora das stopwords
+                                if (p.length >= 5 && !/\d/.test(p) && !STOPWORDS.has(p)) {
+                                    if (!indicePalavras[p]) {
+                                        indicePalavras[p] = [];
+                                    }
+                                    // Guarda até 10 referências por palavra para economizar memória
+                                    if (indicePalavras[p].length < 60) {
+                                        indicePalavras[p].push({
+                                            ref: `${livro.name} ${cIdx + 1}:${vIdx + 1}`,
+                                            texto: verso
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    });
+                });
+
+                // Classifica as palavras por frequência
+                Object.keys(indicePalavras).forEach(palavra => {
+                    const qtd = indicePalavras[palavra].length;
+                    if (qtd >= 2) {
+                        listasPorNivel.todas.push(palavra);
+                        if (qtd >= 50) listasPorNivel.facil.push(palavra);
+                        else if (qtd >= 10) listasPorNivel.medio.push(palavra);
+                        else listasPorNivel.dificil.push(palavra);
+                    }
+                });
+
+                status.classList.add('hidden');
+                btn.disabled = false;
+                sortearPalavra();
+
+            } catch (e) {
+                console.error(e);
+                status.innerText = "Erro ao carregar NVI.json. Verifique a pasta /biblias.";
+                status.className = "text-xs text-red-400 font-bold";
+            }
+        }
+
+        function sortearPalavra() {
+            const nivel = document.getElementById('filtro-dificuldade').value;
+            const lista = listasPorNivel[nivel];
+
+            if (!lista || lista.length === 0) return;
+
+            const palavra = lista[Math.floor(Math.random() * lista.length)];
+            const ocorrencias = indicePalavras[palavra];
+
+            document.getElementById('resultado-area').classList.remove('hidden');
+            document.getElementById('palavra-sorteada').innerText = palavra.toUpperCase();
+            
+            const textoQtd = ocorrencias.length >= 60 
+                ? "Muito comum (+60 ocorrências na NVI)" 
+                : `Aparece em ${ocorrencias.length} versículos na NVI`;
+            document.getElementById('qtd-ocorrencias').innerText = textoQtd;
+
+            // Prepara até 3 exemplos aleatórios para conferência
+            const caixa = document.getElementById('caixa-exemplos');
+            caixa.classList.add('hidden');
+            document.getElementById('btn-exemplos').innerText = "📖 Ver Exemplos de Versículos";
+
+            const exemplos = [...ocorrencias].sort(() => 0.5 - Math.random()).slice(0, 3);
+            caixa.innerHTML = exemplos.map(ex => `
+                <div class="border-b border-white/10 pb-2 last:border-0 last:pb-0">
+                    <strong class="text-yellow-400 block">${ex.ref}</strong>
+                    <span class="italic text-gray-300">"${ex.texto}"</span>
+                </div>
+            `).join('');
+
+            sorteios++;
+            document.getElementById('contador').innerText = sorteios;
+        }
+
+        function alternarExemplos() {
+            const caixa = document.getElementById('caixa-exemplos');
+            const btn = document.getElementById('btn-exemplos');
+            if (caixa.classList.contains('hidden')) {
+                caixa.classList.remove('hidden');
+                btn.innerText = "🙈 Ocultar Exemplos";
+            } else {
+                caixa.classList.add('hidden');
+                btn.innerText = "📖 Ver Exemplos de Versículos";
+            }
+        }
+    </script>
+</body>
+</html>
