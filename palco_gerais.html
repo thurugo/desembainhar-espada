@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Palco - Conhecimentos Gerais da Bíblia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0; padding: 12px; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; font-family: sans-serif; position: relative;
+        }
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('imagens/fundo_entrada_new.webp') no-repeat center top;
+            background-size: cover; z-index: -1;
+        }
+        .glass-panel {
+            background: rgba(0, 15, 30, 0.85);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(234, 179, 8, 0.5);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+        }
+        .text-contour {
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+        select { background: rgba(0, 20, 40, 0.9); border: 1px solid rgba(255, 215, 0, 0.4); color: white; }
+        option { background: #001428; color: white; }
+
+        .opcao-card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.35s ease;
+        }
+        .opcao-card.correta {
+            background: rgba(22, 163, 74, 0.45) !important;
+            border-color: #4ade80 !important;
+            box-shadow: 0 0 25px rgba(74, 222, 128, 0.5);
+            transform: scale(1.02);
+        }
+        .opcao-card.opaca {
+            opacity: 0.35;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="glass-panel w-full max-w-4xl p-6 md:p-10 rounded-3xl text-center shadow-2xl">
+        
+        <!-- TOPO: TÍTULO E CONTROLE DE NÍVEL -->
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-white/10 pb-5 mb-6">
+            <div class="text-center md:text-left">
+                <span class="bg-emerald-600/30 text-emerald-300 border border-emerald-500/40 text-[10px] uppercase font-black px-3 py-1 rounded-full tracking-widest inline-block mb-1">
+                    Modo Apresentação / Palco
+                </span>
+                <h1 class="text-2xl md:text-3xl font-black text-yellow-400 uppercase italic text-contour">
+                    📚 Conhecimentos Gerais da Bíblia
+                </h1>
+            </div>
+
+            <div class="w-full md:w-64">
+                <label class="block text-[10px] uppercase text-yellow-400 font-bold mb-1 text-center md:text-left">
+                    Nível da Pergunta:
+                </label>
+                <select id="seletor-nivel" onchange="atualizarContagemDisponivel()" class="w-full p-3 rounded-xl text-sm font-black uppercase outline-none">
+                    <option value="FACIL">🟢 Nível Fácil</option>
+                    <option value="MEDIO">🟡 Nível Médio</option>
+                    <option value="DIFICIL">🔴 Nível Difícil</option>
+                    <option value="TODOS">🎲 Aleatório (Todos)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ÁREA CENTRAL DE PROJEÇÃO -->
+        <div class="bg-black/50 border border-white/10 rounded-2xl p-6 md:p-8 mb-6 min-h-[300px] flex flex-col justify-center">
+            
+            <div id="status-inicial" class="py-12">
+                <p id="msg-status" class="text-sm text-yellow-400 font-bold uppercase tracking-widest animate-pulse">
+                    Carregando banco de perguntas...
+                </p>
+            </div>
+
+            <!-- BLOCO DA PERGUNTA -->
+            <div id="area-pergunta" class="hidden">
+                <div class="flex justify-center items-center gap-3 mb-4">
+                    <span id="badge-nivel" class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border">---</span>
+                    <span id="badge-id" class="text-xs text-gray-400 font-mono">#000</span>
+                </div>
+
+                <h2 id="texto-pergunta" class="text-2xl md:text-4xl font-black text-white leading-snug mb-8">
+                    <!-- Pergunta exibida aqui -->
+                </h2>
+
+                <!-- GRADE DE OPÇÕES (OCULTA ATÉ O PASSO 2) -->
+                <div id="grid-opcoes" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                    <!-- Opções A, B, C, D -->
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA DE BOTÕES DE CONTROLE SEQUENCIAL -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            <!-- PASSO 1: SORTEAR PERGUNTA -->
+            <button id="btn-sortear" onclick="sortearPergunta()" disabled
+                class="bg-yellow-500 hover:bg-yellow-400 disabled:bg-gray-700 disabled:text-gray-500 text-blue-950 font-black py-4 px-4 rounded-2xl shadow-lg uppercase text-sm md:text-base transition-all active:scale-95">
+                1. 🎲 Sortear Pergunta
+            </button>
+
+            <!-- PASSO 2: MOSTRAR OPÇÕES -->
+            <button id="btn-opcoes" onclick="mostrarOpcoes()" disabled
+                class="bg-blue-600 hover:bg-blue-500 disabled:bg-gray-800 disabled:text-gray-600 disabled:border disabled:border-white/5 text-white font-black py-4 px-4 rounded-2xl shadow-lg uppercase text-sm md:text-base transition-all active:scale-95">
+                2. 📋 Mostrar Opções
+            </button>
+
+            <!-- PASSO 3: REVELAR RESPOSTA -->
+            <button id="btn-resposta" onclick="revelarResposta()" disabled
+                class="bg-emerald-600 hover:bg-emerald-500 disabled:bg-gray-800 disabled:text-gray-600 disabled:border disabled:border-white/5 text-white font-black py-4 px-4 rounded-2xl shadow-lg uppercase text-sm md:text-base transition-all active:scale-95">
+                3. ✅ Mostrar Resposta
+            </button>
+        </div>
+
+        <!-- RODAPÉ DE CONTROLE -->
+        <div class="flex flex-wrap justify-between items-center text-xs text-gray-400 px-2 pt-2 border-t border-white/10 gap-2">
+            <span id="info-restantes">Restantes neste nível: -</span>
+            <div class="flex gap-4">
+                <button onclick="resetarHistorico()" class="text-amber-400 hover:underline font-bold">🔄 Zerar Perguntas Usadas</button>
+                <a href="index.html" class="text-blue-300 hover:underline">Voltar ao Início</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bancoQuestoes = [];
+        let idsUsados = new Set();
+        let questaoAtual = null;
+
+        window.onload = async () => {
+            await carregarBancoPerguntas();
+        };
+
+        async function carregarBancoPerguntas() {
+            const msg = document.getElementById('msg-status');
+            try {
+                // Tenta buscar nos nomes padrão utilizados no projeto
+                const caminhos = ['./gerais_biblia.json', './perguntas_biblia.json', './dados/gerais_biblia.json'];
+                let response = null;
+
+                for (const caminho of caminhos) {
+                    const res = await fetch(caminho);
+                    if (res.ok) {
+                        response = res;
+                        break;
+                    }
+                }
+
+                if (!response) throw new Error("Arquivo JSON de Conhecimentos Gerais não encontrado.");
+
+                const dados = await response.json();
+                const listaBruta = Array.isArray(dados) ? dados : (dados.questoes || []);
+
+                // Normaliza a estrutura para aceitar tanto {a,b,c,d} quanto {opcoes: {A,B,C,D}}
+                bancoQuestoes = listaBruta.map((q, idx) => {
+                    const op = q.opcoes || {
+                        A: q.a || q.A,
+                        B: q.b || q.B,
+                        C: q.c || q.C,
+                        D: q.d || q.D
+                    };
+                    return {
+                        id: q.id || (idx + 1),
+                        nivel: (q.nivel || 'FACIL').toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+                        pergunta: q.pergunta,
+                        opcoes: op,
+                        correta: (q.correta || 'A').toUpperCase().trim()
+                    };
+                });
+
+                if (bancoQuestoes.length === 0) throw new Error("O arquivo JSON está vazio.");
+
+                msg.innerText = "Pronto! Escolha o nível acima e clique em '1. Sortear Pergunta'.";
+                msg.className = "text-base text-blue-200 font-bold uppercase tracking-wide";
+                
+                document.getElementById('btn-sortear').disabled = false;
+                atualizarContagemDisponivel();
+
+            } catch (err) {
+                console.error(err);
+                msg.innerText = `Erro: ${err.message} Verifique se o arquivo gerais_biblia.json está na mesma pasta.`;
+                msg.className = "text-sm text-red-400 font-bold";
+            }
+        }
+
+        function obterDisponiveisPorNivel() {
+            const nivelEscolhido = document.getElementById('seletor-nivel').value;
+            return bancoQuestoes.filter(q => {
+                const bateNivel = nivelEscolhido === 'TODOS' || q.nivel === nivelEscolhido;
+                const naoUsada = !idsUsados.has(q.id);
+                return bateNivel && naoUsada;
+            });
+        }
+
+        function atualizarContagemDisponivel() {
+            const disponiveis = obterDisponiveisPorNivel();
+            document.getElementById('info-restantes').innerText = `Disponíveis neste filtro: ${disponiveis.length}`;
+        }
+
+        function sortearPergunta() {
+            let disponiveis = obterDisponiveisPorNivel();
+
+            if (disponiveis.length === 0) {
+                alert("Todas as perguntas deste nível já foram sorteadas! O histórico será reiniciado automaticamente.");
+                idsUsados.clear();
+                disponiveis = obterDisponiveisPorNivel();
+                if (disponiveis.length === 0) return;
+            }
+
+            // Sorteia uma pergunta inédita
+            const idx = Math.floor(Math.random() * disponiveis.length);
+            questaoAtual = disponiveis[idx];
+            idsUsados.add(questaoAtual.id);
+            atualizarContagemDisponivel();
+
+            // Prepara a exibição (Passo 1: Apenas a pergunta visível)
+            document.getElementById('status-inicial').classList.add('hidden');
+            document.getElementById('area-pergunta').classList.remove('hidden');
+            
+            const gridOpcoes = document.getElementById('grid-opcoes');
+            gridOpcoes.classList.add('hidden');
+            gridOpcoes.innerHTML = "";
+
+            // Configura selo de nível
+            const badgeNivel = document.getElementById('badge-nivel');
+            badgeNivel.innerText = `Nível ${questaoAtual.nivel}`;
+            if (questaoAtual.nivel === 'FACIL') {
+                badgeNivel.className = "px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-green-500 text-green-400 bg-green-950/60";
+            } else if (questaoAtual.nivel === 'MEDIO') {
+                badgeNivel.className = "px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-amber-500 text-amber-400 bg-amber-950/60";
+            } else {
+                badgeNivel.className = "px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-red-500 text-red-400 bg-red-950/60";
+            }
+
+            document.getElementById('badge-id').innerText = `Questão #${questaoAtual.id}`;
+            document.getElementById('texto-pergunta').innerText = questaoAtual.pergunta;
+
+            // Monta os cards das opções em memória (ainda ocultos)
+            ['A', 'B', 'C', 'D'].forEach(letra => {
+                const texto = questaoAtual.opcoes[letra];
+                if (texto) {
+                    gridOpcoes.innerHTML += `
+                        <div id="card-op-${letra}" class="opcao-card p-4 md:p-5 rounded-2xl flex items-center gap-4">
+                            <span class="bg-yellow-500 text-blue-950 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl shrink-0">
+                                ${letra}
+                            </span>
+                            <span class="text-lg md:text-xl font-bold text-gray-100 leading-snug">
+                                ${texto}
+                            </span>
+                        </div>
+                    `;
+                }
+            });
+
+            // Libera o botão 2 (Mostrar Opções) e trava o 3 (Mostrar Resposta)
+            document.getElementById('btn-opcoes').disabled = false;
+            document.getElementById('btn-resposta').disabled = true;
+        }
+
+        function mostrarOpcoes() {
+            if (!questaoAtual) return;
+            document.getElementById('grid-opcoes').classList.remove('hidden');
+            
+            // Desativa o botão 2 e libera o botão 3 (Mostrar Resposta)
+            document.getElementById('btn-opcoes').disabled = true;
+            document.getElementById('btn-resposta').disabled = false;
+        }
+
+        function revelarResposta() {
+            if (!questaoAtual) return;
+            const correta = questaoAtual.correta;
+
+            ['A', 'B', 'C', 'D'].forEach(letra => {
+                const card = document.getElementById(`card-op-${letra}`);
+                if (!card) return;
+                
+                if (letra === correta) {
+                    card.classList.add('correta');
+                } else {
+                    card.classList.add('opaca');
+                }
+            });
+
+            document.getElementById('btn-resposta').disabled = true;
+        }
+
+        function resetarHistorico() {
+            idsUsados.clear();
+            atualizarContagemDisponivel();
+            alert("Histórico zerado! Todas as perguntas voltaram para o sorteio.");
+        }
+    </script>
+</body>
+</html>
